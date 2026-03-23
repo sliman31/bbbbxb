@@ -1,332 +1,1274 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Bloc-note Collaboratif</title>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet"/>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --bg: #0e0e0e; --surface: #161616; --border: #2a2a2a;
-      --accent: #c8f135; --accent2: #35f1c8; --text: #e8e8e8;
-      --muted: #555; --danger: #f13556;
-    }
-    body {
-      background: var(--bg); color: var(--text);
-      font-family: 'Space Mono', monospace;
-      min-height: 100vh; display: flex; flex-direction: column;
-      align-items: center; padding: 40px 20px;
-    }
-    .container { width: 100%; max-width: 860px; }
-    header {
-      display: flex; align-items: flex-end; justify-content: space-between;
-      margin-bottom: 32px; flex-wrap: wrap; gap: 12px;
-    }
-    .logo h1 {
-      font-family: 'Syne', sans-serif; font-weight: 800;
-      font-size: clamp(1.8rem, 4vw, 2.8rem); letter-spacing: -0.03em; line-height: 1;
-    }
-    .logo h1 span { color: var(--accent); }
-    .logo p { font-size: 0.7rem; color: var(--muted); margin-top: 6px; letter-spacing: 0.1em; text-transform: uppercase; }
-    .status { display: flex; align-items: center; gap: 8px; font-size: 0.7rem; color: var(--muted); }
-    .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); transition: background 0.3s; }
-    .dot.on { background: var(--accent); box-shadow: 0 0 8px var(--accent); animation: blink 2s infinite; }
-    .dot.err { background: var(--danger); }
-    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planing QA Sliman</title>
+    <!-- Tailwind CSS pour la structure -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome pour l'iconographie -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts : Inter (Lecture) & JetBrains Mono (Data technique) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@600;800;900&display=swap" rel="stylesheet">
+    <!-- Chart.js pour des graphiques de niveau industriel -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        /* ==========================================================================
+           1. FONDATIONS ET TYPOGRAPHIE
+           ========================================================================== */
+        body { font-family: 'Inter', sans-serif; background-color: #F4F7F9; color: #0F172A; margin: 0; -webkit-font-smoothing: antialiased; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 10px; }
 
-    /* Alerte config */
-    #cfg-warn {
-      display: none; background: #1a1200; border: 1px solid #f1a035;
-      color: #f1a035; padding: 14px 20px; font-size: 0.75rem;
-      border-radius: 2px; margin-bottom: 20px; line-height: 1.7;
-    }
-    #cfg-warn code { background: rgba(241,160,53,0.15); padding: 1px 6px; border-radius: 2px; }
-    #cfg-warn a { color: #f1a035; }
+        /* ==========================================================================
+           2. STRUCTURE DE LA CARTE DE BASE
+           ========================================================================== */
+        .q-card {
+            display: inline-flex; flex-direction: column; width: 320px;
+            background: #FFFFFF; border-radius: 8px; margin: 6px;
+            border: 1px solid #E2E8F0; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            transition: all 0.2s; cursor: pointer;
+            overflow: hidden; border-left-width: 12px; position: relative;
+        }
+        .q-card:hover { box-shadow: 0 8px 16px rgba(15, 23, 42, 0.1); transform: translateY(-2px); }
 
-    /* Panel connexion */
-    #login {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: 2px; padding: 48px 40px; text-align: center;
-    }
-    #login h2 { font-family:'Syne',sans-serif; font-size:1.4rem; margin-bottom:10px; }
-    #login p { font-size:0.78rem; color:var(--muted); line-height:1.8; margin-bottom:28px; }
-    .inp {
-      width: 100%; max-width: 380px; background: var(--bg);
-      border: 1px solid var(--border); color: var(--text);
-      font-family: 'Space Mono', monospace; font-size: 0.85rem;
-      padding: 13px 16px; border-radius: 2px; outline: none;
-      transition: border-color 0.2s; display: block; margin: 0 auto 12px;
-    }
-    .inp:focus { border-color: var(--accent); }
-    .inp::placeholder { color: var(--muted); }
-    .btn {
-      background: var(--accent); color: #0e0e0e;
-      font-family: 'Syne',sans-serif; font-weight: 700;
-      font-size: 0.85rem; padding: 13px 32px;
-      border: none; border-radius: 2px; cursor: pointer;
-      transition: opacity 0.2s;
-    }
-    .btn:hover { opacity: 0.8; }
+        .card-ini { border-left-color: #0EA5E9; }
+        .card-pro { border-left-color: #F97316; }
 
-    /* Panel app */
-    #app { display: none; }
-    .toolbar {
-      display: flex; align-items: center; gap: 10px;
-      margin-bottom: 12px; flex-wrap: wrap;
-    }
-    .badge {
-      font-size: 0.7rem; color: #0e0e0e; background: var(--accent2);
-      font-family: 'Syne',sans-serif; font-weight: 700;
-      padding: 4px 12px; border-radius: 2px;
-    }
-    .online { font-size: 0.7rem; color: var(--muted); margin-left: auto; }
-    .online span { color: var(--accent); font-weight: 700; }
-    .wrap { position: relative; }
-    #pad {
-      width: 100%; min-height: 440px;
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: 2px; color: var(--text);
-      font-family: 'Space Mono', monospace; font-size: 0.9rem;
-      line-height: 1.9; padding: 24px; resize: vertical;
-      outline: none; transition: border-color 0.2s;
-      caret-color: var(--accent);
-    }
-    #pad:focus { border-color: var(--accent); }
-    #save-info {
-      position: absolute; top: 12px; right: 16px;
-      font-size: 0.65rem; color: var(--muted); letter-spacing: 0.1em;
-      text-transform: uppercase; opacity: 0; transition: opacity 0.3s;
-    }
-    #save-info.show { opacity: 1; }
-    #save-info.ok { color: var(--accent); }
-    .meta {
-      display: flex; justify-content: space-between;
-      font-size: 0.65rem; color: var(--muted);
-      margin-top: 10px; flex-wrap: wrap; gap: 6px;
-    }
-    .meta strong { color: var(--accent2); }
-    .actions { display: flex; gap: 8px; margin-top: 18px; flex-wrap: wrap; }
-    .btn-s {
-      font-family: 'Space Mono', monospace; font-size: 0.72rem;
-      padding: 8px 16px; border-radius: 2px;
-      border: 1px solid var(--border); background: transparent;
-      color: var(--muted); cursor: pointer; transition: all 0.2s;
-    }
-    .btn-s:hover { border-color: var(--accent); color: var(--accent); }
-    .btn-s.del:hover { border-color: var(--danger); color: var(--danger); }
+        .q-banner {
+            display: none; width: 100%; text-align: center; font-size: 11px;
+            font-weight: 900; padding: 6px 0; letter-spacing: 1px; text-transform: uppercase;
+        }
 
-    /* Log activité */
-    .log-section { margin-top: 28px; border-top: 1px solid var(--border); padding-top: 20px; }
-    .log-section h3 {
-      font-family:'Syne',sans-serif; font-size:0.72rem;
-      letter-spacing:0.12em; text-transform:uppercase;
-      color:var(--muted); margin-bottom:12px;
-    }
-    #log { display:flex; flex-direction:column; gap:6px; max-height:130px; overflow-y:auto; }
-    #log::-webkit-scrollbar { width:3px; }
-    #log::-webkit-scrollbar-thumb { background:var(--border); }
-    .li { font-size:0.7rem; display:flex; gap:10px; align-items:baseline; }
-    .li .t { color:var(--border); font-size:0.62rem; flex-shrink:0; }
-    .li .u { color:var(--accent2); font-weight:700; }
-    .li .m { color:var(--muted); }
-  </style>
+        .q-header { padding: 10px 12px; border-bottom: 1px solid #F1F5F9; display: flex; justify-content: space-between; align-items: center; position: relative; z-index: 2; }
+        .q-code { font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 900; color: #1E293B; }
+        
+        .q-body { padding: 14px 12px; flex-grow: 1; display: flex; flex-direction: column; align-items: flex-start; gap: 8px; position: relative; z-index: 2; }
+        .q-title-row { display: flex; align-items: flex-start; gap: 8px; width: 100%; }
+        
+        /* ==========================================================================
+           3. LES NOTES / COMMENTAIRES (STYLE POST-IT TRÈS LISIBLE)
+           ========================================================================== */
+        .q-note { 
+            font-size: 12px !important; 
+            color: #1E293B !important; 
+            font-style: normal; 
+            font-weight: 800; 
+            background-color: #FEF3C7 !important; /* Jaune clair Post-it */
+            padding: 8px 10px; 
+            border-radius: 6px; 
+            width: 100%; 
+            border: 1px solid #FDE68A !important;
+            border-left: 4px solid #F59E0B !important; /* Liseré orange */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05); 
+            margin-top: 6px; 
+            z-index: 10; 
+            position: relative;
+        }
+        
+        /* Adaptation des notes pour les alertes Échues (rouge) */
+        .status-expired .q-note { 
+            background: #FEF2F2 !important; border-color: #FCA5A5 !important; 
+            border-left-color: #EF4444 !important; color: #7F1D1D !important; 
+        }
+
+        .q-footer { padding: 10px 12px; background: rgba(0,0,0,0.02); display: flex; justify-content: space-between; align-items: center; position: relative; z-index: 2; }
+        .q-date { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 800; color: #475569; }
+        
+        .badge-type { padding: 3px 6px; border-radius: 4px; font-size: 10px; font-weight: 900; }
+        .type-ini { background: #E0F2FE; color: #0369A1; }
+        .type-pro { background: #FFEDD5; color: #B45309; }
+
+        /* ==========================================================================
+           4. ÉTATS VISUELS CLASSIQUES
+           ========================================================================== */
+
+        .state-validated { border: none !important; background: #000 !important; padding: 6px !important; position: relative; z-index: 1; }
+        .state-validated::before {
+            content: ''; position: absolute; height: 300%; width: 300%;
+            background-image: conic-gradient(#00ff00, #22c55e, transparent 25%, #22c55e, #00ff00);
+            top: -100%; left: -100%; animation: rotate-laser 4s linear infinite; z-index: -1;
+        }
+        @keyframes rotate-laser { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .state-validated .q-header, .state-validated .q-body, .state-validated .q-footer { background-color: #F0FDF4 !important; border: none; border-radius: 0; }
+        .state-validated .q-title { color: #166534 !important; }
+        .state-validated .q-icon { color: #10B981 !important; font-size: 16px; }
+
+        .state-priority {
+            border-left-width: 16px !important; border-left-color: #00E5FF !important; background-color: #F0F9FF !important; border-color: #00E5FF !important; box-shadow: 0 0 15px rgba(0, 229, 255, 0.4); z-index: 10;
+        }
+        .state-priority .priority-sky {
+            display: block !important; background: #E0F2FE; height: 40px; position: relative; overflow: hidden; border-bottom: 1px dashed #7DD3FC; padding: 0 !important;
+        }
+        .plane-wrapper { position: absolute; top: 0; left: -350px; height: 100%; display: flex; align-items: center; animation: fly-right 3.5s linear infinite; white-space: nowrap; }
+        .plane-icon { filter: drop-shadow(2px 4px 2px rgba(0,0,0,0.2)); z-index: 3; margin-bottom: 2px; }
+        .plane-cable { width: 15px; height: 2px; background-color: #475569; z-index: 1; }
+        .plane-banner-content {
+            background-color: #FFFFFF; color: #0369A1;
+            background-image: linear-gradient(115deg, rgba(255,255,255,0) 40%, rgba(14, 165, 233, 0.15) 45%, rgba(14, 165, 233, 0.6) 50%, rgba(14, 165, 233, 0.15) 55%, rgba(255,255,255,0) 60%);
+            background-size: 200% 100%; border: 2px solid #0EA5E9; box-shadow: 0 4px 8px rgba(2, 132, 199, 0.15);
+            padding: 4px 10px; font-weight: 900; font-size: 11px; border-radius: 4px; display: flex; align-items: center; gap: 6px; position: relative; z-index: 2; letter-spacing: 1px; animation: lightning-strike 2.5s infinite linear;
+        }
+        @keyframes lightning-strike { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+        .state-priority .q-title { color: #0369A1 !important; font-weight: 900; }
+        .state-priority .q-icon { color: #0284C7 !important; font-size: 18px; }
+        @keyframes fly-right { 0% { left: -350px; transform: translateY(0px); } 25% { transform: translateY(-2px); } 50% { transform: translateY(2px); } 75% { transform: translateY(-2px); } 100% { left: 100%; transform: translateY(0px); } }
+
+        /* ==========================================================================
+           5. VFX CYBER-SLICE (DÉCOUPE LASER COURTE)
+           ========================================================================== */
+
+        .q-title { 
+            font-size: 13px; font-weight: 900; color: #0F172A; line-height: 1.4; 
+            text-transform: uppercase; flex-grow: 1; position: relative; display: block;
+        }
+
+        .state-disabled .q-title, .state-standby .q-title { color: transparent !important; height: 1.4em; } 
+        
+        .state-disabled .q-title::before, .state-standby .q-title::before {
+            content: attr(data-title); position: absolute; top: 0; left: 0; width: 100%; color: #0F172A;
+            clip-path: polygon(0 0, 100% 0, 100% 55%, 0 45%);
+            animation: vfx-slice-top 4s infinite cubic-bezier(0.86, 0, 0.07, 1);
+        }
+
+        .state-disabled .q-title::after, .state-standby .q-title::after {
+            content: attr(data-title); position: absolute; top: 0; left: 0; width: 100%; color: #0F172A;
+            clip-path: polygon(0 45%, 100% 55%, 100% 100%, 0 100%);
+            animation: vfx-slice-bottom 4s infinite cubic-bezier(0.86, 0, 0.07, 1);
+        }
+
+        .state-disabled .q-title-row::after, .state-standby .q-title-row::after {
+            content: ''; position: absolute; top: 50%; left: -20%; width: 40px; height: 2px;
+            background: #ffffff; z-index: 20; transform: translateY(-50%) rotate(3deg);
+            animation: laser-strike-short 4s infinite cubic-bezier(0.86, 0, 0.07, 1);
+            pointer-events: none;
+        }
+
+        .state-disabled .q-title-row::after { box-shadow: 0 0 10px 4px #fff, 0 0 20px 8px #ef4444; }
+        .state-standby .q-title-row::after { box-shadow: 0 0 10px 4px #fff, 0 0 20px 8px #38BDF8; }
+
+        @keyframes vfx-slice-top { 0%, 9%, 91%, 100% { transform: translate(0, 0); opacity: 1; } 15%, 85% { transform: translate(-3px, -2px) rotate(-1deg); opacity: 0.8; } }
+        @keyframes vfx-slice-bottom { 0%, 9%, 91%, 100% { transform: translate(0, 0); opacity: 1; } 15%, 85% { transform: translate(3px, 2px) rotate(1deg); opacity: 0.8; } }
+        @keyframes laser-strike-short { 0%, 8% { left: -20%; opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 95%, 100% { left: 110%; opacity: 0; } }
+
+        /* --- FONDS DES CARTES --- */
+        .state-disabled { border-left-width: 24px !important; border-left-color: #F59E0B !important; background-color: #FFFBEB !important; border-color: #FCD34D !important; }
+        .state-disabled .q-banner { display: block; background: repeating-linear-gradient(-45deg, #F59E0B, #F59E0B 10px, #1E293B 10px, #1E293B 20px); background-size: 28.28px 28.28px; color: #FFFFFF; text-shadow: 1px 1px 2px rgba(0,0,0,0.8); animation: zebra-move 1.5s linear infinite; }
+        @keyframes zebra-move { 0% { background-position: 0 0; } 100% { background-position: 28.28px 0; } }
+        .state-disabled .q-body { background-color: rgba(255, 255, 255, 0.9); margin: 6px; border-radius: 6px; padding: 12px; border: 1px solid #FDE68A; }
+
+        .state-standby { border-left-color: #64748B !important; background-color: #F1F5F9 !important; border: 1px solid #CBD5E1 !important; border-left-width: 12px !important; background-image: linear-gradient(rgba(100, 116, 139, 0.15) 2px, transparent 2px), linear-gradient(90deg, rgba(100, 116, 139, 0.15) 2px, transparent 2px) !important; background-size: 20px 20px !important; }
+        .state-standby .q-banner { display: block; background-color: #334155; color: #FFFFFF; letter-spacing: 2px; text-align: center; font-size: 11px; padding: 4px 0; font-weight: 900; }
+        .state-standby .q-body { background-color: rgba(255, 255, 255, 0.95); margin: 6px; border-radius: 6px; padding: 12px; border: 1px solid #E2E8F0; }
+
+        .status-expired { border-left-color: #991B1B !important; background-color: #7F1D1D !important; border-color: #DC2626 !important; animation: alarm-breathe 3s ease-in-out infinite; }
+        .status-expired .q-banner { display: block; background-color: #000; color: #EF4444; text-align: center; font-size: 11px; padding: 4px 0; font-weight: 900; }
+        @keyframes alarm-breathe { 0%, 100% { box-shadow: 0 0 5px rgba(220, 38, 38, 0.2); } 50% { box-shadow: 0 0 15px rgba(220, 38, 38, 0.6); } }
+        
+        .timer-badge { font-size: 11px; padding: 2px 6px; border-radius: 4px; font-weight: 900; }
+        .timer-ok { background: #E2E8F0; color: #475569; }
+        .timer-soon { background: #FEF3C7; color: #B45309; }
+        .timer-expired { background: #FEE2E2; color: #DC2626; border: 1px solid #FCA5A5; }
+    </style>
 </head>
-<body>
-<div class="container">
+<body class="flex flex-col min-h-screen">
 
-  <header>
-    <div class="logo">
-      <h1>note<span>/</span>pad</h1>
-      <p>bloc-note collaboratif · temps réel</p>
+    <header class="bg-slate-900 text-white sticky top-0 z-50 shadow-md h-20 flex items-center px-6">
+        <div class="max-w-[1920px] mx-auto w-full flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <div class="bg-blue-600 w-10 h-10 rounded-lg flex items-center justify-center shadow-lg shadow-blue-500/20"><i class="fa-solid fa-plane-up text-xl"></i></div>
+                <div>
+                    <h1 class="text-xl font-black uppercase tracking-tight">Planing QA <span class="text-blue-400">Sliman</span></h1>
+                    <p class="text-[10px] text-slate-400 uppercase font-bold tracking-widest">Pilotage Opérationnel</p>
+                </div>
+            </div>
+
+            <button onclick="openValidatedModal()" class="hidden md:flex items-center bg-slate-800 border border-slate-700 px-6 py-2 rounded-lg gap-4 hover:bg-slate-700 transition-colors shadow-sm">
+                <div class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_#10B981]"></div>
+                <span class="text-xs font-bold uppercase text-slate-300">Validations Hebdo</span>
+                <span id="global-counter" class="text-xl font-black text-emerald-400 mono">0</span>
+            </button>
+            
+            <div class="flex items-center gap-3">
+                <div class="hidden sm:flex items-center bg-slate-800 border border-slate-700 rounded-lg overflow-hidden shadow-sm h-10">
+                    <button onclick="zoomOut()" class="w-8 h-full flex items-center justify-center hover:bg-slate-700 text-slate-400 hover:text-white transition-colors" title="Réduire la taille"><i class="fa-solid fa-minus text-xs"></i></button>
+                    <span id="zoom-level" class="text-xs font-bold text-slate-300 w-10 text-center select-none">100%</span>
+                    <button onclick="zoomIn()" class="w-8 h-full flex items-center justify-center hover:bg-slate-700 text-slate-400 hover:text-white transition-colors" title="Agrandir la taille"><i class="fa-solid fa-plus text-xs"></i></button>
+                </div>
+
+                <div class="relative hidden sm:block">
+                    <i class="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm"></i>
+                    <input type="text" id="searchInput" onkeyup="renderTable()" placeholder="Rechercher un opérateur..." class="pl-9 pr-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm text-white focus:border-blue-500 focus:outline-none w-60">
+                </div>
+                <button onclick="openManageModal()" class="w-10 h-10 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center hover:bg-slate-700 transition-colors text-slate-300 hover:text-white" title="Base de données">
+                    <i class="fa-solid fa-database"></i>
+                </button>
+                <button onclick="checkDevAccess()" class="w-10 h-10 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-slate-800 transition-colors text-slate-600 hover:text-slate-400" title="Mode Développeur">
+                    <i class="fa-solid fa-code"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow p-4 md:p-6 overflow-hidden flex flex-col max-w-[1920px] mx-auto w-full">
+        <!-- ONGLETS PRINCIPAUX -->
+        <div class="flex items-center gap-3 mb-4">
+            <button onclick="switchTab('operators')" id="tab-operators" class="px-5 py-2.5 bg-blue-600 text-white rounded-xl font-bold shadow-md transition-colors text-sm flex items-center gap-2">
+                <i class="fa-solid fa-users"></i> Suivi Opérateurs
+            </button>
+            <button onclick="switchTab('stats')" id="tab-stats" class="px-5 py-2.5 bg-white text-slate-600 rounded-xl font-bold shadow-sm border border-slate-200 transition-colors text-sm flex items-center gap-2">
+                <i class="fa-solid fa-chart-pie"></i> Statistiques & KPI
+            </button>
+        </div>
+
+        <!-- ONGLET 1 : SUIVI DES OPÉRATEURS -->
+        <div id="view-operators" class="bg-white border border-slate-200 overflow-auto flex-grow rounded-xl shadow-sm flex flex-col">
+            <table class="w-full text-sm border-separate border-spacing-0">
+                <thead class="bg-slate-50 sticky top-0 z-10 border-b-2 border-slate-200 shadow-sm">
+                    <tr class="text-slate-500 uppercase font-black text-[11px] tracking-widest">
+                        <th class="px-6 py-4 w-[15%] border-r-2 border-slate-200 text-left">Opérateur</th>
+                        <th class="px-6 py-4 w-[78%] text-left">Cartographie des Qualifications</th>
+                        <th class="px-4 py-4 w-[7%] border-l-2 border-slate-200 text-center">Indicateur</th>
+                    </tr>
+                </thead>
+                <!-- DÉMARCATION RENFORCÉE ENTRE LES LIGNES ICI -->
+                <tbody id="tableBody" class="divide-y-4 divide-slate-200"></tbody>
+            </table>
+        </div>
+
+        <!-- ONGLET 2 : STATISTIQUES ET KPI -->
+        <div id="view-stats" class="hidden bg-white border border-slate-200 overflow-auto flex-grow rounded-xl shadow-sm flex flex-col p-6">
+            
+            <!-- SOUS-MENU DES STATS -->
+            <div class="flex items-center gap-2 mb-6 border-b border-slate-200 pb-4">
+                <button onclick="switchSubStat('global')" id="btn-sub-global" class="px-5 py-2.5 bg-slate-800 text-white rounded-lg font-bold text-xs uppercase tracking-wider transition-colors shadow-sm">Tendance Globale</button>
+                <button onclick="switchSubStat('hebdo')" id="btn-sub-hebdo" class="px-5 py-2.5 bg-slate-100 text-slate-500 hover:bg-slate-200 rounded-lg font-bold text-xs uppercase tracking-wider transition-colors">Résumé de la Semaine</button>
+            </div>
+
+            <!-- CONTENU : TENDANCE GLOBALE -->
+            <div id="subview-global" class="flex flex-col gap-6">
+                <!-- LIGNE DES COMPTEURS GLOBAUX -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4" id="kpi-row"></div>
+
+                <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm h-80 relative">
+                    <div class="flex justify-between items-center mb-2">
+                        <div>
+                            <h3 class="text-slate-800 font-black uppercase text-sm tracking-tight"><i class="fa-solid fa-chart-line text-blue-500 mr-2"></i>Tendance de Production Historique</h3>
+                            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Réalisé (Validé) vs. Charge Totale sur les dernières semaines</p>
+                        </div>
+                        <div class="text-[10px] font-bold bg-slate-100 text-slate-500 px-3 py-1 rounded-lg border border-slate-200 flex items-center">
+                            <i class="fa-solid fa-circle text-emerald-500 text-[8px] mr-1 animate-pulse"></i> Dynamique
+                        </div>
+                    </div>
+                    <div class="flex-grow relative w-full h-full mt-2">
+                        <canvas id="velocityChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="border border-slate-200 rounded-xl overflow-hidden shadow-sm flex flex-col mt-2">
+                    <table class="w-full text-sm text-left">
+                        <thead class="bg-slate-50 border-b border-slate-200">
+                            <tr class="text-slate-500 uppercase font-black text-[10px] tracking-widest">
+                                <th class="px-6 py-4 border-r border-slate-200">Qualification / Process</th>
+                                <th class="px-6 py-4 text-center border-r border-slate-200 w-24">Total</th>
+                                <th class="px-6 py-4 text-center border-r border-slate-200 w-28 text-blue-600">Réalisable</th>
+                                <th class="px-6 py-4 text-center border-r border-slate-200 w-28 text-emerald-600">Validé</th>
+                                <th class="px-6 py-4 text-center border-r border-slate-200 w-24 text-amber-600">Bloqué</th>
+                                <th class="px-6 py-4 text-center w-40">Taux Réalisable</th>
+                            </tr>
+                        </thead>
+                        <tbody id="stats-tbody" class="divide-y divide-slate-100 bg-white"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- CONTENU : RÉSUMÉ DE LA SEMAINE -->
+            <div id="subview-hebdo" class="hidden flex-col gap-6">
+                <!-- Ligne des compteurs spécifiques -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="kpi-row-2"></div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="kpi-details-row"></div>
+                <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl text-center text-slate-400 text-sm font-bold mt-2">
+                    <i class="fa-solid fa-info-circle mr-2"></i> Le résumé de la semaine est calculé du Mercredi précédent au Mercredi suivant.
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="bg-white border-t border-slate-200 px-6 py-4 mt-auto">
+        <div class="max-w-[1920px] mx-auto flex flex-wrap justify-between items-center gap-4 text-xs font-bold text-slate-600">
+            <div class="flex gap-6 overflow-x-auto">
+                <span class="flex items-center gap-2"><span class="w-3 h-3 bg-[#10B981] rounded-sm"></span> Validé</span>
+                <span class="flex items-center gap-2"><span class="w-3 h-3 bg-[#00E5FF] rounded-sm"></span> Priorité (Avion/Éclair)</span>
+                <span class="flex items-center gap-2"><span class="w-3 h-3 bg-[#F59E0B] rounded-sm"></span> Pas en Capacité</span>
+                <span class="flex items-center gap-2"><span class="w-3 h-3 bg-[#64748B] rounded-sm"></span> Standby</span>
+                <span class="flex items-center gap-2"><span class="w-3 h-3 bg-[#EF4444] rounded-sm animate-pulse"></span> Échu</span>
+            </div>
+            <div class="text-slate-400 font-mono text-[11px]"><i class="fa-solid fa-rotate"></i> Reset validations: Mercredi 23:59</div>
+        </div>
+    </footer>
+
+    <!-- MODAL : ACTION -->
+    <div id="qualif-action-modal" class="fixed inset-0 bg-slate-900/50 hidden z-[200] flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden border border-slate-200">
+            <div class="p-5 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
+                <h3 id="modal-qualif-title" class="font-black text-sm text-slate-800 uppercase mono">CODE</h3>
+                <button onclick="closeQualifMenu()" class="text-slate-400 hover:text-slate-700 bg-slate-200 hover:bg-slate-300 w-8 h-8 rounded-lg transition-colors"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="p-3 space-y-2">
+                <button onclick="setQualifState('validated')" class="w-full p-4 flex items-center gap-4 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold text-sm rounded-xl transition-colors text-left border border-emerald-100">
+                    <div class="w-8 h-8 rounded-full bg-emerald-200 flex items-center justify-center"><i class="fa-solid fa-check text-emerald-700"></i></div> Valider
+                </button>
+                <button onclick="setQualifState('priority')" class="w-full p-4 flex items-center gap-4 bg-sky-50 hover:bg-sky-100 text-sky-700 font-bold text-sm rounded-xl transition-colors text-left border border-sky-200">
+                    <div class="w-8 h-8 rounded-full bg-sky-200 flex items-center justify-center"><i class="fa-solid fa-plane-up text-sky-700"></i></div> Priorité Journée
+                </button>
+                <button onclick="setQualifState('disabled')" class="w-full p-4 flex items-center gap-4 bg-amber-50 hover:bg-amber-100 text-amber-800 font-bold text-sm rounded-xl transition-colors text-left border border-amber-200 shadow-sm">
+                    <div class="w-8 h-8 rounded-full bg-amber-200 flex items-center justify-center"><i class="fa-solid fa-lock text-amber-800"></i></div> PAS EN CAPACITÉ
+                </button>
+                <button onclick="setQualifState('standby')" class="w-full p-4 flex items-center gap-4 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-sm rounded-xl transition-colors text-left border border-slate-300">
+                    <div class="w-8 h-8 rounded-full bg-slate-300 flex items-center justify-center"><i class="fa-solid fa-pause text-slate-700"></i></div> En Standby
+                </button>
+                <div class="h-px w-full bg-slate-100 my-2"></div>
+                <div class="p-3 bg-slate-50 rounded-xl border border-slate-200">
+                    <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2 block"><i class="fa-solid fa-pen mr-1"></i> Note / Commentaire</label>
+                    <textarea id="modal-qualif-note" class="w-full text-xs p-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 outline-none resize-none h-16 shadow-inner" placeholder="Ajouter une note (ex: OF manquant...)"></textarea>
+                    <button onclick="saveQualifNote()" class="mt-2 w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs rounded-lg transition-colors shadow-md">Enregistrer la note</button>
+                </div>
+                <button onclick="setQualifState('normal')" class="w-full p-4 flex items-center gap-4 bg-white hover:bg-slate-50 text-slate-500 font-bold text-sm rounded-xl transition-colors text-left border border-slate-200 mt-2">
+                    <div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center"><i class="fa-solid fa-arrow-rotate-left text-slate-500"></i></div> Réinitialiser l'état
+                </button>
+            </div>
+        </div>
     </div>
-    <div class="status">
-      <div class="dot" id="dot"></div>
-      <span id="stxt">déconnecté</span>
+
+    <!-- MODAL : AJOUTER QUALIF DIRECTEMENT AU COMPAGNON -->
+    <div id="add-qualif-modal" class="fixed inset-0 bg-slate-900/50 hidden z-[250] flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden border border-slate-200">
+            <div class="p-5 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
+                <h3 class="font-black text-sm text-slate-800 uppercase">Ajouter Qualif : <span id="add-qualif-op-name" class="text-blue-600"></span></h3>
+                <button onclick="closeAddQualifMenu()" class="text-slate-400 hover:text-slate-700 bg-slate-200 hover:bg-slate-300 w-8 h-8 rounded-lg transition-colors"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="p-5 space-y-4">
+                <div>
+                    <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1 block">Qualification</label>
+                    <select id="new-q-select" class="w-full text-sm p-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 outline-none bg-slate-50 font-mono font-bold text-slate-700">
+                        <!-- Options generated by JS -->
+                    </select>
+                </div>
+                <div>
+                    <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2 block">Type d'évaluation</label>
+                    <div class="flex gap-4">
+                        <label class="flex items-center gap-2 cursor-pointer bg-slate-50 p-2 border border-slate-200 rounded-lg flex-1">
+                            <input type="radio" name="q-type" value="O" checked onchange="toggleDateField()" class="w-4 h-4 text-blue-600">
+                            <span class="text-xs font-bold text-slate-700">Initiale (Sans date)</span>
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer bg-slate-50 p-2 border border-slate-200 rounded-lg flex-1">
+                            <input type="radio" name="q-type" value="N" onchange="toggleDateField()" class="w-4 h-4 text-blue-600">
+                            <span class="text-xs font-bold text-slate-700">Prorogation</span>
+                        </label>
+                    </div>
+                </div>
+                <div id="date-input-container" class="hidden">
+                    <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1 block">Date d'expiration</label>
+                    <input type="date" id="new-q-date" class="w-full text-sm p-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 outline-none bg-slate-50">
+                </div>
+                <button onclick="submitNewQualif()" class="w-full py-3 mt-4 bg-blue-600 hover:bg-blue-700 text-white font-black text-sm rounded-xl transition-colors shadow-md uppercase tracking-wider">
+                    <i class="fa-solid fa-plus mr-2"></i> Ajouter au Compagnon
+                </button>
+            </div>
+        </div>
     </div>
-  </header>
 
-  <div id="cfg-warn">
-    ⚠️ Firebase non configuré ! Ouvre ce fichier, trouve la section <code>firebaseConfig</code>
-    et remplace les valeurs par les tiennes.
-    <a href="https://console.firebase.google.com/" target="_blank"> → console.firebase.google.com</a>
-  </div>
-
-  <!-- LOGIN -->
-  <div id="login">
-    <h2>Rejoindre le bloc-note</h2>
-    <p>Tout ce que tu écris est visible par tous en temps réel.<br/>Entre ton prénom pour commencer.</p>
-    <input class="inp" id="name-inp" type="text" placeholder="Ton prénom ou pseudo…" maxlength="24" autocomplete="off"/>
-    <button class="btn" id="join-btn">Accéder →</button>
-  </div>
-
-  <!-- APP -->
-  <div id="app">
-    <div class="toolbar">
-      <div class="badge" id="badge">—</div>
-      <div class="online">connectés : <span id="cnt">1</span></div>
+    <!-- MODAL : BDD -->
+    <div id="manage-modal" class="fixed inset-0 bg-slate-900/60 hidden z-[100] flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-5xl flex flex-col h-[85vh] border border-slate-200">
+            <div class="bg-slate-800 p-5 text-white flex justify-between items-center rounded-t-xl">
+                <h2 class="text-base font-black uppercase flex items-center gap-2"><i class="fa-solid fa-database text-blue-400"></i> Données Compagnons</h2>
+                <button onclick="closeManageModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            <div class="p-4 bg-slate-50 border-b border-slate-200 grid grid-cols-1 md:grid-cols-4 gap-3">
+                <input type="text" id="new-nom" placeholder="NOM Prénom" class="p-2.5 border rounded-lg text-sm font-bold uppercase focus:ring-2 focus:ring-blue-500 outline-none">
+                <input type="text" id="new-qualifs" placeholder="CODE-Nom|Date|O/N" class="p-2.5 border rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none md:col-span-2 font-mono">
+                <button onclick="addEntry()" class="bg-blue-600 text-white font-bold p-2.5 rounded-lg text-sm hover:bg-blue-700 transition-colors">Ajouter</button>
+            </div>
+            <div class="overflow-auto flex-grow p-4">
+                <table class="w-full text-xs text-left">
+                    <thead class="font-black uppercase text-slate-400 border-b border-slate-200">
+                        <tr><th class="pb-2 w-1/4">Nom</th><th class="pb-2 w-3/4">Qualifications (Brut)</th><th class="pb-2 text-right">Sup.</th></tr>
+                    </thead>
+                    <tbody id="manage-tbody" class="divide-y divide-slate-100 font-mono text-[11px] text-slate-600"></tbody>
+                </table>
+            </div>
+        </div>
     </div>
-    <div class="wrap">
-      <textarea id="pad" placeholder="Commence à écrire… tout le monde voit en temps réel."></textarea>
-      <div id="save-info">sauvegarde…</div>
+
+    <!-- MODAL : LISTE DES VALIDATIONS HEBDO -->
+    <div id="validated-modal" class="fixed inset-0 bg-slate-900/60 hidden z-[100] flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl flex flex-col max-h-[85vh] border border-slate-200">
+            <div class="bg-slate-800 p-5 text-white flex justify-between items-center rounded-t-xl">
+                <h2 class="text-base font-black uppercase flex items-center gap-2"><i class="fa-solid fa-check-circle text-emerald-400"></i> Historique des Validations Hebdo</h2>
+                <button onclick="closeValidatedModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            <div class="overflow-auto flex-grow p-4">
+                <table class="w-full text-sm text-left">
+                    <thead class="font-black uppercase text-slate-400 border-b border-slate-200 text-xs">
+                        <tr><th class="pb-2 w-1/3">Opérateur</th><th class="pb-2 w-1/4">Code</th><th class="pb-2 w-5/12">Qualification</th></tr>
+                    </thead>
+                    <tbody id="validated-tbody" class="divide-y divide-slate-100 font-medium text-slate-700"></tbody>
+                </table>
+            </div>
+        </div>
     </div>
-    <div class="meta">
-      <span id="chars">0 caractères</span>
-      <span id="last-edit"></span>
+
+    <!-- MODAL : DÉVELOPPEUR (TIME MACHINE) -->
+    <div id="dev-modal" class="fixed inset-0 bg-slate-900/80 hidden z-[300] flex items-center justify-center p-4">
+        <div class="bg-slate-900 rounded-xl shadow-2xl w-full max-w-3xl flex flex-col h-[75vh] border border-slate-700">
+            <div class="bg-black p-5 text-white flex justify-between items-center rounded-t-xl border-b border-slate-800">
+                <h2 class="text-base font-black uppercase flex items-center gap-3 text-blue-400">
+                    <i class="fa-solid fa-terminal"></i> Console Admin - Time Machine
+                </h2>
+                <button onclick="closeDevModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            <div class="p-4 bg-slate-800 text-xs text-amber-400 border-b border-slate-700 flex items-center gap-3">
+                <i class="fa-solid fa-triangle-exclamation text-xl"></i>
+                <p><b>Sécurité activée :</b> Le système enregistre automatiquement les dernières actions. Vous pouvez restaurer le tableau à un instant précis en cas d'erreur de manipulation.</p>
+            </div>
+            <div class="overflow-auto flex-grow p-4 bg-slate-900">
+                <table class="w-full text-sm text-left">
+                    <thead class="font-black uppercase text-slate-500 border-b border-slate-700 text-xs">
+                        <tr><th class="pb-3 w-1/2">Date et Heure de la Sauvegarde</th><th class="pb-3 text-right">Action de restauration</th></tr>
+                    </thead>
+                    <tbody id="dev-tbody" class="divide-y divide-slate-800 font-mono text-slate-300 text-[11px]"></tbody>
+                </table>
+            </div>
+        </div>
     </div>
-    <div class="actions">
-      <button class="btn-s" id="copy-btn">copier</button>
-      <button class="btn-s" id="dl-btn">télécharger .txt</button>
-      <button class="btn-s del" id="clear-btn">effacer tout</button>
-      <button class="btn-s" id="leave-btn">quitter</button>
-    </div>
-    <div class="log-section">
-      <h3>Activité récente</h3>
-      <div id="log"></div>
-    </div>
-  </div>
 
-</div>
+    <script>
+        const CURRENT_KEY = 'cockpit_p40_master_safe_v3_clean'; 
+        const HISTORY_KEY = 'cockpit_p40_history_permanent';
+        const STATS_KEY = 'cockpit_p40_weekly_stats_permanent';
 
-<script type="module">
-import { initializeApp }   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getDatabase, ref, set, onValue, push, onDisconnect, query, limitToLast }
-  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+        // --- LISTE OFFICIELLE ET NETTOYÉE DES QUALIFICATIONS ---
+        const QUALIFS_LIST = [
+            "ET0O45-Certification étanchage",
+            "B40TE31-Install harness+torquage",
+            "BCO0E30-Collage Support Electrique",
+            "BCO0S00-Collage Support Matelas",
+            "BCO0S34-Collage avec résine",
+            "BDE0S00-Dépose EQ ou éléments",
+            "BME0E31-Mesure métallisation élec",
+            "BME0S00-Mesure métallisation méca",
+            "BMT0S03-Mtge joint tuyauterie",
+            "BOP1E31-Fibre Optic",
+            "BP40A05-Essai Recherche de Fuite",
+            "BP40E30-Elec Install Core Compet",
+            "BP40E31-Install Elec. Harnesses",
+            "BP40E32-Install Elec. Equipment",
+            "BP40E35-A/C C cable connection",
+            "BP40E36-A/C Z cable connection",
+            "BP40L07-Mouler/Démouler Avion",
+            "BP40O45-Réalis Opérat° Etancheite",
+            "BP40P01-Compétence Basic Peintre",
+            "BP40P02-Appliq Peinture Finition",
+            "BP40S00-Basic Metier Assemblage",
+            "BP40S01-Mont Méca avec Réglage",
+            "BP40S02-Hydraulique",
+            "BP40S03-Carburant",
+            "BP40S05-Circuit Eaux",
+            "BP40S07-Conditionnement Air",
+            "BP40S08-Extinction",
+            "BP40S10-Commande de Vol",
+            "BP40S11-Trains",
+            "BP40S12-Pneumatique",
+            "BP40S20-Assemb/Ajust Elmt Struct",
+            "BP40S21-Assemb/Ajuster Composite",
+            "BP40S23-Mettre en RéfGrandePiece",
+            "BP40S25-Inst/RéglerElémentCdeVol",
+            "BP40S27-Mont et Régler Empennages",
+            "BP40S37-Ajusteur photogramétrie",
+            "BPV0S00-Pose visserie",
+            "BPV3S21-Pose visserie dans composit",
+            "BPV4S21-Pose visserie A350",
+            "BRC0C19-Retou compos sans moy chauf",
+            "BRC0C20-retou compos avec moy chauf",
+            "BSC0E30-Opérat°couple serrage élec",
+            "BSC0S00-Opérat°couple serrage",
+            "BSC0S02-Serrage couple hydraulique",
+            "BSE1S02-Sertissage Rynglok",
+            "BSE9S02-Sertissage Permaswage",
+            "BTS0S00-Application Alodine"
+        ];
 
-// ============================================================
-//  🔧 REMPLACE CES VALEURS PAR TES CLÉS FIREBASE
-//  1. Va sur https://console.firebase.google.com/
-//  2. Crée un projet → Realtime Database → mode test
-//  3. Paramètres du projet → Ajouter une app Web → copie ici
-// ============================================================
-const firebaseConfig = {
-  apiKey:            "COLLE_TON_API_KEY_ICI",
-  authDomain:        "COLLE_TON_AUTH_DOMAIN_ICI",
-  databaseURL:       "COLLE_TON_DATABASE_URL_ICI",
-  projectId:         "COLLE_TON_PROJECT_ID_ICI",
-  storageBucket:     "COLLE_TON_STORAGE_BUCKET_ICI",
-  messagingSenderId: "COLLE_TON_MESSAGING_SENDER_ID_ICI",
-  appId:             "COLLE_TON_APP_ID_ICI"
-};
-// ============================================================
+        let database = [];
+        let currentActiveQualif = { opIdx: -1, qIdx: -1 };
+        let currentOpForAdd = -1; // Pour le menu Ajouter Qualif
+        let currentValidatedList = [];
+        let velocityChartInstance = null; 
 
-const NOT_CONFIGURED = firebaseConfig.apiKey === "COLLE_TON_API_KEY_ICI";
-if (NOT_CONFIGURED) document.getElementById('cfg-warn').style.display = 'block';
+        window.onload = () => { 
+            initializeDatabase(); 
+            performWeeklyPurge(); 
+            renderTable(); 
+        };
 
-let db, user, saveTimer, remote = false;
+        function switchTab(tabId) {
+            if (tabId === 'operators') {
+                document.getElementById('view-operators').classList.remove('hidden');
+                document.getElementById('view-stats').classList.add('hidden');
+                document.getElementById('tab-operators').className = "px-5 py-2.5 bg-blue-600 text-white rounded-xl font-bold shadow-md transition-colors text-sm flex items-center gap-2";
+                document.getElementById('tab-stats').className = "px-5 py-2.5 bg-white text-slate-600 rounded-xl font-bold shadow-sm hover:bg-slate-50 border border-slate-200 transition-colors text-sm flex items-center gap-2";
+            } else {
+                document.getElementById('view-operators').classList.add('hidden');
+                document.getElementById('view-stats').classList.remove('hidden');
+                document.getElementById('tab-stats').className = "px-5 py-2.5 bg-blue-600 text-white rounded-xl font-bold shadow-md transition-colors text-sm flex items-center gap-2";
+                document.getElementById('tab-operators').className = "px-5 py-2.5 bg-white text-slate-600 rounded-xl font-bold shadow-sm hover:bg-slate-50 border border-slate-200 transition-colors text-sm flex items-center gap-2";
+                renderStats();
+            }
+        }
 
-try {
-  db = getDatabase(initializeApp(firebaseConfig));
-} catch(e) { console.error(e); }
+        function switchSubStat(tab) {
+            document.getElementById('subview-global').classList.toggle('hidden', tab !== 'global');
+            document.getElementById('subview-hebdo').classList.toggle('hidden', tab !== 'hebdo');
+            
+            const btnGlobal = document.getElementById('btn-sub-global');
+            const btnHebdo = document.getElementById('btn-sub-hebdo');
 
-// Helpers
-const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-const hms = ts => ts ? new Date(ts).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit',second:'2-digit'}) : '';
-function dot(cls, txt) {
-  document.getElementById('dot').className = 'dot ' + cls;
-  document.getElementById('stxt').textContent = txt;
-}
-function saveMsg(txt, ok) {
-  const el = document.getElementById('save-info');
-  el.textContent = txt; el.className = 'show' + (ok ? ' ok' : '');
-  if (ok) setTimeout(() => el.className = '', 1800);
-}
-function logAdd(u, m, ts) {
-  const d = document.createElement('div');
-  d.className = 'li';
-  d.innerHTML = `<span class="t">${hms(ts)}</span><span class="u">${esc(u)}</span><span class="m">${esc(m)}</span>`;
-  document.getElementById('log').prepend(d);
-}
-function logPush(action) {
-  if (!db) return;
-  push(ref(db,'notepad/activity'), { user, action, timestamp: Date.now() });
-}
+            if (tab === 'global') {
+                btnGlobal.className = "px-5 py-2.5 bg-slate-800 text-white rounded-lg font-bold text-xs uppercase tracking-wider transition-colors shadow-sm";
+                btnHebdo.className = "px-5 py-2.5 bg-slate-100 text-slate-500 hover:bg-slate-200 rounded-lg font-bold text-xs uppercase tracking-wider transition-colors";
+                if (velocityChartInstance) velocityChartInstance.update();
+            } else {
+                btnGlobal.className = "px-5 py-2.5 bg-slate-100 text-slate-500 hover:bg-slate-200 rounded-lg font-bold text-xs uppercase tracking-wider transition-colors";
+                btnHebdo.className = "px-5 py-2.5 bg-slate-800 text-white rounded-lg font-bold text-xs uppercase tracking-wider transition-colors shadow-sm";
+            }
+        }
 
-// Rejoindre
-function join() {
-  const v = document.getElementById('name-inp').value.trim();
-  if (!v) { document.getElementById('name-inp').style.borderColor='var(--danger)'; return; }
-  user = v;
-  document.getElementById('login').style.display = 'none';
-  document.getElementById('app').style.display = 'block';
-  document.getElementById('badge').textContent = user;
+        function getWeekNumber(d) {
+            d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+            d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay()||7));
+            var yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
+            return Math.ceil((((d - yearStart) / 86400000) + 1)/7);
+        }
 
-  if (!db) { dot('err','Firebase non configuré'); return; }
-  dot('on','connecté');
+        function initializeDatabase() {
+            let savedData = localStorage.getItem(CURRENT_KEY);
+            
+            if (!savedData) {
+                const possibleOldKeys = [
+                    'cockpit_p40_stable_final_v4', 'cockpit_p40_stable_final_v5', 'cockpit_p40_stable_final_v6',
+                    'cockpit_p40_final_v11', 'cockpit_p40_final_v12', 'cockpit_p40_production_permanente', 'cockpit_p40_master_safe'
+                ];
 
-  // Présence
-  const pRef = ref(db, 'presence/' + Date.now() + '_' + Math.random().toString(36).slice(2));
-  set(pRef, { name: user });
-  onDisconnect(pRef).remove();
-  onValue(ref(db,'presence'), s => {
-    document.getElementById('cnt').textContent = s.exists() ? Object.keys(s.val()).length : 0;
-  });
+                let bestData = null;
+                let maxMods = -1;
 
-  // Contenu
-  onValue(ref(db,'notepad/content'), s => {
-    if (!s.exists()) return;
-    const d = s.val();
-    remote = true;
-    const ta = document.getElementById('pad');
-    const pos = ta.selectionStart;
-    ta.value = d.text || '';
-    try { ta.setSelectionRange(pos,pos); } catch(e){}
-    remote = false;
-    document.getElementById('chars').textContent = (d.text||'').length + ' caractères';
-    if (d.editedBy && d.timestamp)
-      document.getElementById('last-edit').innerHTML =
-        `modifié par <strong>${esc(d.editedBy)}</strong> · ${hms(d.timestamp)}`;
-  });
+                for (let key of possibleOldKeys) {
+                    let dataStr = localStorage.getItem(key);
+                    if (dataStr) {
+                        let countMods = (dataStr.match(/validated|disabled|standby|priority/g) || []).length;
+                        if (countMods > maxMods) {
+                            maxMods = countMods;
+                            bestData = dataStr;
+                        }
+                    }
+                }
 
-  // Activité
-  onValue(query(ref(db,'notepad/activity'), limitToLast(25)), s => {
-    if (!s.exists()) return;
-    document.getElementById('log').innerHTML = '';
-    Object.values(s.val()).reverse().forEach(i => logAdd(i.user, i.action, i.timestamp));
-  });
+                if (bestData) {
+                    database = JSON.parse(bestData);
+                } else {
+                    database = [
+                        { nom: "ATTARD THEO", qualifs: "BSC0E30-Serrage Elec|15/07/2026|N|disabled, BTS0S00-Alodine|3/10/2026|N|disabled" },
+                        { nom: "CROUZERY NICOLAS", qualifs: "PSIVXBTS0S00-Application Alodine|À QUALIFIER|O|validated" },
+                        { nom: "DAPREMONT MAXIME", qualifs: "BCO0S34-Collage résine|À QUALIFIER|O, BET0O45-Etanchage|À QUALIFIER|O, BPV4S21-Visserie A350|À QUALIFIER|O, BSC0S00-Serrage Meca|À QUALIFIER|O, BPV3S21-Visserie composite|À QUALIFIER|O, BPV0S00-Visserie structurale|À QUALIFIER|O, BOP1E31-Fibre Optic|À QUALIFIER|O, BP40S21-Assemb Composite|À QUALIFIER|O" },
+                        { nom: "DARAN ALEXANDRE", qualifs: "BP40S03-Carburant|31/01/2026|N, BP40S20-Assemb Struct|13/02/2026|N, BPV0S00-Visserie structurale|17/07/2026|N, BP40S37-Ajusteur photogramétrie|03/02/2026|N" },
+                        { nom: "DI STASI THOMAS", qualifs: "BET0O45-Etanchage|05/06/2026|N" },
+                        { nom: "FAGES CLEMENT", qualifs: "BP40S03-Carburant|18/03/2026|N, BP40S05-Circuit Eaux|03/02/2026|N, BTS0S00-Alodine|13/02/2026|N" },
+                        { nom: "GIMENEZ JULIEN", qualifs: "" },
+                        { nom: "GIRARDINI VINCENT", qualifs: "BP40S01-Mont Méca Réglage|À QUALIFIER|O|standby, BP40S05-Circuit Eaux|À QUALIFIER|O|standby, BP40S10-Commande de Vol|À QUALIFIER|O|standby, BP40S23-Mettre en RéfGrandePiece|À QUALIFIER|O|standby" },
+                        { nom: "GONGORA BORIS", qualifs: "BSC0S02-Serrage hydraulique|05/06/2026|N, BSE9S02-Permaswage|05/05/2026|N, BSC0E30-Serrage Elec|16/09/2026|N, BP40P01-Peintre Basic|À QUALIFIER|O, BP40P02-Peinture Finition|À QUALIFIER|O" },
+                        { nom: "KURTH LUC", qualifs: "BP40S05-Circuit Eaux|À QUALIFIER|O|standby, BP40E30-Elec Core Compet|À QUALIFIER|O|standby" },
+                        { nom: "MARIA NICOLAS", qualifs: "" },
+                        { nom: "MARTIN KÉVIN", qualifs: "BP40E30-Elec Core Compet|06/02/2026|N, BSC0S00-Serrage Meca|15/07/2026|N, BPV3S21-Pose visserie composit|15/07/2026|N, BP40S20-Assemb Struct|À QUALIFIER|O" },
+                        { nom: "MICHEL FREDERIC", qualifs: "BTS0S00-Alodine|À QUALIFIER|O" },
+                        { nom: "MORELLATO WILLIAM", qualifs: "BP40S10-Commande de Vol|À QUALIFIER|O|standby, BME0E31-Métallisation|24/03/2026|N|standby" },
+                        { nom: "RIVIERE ENZO", qualifs: "BRC0C19-Retou sans moy chauf|À QUALIFIER|O, BSC0S00-Serrage Meca|02/06/2026|N, BP40S01-Mont Méca Réglage|05/05/2026|N, BPV3S21-Pose visserie composit|02/06/2026|N, BPV0S00-Visserie structurale|17/07/2026|N" },
+                        { nom: "SANCE ALLAN", qualifs: "BMT0S03-Tuyauterie carbu|À QUALIFIER|O" },
+                        { nom: "SEGUE MAIRONE", qualifs: "BME0S00-Métallisation|À QUALIFIER|O, BSC0S02-Serrage hydraulique|À QUALIFIER|O|disabled" },
+                        { nom: "SCALLI GUILLAUME", qualifs: "BTS0S00-Alodine|À QUALIFIER|O|priority" },
+                        { nom: "ETHAN WHITE", qualifs: "BME0E31-Métallisation|À QUALIFIER|O|priority" }
+                    ];
+                }
 
-  logPush('a rejoint le bloc-note');
-  document.getElementById('pad').addEventListener('input', onInput);
-}
+                let crouzery = database.find(o => o.nom.toUpperCase().includes("CROUZERY"));
+                if (crouzery) {
+                    crouzery.nom = "CROUZERY NICOLAS";
+                    if (!crouzery.qualifs.includes("PSIVXBTS0S00")) {
+                        crouzery.qualifs = crouzery.qualifs.replace(/BTS0S00-Alodine[^,]*/g, "").replace(/,,/g, ',');
+                        crouzery.qualifs = (crouzery.qualifs + ", PSIVXBTS0S00-Application Alodine|À QUALIFIER|O|validated").replace(/^,\s*/, '');
+                    }
+                }
+                
+                persistData();
+            } else {
+                database = JSON.parse(savedData);
+            }
+        }
 
-function onInput() {
-  if (remote || !db) return;
-  const text = document.getElementById('pad').value;
-  document.getElementById('chars').textContent = text.length + ' caractères';
-  saveMsg('sauvegarde…', false);
-  clearTimeout(saveTimer);
-  saveTimer = setTimeout(() => {
-    set(ref(db,'notepad/content'), { text, editedBy: user, timestamp: Date.now() })
-      .then(() => saveMsg('sauvegardé ✓', true));
-  }, 600);
-}
+        function persistData() { 
+            saveToHistory();
+            localStorage.setItem(CURRENT_KEY, JSON.stringify(database)); 
+        }
 
-// Boutons
-document.getElementById('join-btn').onclick = join;
-document.getElementById('name-inp').onkeydown = e => e.key === 'Enter' && join();
+        function saveToHistory() {
+            let history = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
+            const now = new Date();
+            const timeStr = now.toLocaleDateString('fr-FR') + ' à ' + now.toLocaleTimeString('fr-FR');
+            history.unshift({ time: timeStr, data: JSON.parse(JSON.stringify(database)) });
+            if (history.length > 50) history = history.slice(0, 50);
+            localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+        }
 
-document.getElementById('copy-btn').onclick = () => {
-  navigator.clipboard.writeText(document.getElementById('pad').value);
-  saveMsg('copié !', true);
-};
+        function performWeeklyPurge() {
+            const now = new Date();
+            const lastPurgeStr = localStorage.getItem('p40_purge_permanente');
+            let lastWed = new Date();
+            lastWed.setDate(now.getDate() - ((now.getDay() + 4) % 7));
+            lastWed.setHours(23, 59, 59, 999);
+            
+            if (!lastPurgeStr || parseInt(lastPurgeStr) < lastWed.getTime()) {
+                if (now.getTime() > lastWed.getTime()) {
+                    
+                    let weeklyVal = 0, weeklyTot = 0;
+                    database.forEach(op => {
+                        const qs = (op.qualifs || "").split(',').filter(x => x.trim() !== "");
+                        qs.forEach(q => {
+                            weeklyTot++;
+                            if (q.includes('|validated')) weeklyVal++;
+                        });
+                    });
+                    
+                    let chartStats = JSON.parse(localStorage.getItem(STATS_KEY) || '[]');
+                    const weekNum = getWeekNumber(now) - 1; 
+                    chartStats.push({ label: "Sem " + weekNum, val: weeklyVal, tot: weeklyTot });
+                    if (chartStats.length > 10) chartStats.shift(); 
+                    localStorage.setItem(STATS_KEY, JSON.stringify(chartStats));
 
-document.getElementById('dl-btn').onclick = () => {
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(new Blob([document.getElementById('pad').value], {type:'text/plain'}));
-  a.download = 'notepad-' + new Date().toISOString().slice(0,10) + '.txt';
-  a.click();
-};
+                    let changed = false;
+                    database.forEach(op => {
+                        if (!op.qualifs) return;
+                        const oldList = op.qualifs.split(',').filter(x => x.trim() !== "");
+                        const newList = oldList.filter(q => !q.includes('|validated'));
+                        if (newList.length !== oldList.length) { op.qualifs = newList.join(','); changed = true; }
+                    });
+                    localStorage.setItem('p40_purge_permanente', now.getTime().toString());
+                    if (changed) persistData();
+                }
+            }
+        }
 
-document.getElementById('clear-btn').onclick = () => {
-  if (!confirm('Effacer tout le contenu pour tout le monde ?')) return;
-  set(ref(db,'notepad/content'), { text:'', editedBy:user, timestamp:Date.now() });
-  logPush('a effacé le contenu');
-};
+        function analyzeDate(dateStr, isInitial) {
+            if (isInitial || dateStr === "À QUALIFIER") return { status: 'ok', days: null };
+            try {
+                const parts = dateStr.split('/');
+                if(parts.length !== 3) return { status: 'ok', days: null };
+                const expDate = new Date(parts[2], parts[1] - 1, parts[0]);
+                const today = new Date(); today.setHours(0,0,0,0);
+                const diffDays = Math.ceil((expDate - today) / (1000 * 60 * 60 * 24));
+                
+                let status = 'ok';
+                if (diffDays <= 0) status = 'expired';
+                else if (diffDays <= 5) status = 'critical';
+                else if (diffDays <= 15) status = 'warning';
 
-document.getElementById('leave-btn').onclick = () => {
-  logPush('a quitté le bloc-note');
-  setTimeout(() => location.reload(), 400);
-};
-</script>
+                return { status: status, days: diffDays };
+            } catch(e) { return { status: 'ok', days: null }; }
+        }
+
+        function cleanName(text) { return text ? text.replace(/\s*\(.*?\)\s*/g, '').trim() : "QUALIFICATION"; }
+
+        function renderTable() {
+            const tbody = document.getElementById('tableBody');
+            const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+            let totalValidatedCount = 0;
+            currentValidatedList = []; 
+            tbody.innerHTML = '';
+            
+            database.forEach((op, opIdx) => {
+                if (searchQuery && !op.nom.toLowerCase().includes(searchQuery)) return;
+
+                const parsedQualifs = (op.qualifs || "").split(',').filter(x => x.trim() !== "").map((qStr, qIdx) => {
+                    const parts = qStr.trim().split('|');
+                    const codeName = parts[0].split('-');
+                    const state = parts[3] || 'normal';
+                    
+                    if (state === 'validated') {
+                        totalValidatedCount++;
+                        currentValidatedList.push({
+                            nom: op.nom,
+                            code: codeName[0] || "?",
+                            name: cleanName(codeName[1])
+                        });
+                    }
+                    
+                    const note = parts[4] || '';
+                    const isIni = (parts[2] === 'O' || parts[2] === 'o');
+                    return { id: qIdx, code: codeName[0] || "?", name: cleanName(codeName[1]), dateStr: parts[1] || "-", isIni: isIni, state: state, note: note, ...analyzeDate(parts[1], isIni) };
+                });
+
+                parsedQualifs.sort((a, b) => {
+                    if (a.state === 'priority' && b.state !== 'priority') return -1;
+                    if (b.state === 'priority' && a.state !== 'priority') return 1;
+
+                    const bottomStates = ['validated', 'disabled', 'standby', 'not-needed'];
+                    const aIsBottom = bottomStates.includes(a.state);
+                    const bIsBottom = bottomStates.includes(b.state);
+
+                    if (aIsBottom && !bIsBottom) return 1;
+                    if (!aIsBottom && bIsBottom) return -1;
+
+                    if (aIsBottom && bIsBottom) {
+                        if (a.state === 'validated' && b.state !== 'validated') return 1;
+                        if (b.state === 'validated' && a.state !== 'validated') return -1;
+                    }
+
+                    if (a.status === 'expired' && b.status !== 'expired') return -1;
+                    if (b.status === 'expired' && a.status !== 'expired') return 1;
+                    
+                    if (a.days !== null && b.days !== null) return a.days - b.days;
+                    
+                    return (a.isIni) ? -1 : 1;
+                });
+
+                const cardsHtml = parsedQualifs.map(q => {
+                    let cardClasses = q.isIni ? "card-ini" : "card-pro";
+                    let iconHtml = "";
+                    let bannerHtml = "";
+
+                    if (q.state === 'validated') { 
+                        cardClasses += ' state-validated'; 
+                        iconHtml = '<i class="fa-solid fa-circle-check q-icon"></i>'; 
+                    }
+                    else if (q.state === 'priority') { 
+                        cardClasses += ' state-priority'; 
+                        iconHtml = '<i class="fa-solid fa-bolt q-icon"></i>'; 
+                        bannerHtml = `
+                        <div class="q-banner priority-sky">
+                            <div class="plane-wrapper">
+                                <div class="plane-banner-content">
+                                    <i class="fa-solid fa-bullseye text-blue-600"></i> PRIORITÉ JOURNÉE
+                                </div>
+                                <div class="plane-cable"></div>
+                                <svg class="plane-icon" viewBox="0 0 24 24" width="24" height="24" fill="#0284C7">
+                                    <path d="M21,14a2,2 0 0 0-2-2h-3.5l-4.5-6h-2l2.5,6H6.5l-2-1.5h-2l1.5,2.5L2.5,15h2l2,1.5h2L6,14h5l-2.5,6h2l4.5-6H19A2,2 0 0 0 21,14z" />
+                                </svg>
+                            </div>
+                        </div>`; 
+                    }
+                    else if (q.state === 'disabled') { 
+                        cardClasses += ' state-disabled'; 
+                        bannerHtml = `<div class="q-banner"><i class="fa-solid fa-triangle-exclamation mr-1 text-[10px]"></i> PAS EN CAPACITÉ</div>`; 
+                    }
+                    else if (q.state === 'standby' || q.state === 'not-needed') { 
+                        cardClasses += ' state-standby'; 
+                        bannerHtml = `<div class="q-banner"><i class="fa-solid fa-pause mr-1 text-[10px]"></i> EN STANDBY</div>`; 
+                    }
+                    else if (q.state === 'normal' && q.status !== 'ok') { 
+                        cardClasses += ` status-${q.status}`; 
+                        if (q.status === 'expired') { iconHtml = '<i class="fa-solid fa-triangle-exclamation q-icon"></i>'; bannerHtml = `<div class="q-banner">🚨 QUALIF ÉCHUE 🚨</div>`; } 
+                        else if (q.status === 'critical') { bannerHtml = `<div class="q-banner">⚠️ EXPIRATION IMMINENTE</div>`; } 
+                        else if (q.status === 'warning') { bannerHtml = `<div class="q-banner">⏳ À RENOUVELER BIENTÔT</div>`; }
+                    }
+
+                    const typeBadge = q.isIni ? `<span class="badge-type type-ini">INI</span>` : `<span class="badge-type type-pro">PRO</span>`;
+                    let timeBadgeHtml = "";
+                    if (q.days !== null && q.state === 'normal') {
+                        if (q.status === 'expired') timeBadgeHtml = `<span class="timer-badge timer-expired">ÉCHU</span>`;
+                        else if (q.status === 'critical') timeBadgeHtml = `<span class="timer-badge timer-soon" style="background:#EF4444;color:white;">J-${q.days}</span>`;
+                        else if (q.status === 'warning') timeBadgeHtml = `<span class="timer-badge timer-soon">J-${q.days}</span>`;
+                        else timeBadgeHtml = `<span class="timer-badge timer-ok">J-${q.days}</span>`;
+                    }
+
+                    let noteHtml = q.note ? `<div class="q-note"><i class="fa-solid fa-pen opacity-50 mr-1 text-[10px]"></i> ${q.note}</div>` : '';
+                    
+                    const safeName = (q.name || "QUALIF").replace(/"/g, '&quot;');
+
+                    return `
+                    <div class="q-card ${cardClasses}" onclick="openActionMenu(${opIdx}, ${q.id}, '${q.code}')">
+                        ${bannerHtml}
+                        <div class="q-header"><span class="q-code">${q.code}</span>${typeBadge}</div>
+                        <div class="q-body">
+                            <div class="q-title-row">
+                                ${iconHtml ? `<span>${iconHtml}</span>` : ''}
+                                <span class="q-title" data-title="${safeName}">${q.name}</span>
+                            </div>
+                            ${noteHtml}
+                        </div>
+                        <div class="q-footer"><span class="q-date">${q.dateStr}</span>${timeBadgeHtml}</div>
+                    </div>`;
+                }).join('');
+
+                let rowHealth = 'bg-slate-200';
+                if (parsedQualifs.length > 0) {
+                    if (parsedQualifs.some(q => q.state === 'priority')) rowHealth = 'bg-sky-500 shadow-[0_0_8px_rgba(56,189,248,0.6)] animate-pulse';
+                    else if (parsedQualifs.some(q => q.status === 'expired' && q.state === 'normal')) rowHealth = 'bg-red-600 animate-pulse shadow-[0_0_8px_#DC2626]';
+                    else if (parsedQualifs.some(q => q.status === 'critical' && q.state === 'normal')) rowHealth = 'bg-red-400';
+                    else if (parsedQualifs.some(q => q.status === 'warning' && q.state === 'normal')) rowHealth = 'bg-amber-400';
+                    else rowHealth = 'bg-emerald-400';
+                }
+
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50 transition-colors";
+                
+                // AJOUT BORDURES POUR MARQUER LA LIGNE DU COMPAGNON
+                tr.innerHTML = `
+                    <td class="px-6 py-6 border-r-2 border-slate-200 align-top">
+                        <div class="font-black text-sm text-slate-800 uppercase tracking-tight">${op.nom}</div>
+                        <button onclick="openAddQualifMenu(${opIdx})" class="mt-3 text-[10px] font-bold bg-slate-100 hover:bg-blue-50 text-slate-500 hover:text-blue-600 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 border border-slate-200 shadow-sm w-full justify-center">
+                            <i class="fa-solid fa-plus"></i> Ajouter une Qualif
+                        </button>
+                    </td>
+                    <td class="px-4 py-4 flex flex-wrap items-stretch">${cardsHtml || '<div class="text-slate-400 italic text-xs px-3 py-2 bg-slate-50 rounded border border-slate-100">Aucune qualification</div>'}</td>
+                    <td class="px-4 py-4 text-center align-middle border-l-2 border-slate-200"><div class="w-3 h-3 mx-auto rounded-full ${rowHealth}"></div></td>
+                `;
+                tbody.appendChild(tr);
+            });
+            
+            document.getElementById('global-counter').innerText = totalValidatedCount;
+            
+            if (!document.getElementById('view-stats').classList.contains('hidden')) {
+                renderStats();
+            }
+        }
+
+        function renderStats() {
+            let stats = {};
+            let grandTotal = 0, gValidated = 0, gRealizable = 0, gBlocked = 0;
+            let iniVal = 0, proVal = 0, proExpWeek = 0;
+            
+            // Tableaux pour lister les détails de la semaine
+            let listProExp = [], listIniVal = [], listProVal = [];
+
+            const now = new Date();
+            const lastWed = new Date();
+            lastWed.setDate(now.getDate() - ((now.getDay() + 4) % 7));
+            lastWed.setHours(23, 59, 59, 999);
+            const nextWed = new Date(lastWed.getTime() + 7 * 24 * 60 * 60 * 1000);
+
+            database.forEach(op => {
+                const qualifs = (op.qualifs || "").split(',').filter(x => x.trim() !== "");
+                qualifs.forEach(q => {
+                    const parts = q.trim().split('|');
+                    const codeName = parts[0].split('-');
+                    const name = cleanName(codeName[1]) || "NON DÉFINIE";
+                    const dateStr = parts[1];
+                    const type = parts[2];
+                    const state = parts[3] || 'normal';
+
+                    if (!stats[name]) stats[name] = { total: 0, validated: 0, realizable: 0, blocked: 0 };
+                    
+                    stats[name].total++;
+                    grandTotal++;
+
+                    if (state === 'validated') { 
+                        stats[name].validated++; 
+                        gValidated++; 
+                        if (type === 'O' || type === 'o') {
+                            iniVal++;
+                            listIniVal.push({op: op.nom, q: name});
+                        }
+                        if (type === 'N' || type === 'n') {
+                            proVal++;
+                            listProVal.push({op: op.nom, q: name});
+                        }
+                    }
+                    else if (state === 'disabled' || state === 'standby' || state === 'not-needed') { 
+                        stats[name].blocked++; 
+                        gBlocked++; 
+                    }
+                    else { 
+                        stats[name].realizable++; 
+                        gRealizable++; 
+                    } 
+
+                    // Calcul uniquement pour la semaine en cours, en ignorant les standbys et pas en capacité
+                    if ((type === 'N' || type === 'n') && state !== 'validated' && state !== 'standby' && state !== 'disabled' && state !== 'not-needed') {
+                        if (dateStr && dateStr !== "À QUALIFIER" && dateStr !== "-") {
+                            let dParts = dateStr.split('/');
+                            if(dParts.length === 3) {
+                                let expDate = new Date(dParts[2], dParts[1]-1, dParts[0]);
+                                expDate.setHours(12, 0, 0, 0); 
+                                // Strictement dans la semaine en cours
+                                if (expDate > lastWed && expDate <= nextWed) {
+                                    proExpWeek++;
+                                    listProExp.push({op: op.nom, q: name, date: dateStr});
+                                }
+                            }
+                        }
+                    }
+                });
+            });
+
+            // Affichage LIGNE 1 (Globale)
+            const elTotal = document.getElementById('kpi-total'); if (elTotal) elTotal.innerText = grandTotal;
+            const elVal = document.getElementById('kpi-val'); if (elVal) elVal.innerText = gValidated + " (" + (grandTotal?Math.round(gValidated/grandTotal*100):0) + "%)";
+            const elReal = document.getElementById('kpi-realizable'); if (elReal) elReal.innerText = gRealizable + " (" + (grandTotal?Math.round(gRealizable/grandTotal*100):0) + "%)";
+            const elBlock = document.getElementById('kpi-blocked'); if (elBlock) elBlock.innerText = gBlocked;
+
+            // Affichage LIGNE 2 (Semaine)
+            const elProExp = document.getElementById('kpi-pro-expired'); if (elProExp) elProExp.innerText = proExpWeek;
+            const elIniVal = document.getElementById('kpi-ini-val'); if (elIniVal) elIniVal.innerText = iniVal;
+            const elProVal = document.getElementById('kpi-pro-val'); if (elProVal) elProVal.innerText = proVal;
+
+            // Remplissage des listes détaillées de la semaine (s'il y en a)
+            const detailsRow = document.getElementById('kpi-details-row');
+            if (detailsRow) {
+                const renderList = (list, emptyMsg, color) => {
+                    if (list.length === 0) return `<p class="text-xs italic text-slate-400 p-2">${emptyMsg}</p>`;
+                    return list.map(item => `
+                        <div class="py-2 border-b border-${color}-100 last:border-0 flex flex-col gap-1">
+                            <div class="flex justify-between items-start">
+                                <p class="text-xs font-bold text-slate-800">${item.op}</p>
+                                ${item.date ? `<span class="text-[9px] font-bold bg-${color}-100 text-${color}-700 px-2 py-0.5 rounded">${item.date}</span>` : ''}
+                            </div>
+                            <p class="text-[10px] text-${color}-600 truncate">${item.q}</p>
+                        </div>
+                    `).join('');
+                };
+
+                detailsRow.innerHTML = `
+                    <div class="bg-white border border-red-200 rounded-xl p-4 shadow-sm h-48 overflow-auto">
+                        <h4 class="text-xs font-black uppercase text-red-600 mb-2 sticky top-0 bg-white pb-2 border-b border-red-100">Détail Expirations</h4>
+                        ${renderList(listProExp, "Aucune expiration à gérer.", "red")}
+                    </div>
+                    <div class="bg-white border border-sky-200 rounded-xl p-4 shadow-sm h-48 overflow-auto">
+                        <h4 class="text-xs font-black uppercase text-sky-600 mb-2 sticky top-0 bg-white pb-2 border-b border-sky-100">Détail Initiales Validées</h4>
+                        ${renderList(listIniVal, "Aucune validation initiale.", "sky")}
+                    </div>
+                    <div class="bg-white border border-amber-200 rounded-xl p-4 shadow-sm h-48 overflow-auto">
+                        <h4 class="text-xs font-black uppercase text-amber-600 mb-2 sticky top-0 bg-white pb-2 border-b border-amber-100">Détail Prorogations Validées</h4>
+                        ${renderList(listProVal, "Aucune prorogation validée.", "amber")}
+                    </div>
+                `;
+            }
+
+            updateVelocityChart(gValidated, gRealizable + gValidated + gBlocked);
+
+            const tbody = document.getElementById('stats-tbody');
+            if (tbody) {
+                tbody.innerHTML = '';
+                Object.keys(stats).sort().forEach(name => {
+                    const s = stats[name];
+                    const pctRealizable = s.total > 0 ? Math.round((s.realizable / s.total) * 100) : 0;
+                    const pctVal = s.total > 0 ? Math.round((s.validated / s.total) * 100) : 0;
+
+                    tbody.innerHTML += `
+                        <tr class="hover:bg-slate-50 transition-colors">
+                            <td class="px-6 py-4 border-r border-slate-100 font-bold text-slate-700 uppercase text-[11px] tracking-wide">${name}</td>
+                            <td class="px-6 py-4 text-center border-r border-slate-100 font-mono font-black text-slate-800">${s.total}</td>
+                            <td class="px-6 py-4 text-center border-r border-slate-100 font-mono font-black text-blue-600 bg-blue-50/30">${s.realizable}</td>
+                            <td class="px-6 py-4 text-center border-r border-slate-100 font-mono font-bold text-emerald-600">${s.validated}</td>
+                            <td class="px-6 py-4 text-center border-r border-slate-100 font-mono font-bold text-amber-500">${s.blocked}</td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden flex shadow-inner">
+                                        <div class="bg-emerald-500 h-3" style="width: ${pctVal}%" title="Validé : ${pctVal}%"></div>
+                                        <div class="bg-blue-500 h-3" style="width: ${pctRealizable}%" title="Réalisable : ${pctRealizable}%"></div>
+                                    </div>
+                                    <span class="text-[11px] font-black text-slate-500 w-10 text-right">${pctRealizable}%</span>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+        }
+
+        function updateVelocityChart(currentValidated, totalPotential) {
+            const canvas = document.getElementById('velocityChart');
+            if (!canvas) return; 
+            
+            const ctx = canvas.getContext('2d');
+            
+            let history = JSON.parse(localStorage.getItem(STATS_KEY) || '[]');
+            
+            let labels = history.map(h => h.label);
+            let valData = history.map(h => h.val); 
+            let totData = history.map(h => h.tot); 
+
+            labels.push("Sem. En Cours");
+            valData.push(currentValidated);
+            totData.push(totalPotential);
+
+            let barGradient = ctx.createLinearGradient(0, 0, 0, 300);
+            barGradient.addColorStop(0, 'rgba(16, 185, 129, 0.9)'); 
+            barGradient.addColorStop(1, 'rgba(16, 185, 129, 0.2)'); 
+
+            let lineGradient = ctx.createLinearGradient(0, 0, 0, 300);
+            lineGradient.addColorStop(0, 'rgba(59, 130, 246, 0.4)'); 
+            lineGradient.addColorStop(1, 'rgba(59, 130, 246, 0.0)'); 
+
+            if (velocityChartInstance) { velocityChartInstance.destroy(); }
+
+            velocityChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            type: 'line', 
+                            label: 'Charge Totale d\'Équipe',
+                            data: totData,
+                            borderColor: '#3B82F6', 
+                            borderWidth: 3,
+                            borderDash: [5, 5], 
+                            backgroundColor: lineGradient,
+                            fill: true,
+                            tension: 0.4, 
+                            pointBackgroundColor: '#FFFFFF',
+                            pointBorderColor: '#3B82F6',
+                            pointBorderWidth: 2,
+                            pointRadius: 4,
+                            pointHoverRadius: 6
+                        },
+                        {
+                            type: 'bar', 
+                            label: 'Production (Validées)',
+                            data: valData,
+                            backgroundColor: barGradient,
+                            borderColor: '#10B981', 
+                            borderWidth: { top: 2, right: 0, bottom: 0, left: 0 },
+                            borderRadius: { topLeft: 6, topRight: 6 }, 
+                            barPercentage: 0.5 
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: {
+                        y: { duration: 1200, easing: 'easeOutQuart' },
+                        x: { duration: 1200, easing: 'easeOutQuart' }
+                    },
+                    plugins: {
+                        legend: { position: 'top', align: 'end', labels: { usePointStyle: true, boxWidth: 8, font: { family: 'Inter', size: 11, weight: 'bold' } } },
+                        tooltip: { backgroundColor: 'rgba(15, 23, 42, 0.9)', titleFont: { family: 'Inter', size: 13 }, bodyFont: { family: 'JetBrains Mono', size: 12 }, padding: 12, cornerRadius: 8, displayColors: true }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, suggestedMax: totalPotential + 5, grid: { color: '#F1F5F9', drawBorder: false }, ticks: { font: { family: 'JetBrains Mono', size: 10 }, color: '#64748B', stepSize: 5 } },
+                        x: { grid: { display: false, drawBorder: false }, ticks: { font: { family: 'Inter', size: 11, weight: 'bold' }, color: '#64748B' } }
+                    }
+                }
+            });
+        }
+
+        // =======================================================================
+        // GESTION DU MENU D'AJOUT DE QUALIFICATION
+        // =======================================================================
+        function openActionMenu(opIdx, qIdx, code) {
+            currentActiveQualif = { opIdx, qIdx };
+            document.getElementById('modal-qualif-title').innerText = code;
+            
+            const parts = database[opIdx].qualifs.split(',')[qIdx].trim().split('|');
+            document.getElementById('modal-qualif-note').value = parts[4] || '';
+            
+            document.getElementById('qualif-action-modal').classList.remove('hidden');
+        }
+
+        function closeQualifMenu() { document.getElementById('qualif-action-modal').classList.add('hidden'); }
+        
+        function setQualifState(newState) {
+            const { opIdx, qIdx } = currentActiveQualif;
+            if (opIdx === -1) return;
+            let qualifArray = database[opIdx].qualifs.split(',');
+            let parts = qualifArray[qIdx].trim().split('|');
+            parts[3] = newState;
+            qualifArray[qIdx] = parts.join('|');
+            database[opIdx].qualifs = qualifArray.join(',');
+            persistData(); renderTable(); closeQualifMenu();
+        }
+
+        function saveQualifNote() {
+            const { opIdx, qIdx } = currentActiveQualif;
+            if (opIdx === -1) return;
+            const newNote = document.getElementById('modal-qualif-note').value.trim().replace(/\|/g, '-').replace(/,/g, ';');
+            
+            let qualifArray = database[opIdx].qualifs.split(',');
+            let parts = qualifArray[qIdx].trim().split('|');
+            while(parts.length < 4) parts.push('');
+            parts[4] = newNote;
+            
+            qualifArray[qIdx] = parts.join('|');
+            database[opIdx].qualifs = qualifArray.join(',');
+            persistData(); renderTable(); closeQualifMenu();
+        }
+
+        function openAddQualifMenu(opIdx) {
+            currentOpForAdd = opIdx;
+            document.getElementById('add-qualif-op-name').innerText = database[opIdx].nom;
+            
+            const select = document.getElementById('new-q-select');
+            select.innerHTML = QUALIFS_LIST.map(q => `<option value="${q}">${q}</option>`).join('');
+            
+            document.querySelector('input[name="q-type"][value="O"]').checked = true;
+            document.getElementById('new-q-date').value = '';
+            toggleDateField();
+            
+            document.getElementById('add-qualif-modal').classList.remove('hidden');
+        }
+
+        function closeAddQualifMenu() {
+            document.getElementById('add-qualif-modal').classList.add('hidden');
+            currentOpForAdd = -1;
+        }
+
+        function toggleDateField() {
+            const type = document.querySelector('input[name="q-type"]:checked').value;
+            const dateContainer = document.getElementById('date-input-container');
+            if (type === 'N') {
+                dateContainer.classList.remove('hidden');
+            } else {
+                dateContainer.classList.add('hidden');
+            }
+        }
+
+        function submitNewQualif() {
+            if (currentOpForAdd === -1) return;
+            
+            const qualif = document.getElementById('new-q-select').value;
+            const type = document.querySelector('input[name="q-type"]:checked').value; 
+            let dateStr = "À QUALIFIER";
+            
+            if (type === 'N') {
+                const dateVal = document.getElementById('new-q-date').value;
+                if (!dateVal) {
+                    alert("Veuillez sélectionner une date d'expiration pour la prorogation.");
+                    return;
+                }
+                const parts = dateVal.split('-');
+                dateStr = `${parts[2]}/${parts[1]}/${parts[0]}`; // Formatage en JJ/MM/AAAA
+            }
+            
+            const newEntry = `${qualif}|${dateStr}|${type}|normal|`;
+            
+            let op = database[currentOpForAdd];
+            if (!op.qualifs || op.qualifs.trim() === "") {
+                op.qualifs = newEntry;
+            } else {
+                op.qualifs += ", " + newEntry;
+            }
+            
+            persistData();
+            renderTable();
+            closeAddQualifMenu();
+        }
+
+        function openManageModal() {
+            document.getElementById('manage-tbody').innerHTML = database.map((op, idx) => `
+                <tr class="hover:bg-slate-50 transition-colors">
+                    <td class="py-4 pr-3 font-bold text-slate-800">${op.nom}</td>
+                    <td class="py-4 pr-3 text-slate-500 max-w-md truncate" title="${op.qualifs}">${op.qualifs||'-'}</td>
+                    <td class="py-4 text-right">
+                        <button onclick="deleteEntry(${idx})" class="bg-slate-100 text-slate-400 hover:bg-red-500 hover:text-white p-2.5 rounded-xl transition-colors"><i class="fa-solid fa-trash-can"></i></button>
+                    </td>
+                </tr>
+            `).join('');
+            document.getElementById('manage-modal').classList.remove('hidden');
+        }
+        
+        function closeManageModal() { document.getElementById('manage-modal').classList.add('hidden'); }
+        
+        function addEntry() {
+            const nom = document.getElementById('new-nom').value.trim().toUpperCase();
+            const qualifs = document.getElementById('new-qualifs').value.trim();
+            const comm = ""; 
+            if (!nom) return;
+            database.push({ nom, qualifs, comm });
+            persistData(); renderTable(); openManageModal();
+            document.getElementById('new-nom').value = ''; document.getElementById('new-qualifs').value = '';
+        }
+        function deleteEntry(idx) {
+            if (confirm("Supprimer ce compagnon ?")) { database.splice(idx, 1); persistData(); renderTable(); openManageModal(); }
+        }
+
+        function openValidatedModal() {
+            const tbody = document.getElementById('validated-tbody');
+            if (currentValidatedList.length > 0) {
+                tbody.innerHTML = currentValidatedList.map(item => `
+                    <tr class="hover:bg-emerald-50 transition-colors">
+                        <td class="py-3 font-bold text-slate-800">${item.nom}</td>
+                        <td class="py-3 font-mono text-emerald-600 font-bold">${item.code}</td>
+                        <td class="py-3 text-slate-500 text-xs uppercase">${item.name}</td>
+                    </tr>
+                `).join('');
+            } else {
+                tbody.innerHTML = `<tr><td colspan="3" class="py-8 text-center text-slate-400 italic">Aucune qualification validée pour le moment.</td></tr>`;
+            }
+            document.getElementById('validated-modal').classList.remove('hidden');
+        }
+        
+        function closeValidatedModal() { document.getElementById('validated-modal').classList.add('hidden'); }
+
+        function checkDevAccess() {
+            const code = prompt("🔑 Saisissez le code développeur :");
+            if (code === "270418") { openDevModal(); } 
+            else if (code !== null) { alert("❌ Code incorrect. Accès refusé."); }
+        }
+
+        function openDevModal() {
+            const tbody = document.getElementById('dev-tbody');
+            let history = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
+            
+            if (history.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="2" class="py-6 text-center text-slate-600 italic">Aucune sauvegarde dans l\'historique.</td></tr>';
+            } else {
+                tbody.innerHTML = history.map((bkp, idx) => `
+                    <tr class="hover:bg-slate-800 transition-colors">
+                        <td class="py-4 text-blue-400 font-bold"><i class="fa-solid fa-clock mr-2 text-slate-500"></i> ${bkp.time}</td>
+                        <td class="py-4 text-right">
+                            <button onclick="restoreBackup(${idx})" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg font-bold shadow-md transition-colors uppercase tracking-wider text-[10px]">
+                                Restaurer cette version
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+            document.getElementById('dev-modal').classList.remove('hidden');
+        }
+        function closeDevModal() { document.getElementById('dev-modal').classList.add('hidden'); }
+
+        function restoreBackup(idx) {
+            if (confirm("⚠️ ATTENTION : Vous allez revenir à cette sauvegarde exacte. Êtes-vous sûr ?")) {
+                let history = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
+                if (history[idx]) {
+                    database = history[idx].data;
+                    persistData(); renderTable(); openDevModal();
+                    alert("✅ Restauration réussie ! Le tableau est revenu à l'état du " + history[idx].time);
+                }
+            }
+        }
+
+        let currentZoom = 1;
+        function zoomIn() {
+            if (currentZoom < 1.5) {
+                currentZoom = Math.round((currentZoom + 0.1) * 10) / 10;
+                applyZoom();
+            }
+        }
+        function zoomOut() {
+            if (currentZoom > 0.5) {
+                currentZoom = Math.round((currentZoom - 0.1) * 10) / 10;
+                applyZoom();
+            }
+        }
+        function applyZoom() {
+            document.body.style.zoom = currentZoom;
+            document.getElementById('zoom-level').innerText = Math.round(currentZoom * 100) + '%';
+        }
+    </script>
 </body>
 </html>
