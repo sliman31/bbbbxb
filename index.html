@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Planing QA Sliman</title>
     <!-- Tailwind CSS pour la structure -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -24,16 +24,24 @@
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 10px; }
 
+        /* Masquer la barre de scroll pour les menus horizontaux sur mobile */
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
         /* ==========================================================================
            2. STRUCTURE DE LA CARTE DE BASE
            ========================================================================== */
         .q-card {
-            display: inline-flex; flex-direction: column; width: 320px; 
-            background: #FFFFFF; border-radius: 8px; margin: 6px;
+            display: inline-flex; flex-direction: column; width: 100%; max-width: 320px; 
+            background: #FFFFFF; border-radius: 8px; margin: 6px 0; /* Marge ajustée pour mobile */
             border: 1px solid #E2E8F0; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
             transition: all 0.2s; cursor: pointer;
             overflow: hidden; border-left-width: 12px; position: relative;
         }
+        @media (min-width: 640px) {
+            .q-card { margin: 6px; }
+        }
+        
         .q-card:hover { box-shadow: 0 8px 16px rgba(15, 23, 42, 0.1); transform: translateY(-2px); }
 
         .card-ini { border-left-color: #0EA5E9; }
@@ -155,62 +163,67 @@
 </head>
 <body class="flex flex-col min-h-screen">
 
-    <header class="bg-slate-900 text-white sticky top-0 z-50 shadow-md h-20 flex items-center px-6">
-        <div class="max-w-[1920px] mx-auto w-full flex items-center justify-between">
-            <div class="flex items-center gap-4">
-                <div class="bg-blue-600 w-10 h-10 rounded-lg flex items-center justify-center shadow-lg shadow-blue-500/20"><i class="fa-solid fa-plane-up text-xl"></i></div>
+    <header class="bg-slate-900 text-white sticky top-0 z-50 shadow-md py-3 lg:h-20 flex flex-col justify-center px-4 lg:px-6">
+        <div class="max-w-[1920px] mx-auto w-full flex flex-wrap items-center justify-between gap-y-3">
+            <div class="flex items-center gap-3">
+                <div class="bg-blue-600 w-9 h-9 lg:w-10 lg:h-10 rounded-lg flex items-center justify-center shadow-lg shadow-blue-500/20"><i class="fa-solid fa-plane-up text-lg lg:text-xl"></i></div>
                 <div>
-                    <h1 class="text-xl font-black uppercase tracking-tight">Planing QA <span class="text-blue-400">Sliman</span></h1>
-                    <p class="text-[10px] text-slate-400 uppercase tracking-widest font-bold">Pilotage Opérationnel</p>
+                    <h1 class="text-lg lg:text-xl font-black uppercase tracking-tight leading-tight">Planing QA <span class="text-blue-400">Sliman</span></h1>
+                    <p class="text-[9px] lg:text-[10px] text-slate-400 uppercase tracking-widest font-bold hidden sm:block">Pilotage Opérationnel</p>
                 </div>
             </div>
 
-            <button onclick="openValidatedModal()" class="hidden md:flex items-center bg-slate-800 border border-slate-700 px-6 py-2 rounded-lg gap-4 hover:bg-slate-700 transition-colors shadow-sm">
+            <!-- COMPTEUR VALIDATIONS GLOBAUX (Corrigé par l'Architecte) -->
+            <button onclick="openValidatedModal()" class="flex items-center bg-slate-800 border border-slate-700 px-3 lg:px-6 py-2 rounded-lg gap-2 lg:gap-4 hover:bg-slate-700 transition-colors shadow-sm ml-auto sm:ml-0">
                 <div class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_#10B981]"></div>
-                <span class="text-xs font-bold uppercase text-slate-300">Validations Hebdo</span>
-                <span id="global-counter" class="text-xl font-black text-emerald-400 mono">0</span>
+                <span class="hidden sm:inline text-xs font-bold uppercase text-slate-300">Validations (Toutes équipes)</span>
+                <span id="global-counter" class="text-lg lg:text-xl font-black text-emerald-400 mono">0</span>
             </button>
             
-            <div class="flex items-center gap-3">
-                <div class="hidden sm:flex items-center bg-slate-800 border border-slate-700 rounded-lg overflow-hidden shadow-sm h-10">
-                    <button onclick="zoomOut()" class="w-8 h-full flex items-center justify-center hover:bg-slate-700 text-slate-400 hover:text-white transition-colors" title="Réduire la taille"><i class="fa-solid fa-minus text-xs"></i></button>
-                    <span id="zoom-level" class="text-xs font-bold text-slate-300 w-10 text-center select-none">100%</span>
-                    <button onclick="zoomIn()" class="w-8 h-full flex items-center justify-center hover:bg-slate-700 text-slate-400 hover:text-white transition-colors" title="Agrandir la taille"><i class="fa-solid fa-plus text-xs"></i></button>
-                </div>
-
-                <div class="relative hidden sm:block z-50">
+            <div class="flex items-center gap-2 lg:gap-3 w-full sm:w-auto order-last sm:order-none justify-between sm:justify-end">
+                
+                <!-- BARRE DE RECHERCHE INTELLIGENTE (Optimisée avec Debounce) -->
+                <div class="relative flex-grow sm:flex-grow-0 z-50">
                     <i class="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm"></i>
-                    <input type="text" id="searchInput" oninput="handleSearchInput()" placeholder="Rechercher un opérateur..." class="pl-9 pr-8 py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm text-white focus:border-blue-500 focus:outline-none w-64" autocomplete="off">
+                    <input type="text" id="searchInput" oninput="debouncedSearch()" placeholder="Rechercher..." class="pl-9 pr-8 py-2.5 sm:py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm text-white focus:border-blue-500 focus:outline-none w-full sm:w-64 transition-all" autocomplete="off">
                     <button onclick="clearSearch()" id="clearSearchBtn" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white hidden"><i class="fa-solid fa-xmark"></i></button>
                     
                     <ul id="searchResults" class="absolute top-full left-0 w-full mt-2 bg-white border border-slate-200 rounded-lg shadow-2xl hidden max-h-64 overflow-y-auto divide-y divide-slate-100 text-slate-800"></ul>
                 </div>
 
-                <button onclick="openManageModal()" class="w-10 h-10 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center hover:bg-slate-700 transition-colors text-slate-300 hover:text-white" title="Gestion des Opérateurs">
-                    <i class="fa-solid fa-users-gear"></i>
-                </button>
-                <!-- CHANGEMENT ICI : Appel direct au nouveau Pin Modal -->
-                <button type="button" onclick="openPinModal()" class="w-10 h-10 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-slate-800 transition-colors text-slate-600 hover:text-blue-400 focus:outline-none" title="Console Time Machine & Admin">
-                    <i class="fa-solid fa-code"></i>
-                </button>
+                <!-- OUTILS ADMIN & ZOOM -->
+                <div class="hidden lg:flex items-center bg-slate-800 border border-slate-700 rounded-lg overflow-hidden shadow-sm h-10">
+                    <button onclick="zoomOut()" class="w-8 h-full flex items-center justify-center hover:bg-slate-700 text-slate-400 hover:text-white transition-colors" title="Réduire la taille"><i class="fa-solid fa-minus text-xs"></i></button>
+                    <span id="zoom-level" class="text-xs font-bold text-slate-300 w-10 text-center select-none">100%</span>
+                    <button onclick="zoomIn()" class="w-8 h-full flex items-center justify-center hover:bg-slate-700 text-slate-400 hover:text-white transition-colors" title="Agrandir la taille"><i class="fa-solid fa-plus text-xs"></i></button>
+                </div>
+                
+                <div class="flex gap-2">
+                    <button onclick="openManageModal()" class="w-10 h-10 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center hover:bg-slate-700 transition-colors text-slate-300 hover:text-white" title="Gestion des Opérateurs">
+                        <i class="fa-solid fa-users-gear"></i>
+                    </button>
+                    <button type="button" onclick="openPinModal()" class="w-10 h-10 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-slate-800 transition-colors text-slate-600 hover:text-blue-400 focus:outline-none" title="Console Time Machine & Admin">
+                        <i class="fa-solid fa-code"></i>
+                    </button>
+                </div>
             </div>
         </div>
     </header>
 
-    <main class="flex-grow p-4 md:p-6 overflow-hidden flex flex-col max-w-[1920px] mx-auto w-full">
+    <main class="flex-grow p-3 sm:p-4 lg:p-6 overflow-x-hidden flex flex-col max-w-[1920px] mx-auto w-full">
         
         <!-- ONGLETS DE NAVIGATION PRINCIPAUX -->
-        <div class="flex flex-wrap items-center gap-3 mb-4">
-            <button onclick="switchTab('operators')" id="tab-operators" class="px-5 py-2.5 bg-blue-600 text-white rounded-xl font-bold shadow-md transition-colors text-sm flex items-center gap-2">
+        <div class="flex overflow-x-auto items-center gap-2 mb-4 pb-2 hide-scrollbar w-full whitespace-nowrap snap-x">
+            <button onclick="switchTab('operators')" id="tab-operators" class="flex-shrink-0 snap-start px-4 sm:px-5 py-2.5 bg-blue-600 text-white rounded-xl font-bold shadow-md transition-colors text-sm flex items-center gap-2">
                 <i class="fa-solid fa-users"></i> Suivi Opérateurs
             </button>
-            <button onclick="switchTab('global')" id="tab-global" class="px-5 py-2.5 bg-white text-slate-600 rounded-xl font-bold shadow-sm hover:bg-slate-50 border border-slate-200 transition-colors text-sm flex items-center gap-2">
+            <button onclick="switchTab('global')" id="tab-global" class="flex-shrink-0 snap-start px-4 sm:px-5 py-2.5 bg-white text-slate-600 rounded-xl font-bold shadow-sm hover:bg-slate-50 border border-slate-200 transition-colors text-sm flex items-center gap-2">
                 <i class="fa-solid fa-chart-line"></i> Tendance Globale
             </button>
-            <button onclick="switchTab('hebdo')" id="tab-hebdo" class="px-5 py-2.5 bg-white text-slate-600 rounded-xl font-bold shadow-sm hover:bg-slate-50 border border-slate-200 transition-colors text-sm flex items-center gap-2">
+            <button onclick="switchTab('hebdo')" id="tab-hebdo" class="flex-shrink-0 snap-start px-4 sm:px-5 py-2.5 bg-white text-slate-600 rounded-xl font-bold shadow-sm hover:bg-slate-50 border border-slate-200 transition-colors text-sm flex items-center gap-2">
                 <i class="fa-solid fa-calendar-week"></i> Résumé de la Semaine
             </button>
-            <button onclick="switchTab('tuto')" id="tab-tuto" class="px-5 py-2.5 bg-white text-slate-600 rounded-xl font-bold shadow-sm hover:bg-slate-50 border border-slate-200 transition-colors text-sm flex items-center gap-2 ml-auto">
+            <button onclick="switchTab('tuto')" id="tab-tuto" class="flex-shrink-0 snap-start px-4 sm:px-5 py-2.5 bg-white text-slate-600 rounded-xl font-bold shadow-sm hover:bg-slate-50 border border-slate-200 transition-colors text-sm flex items-center gap-2 lg:ml-auto">
                 <i class="fa-solid fa-book"></i> Tuto
             </button>
         </div>
@@ -218,78 +231,78 @@
         <!-- ONGLET 1 : SUIVI DES OPÉRATEURS -->
         <div id="view-operators" class="flex flex-col gap-4">
             
-            <div class="flex flex-col gap-2 bg-slate-50 p-3 rounded-xl border border-slate-200 shadow-sm w-full sm:w-fit">
-                <!-- Zone -->
-                <div class="flex items-center gap-3">
-                    <span class="text-[10px] font-black text-slate-400 uppercase w-12">Zone</span>
-                    <div class="flex gap-1 bg-slate-200/50 p-1 rounded-lg">
-                        <button onclick="setZone('P40')" id="btn-zone-P40" class="px-4 py-1.5 rounded-md text-xs font-black bg-blue-600 text-white shadow-sm transition-all">P40</button>
-                        <button onclick="setZone('P50')" id="btn-zone-P50" class="px-4 py-1.5 rounded-md text-xs font-bold text-slate-500 hover:text-slate-800 hover:bg-white transition-all">P50</button>
+            <div class="flex flex-col gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200 shadow-sm w-full lg:w-fit">
+                <div class="flex items-center overflow-x-auto hide-scrollbar gap-4 pb-1">
+                    <div class="flex items-center gap-2 flex-shrink-0">
+                        <span class="text-[10px] font-black text-slate-400 uppercase">Zone</span>
+                        <div class="flex gap-1 bg-slate-200/50 p-1 rounded-lg">
+                            <button onclick="setZone('P40')" id="btn-zone-P40" class="px-3 sm:px-4 py-1.5 rounded-md text-xs font-black bg-blue-600 text-white shadow-sm transition-all">P40</button>
+                            <button onclick="setZone('P50')" id="btn-zone-P50" class="px-3 sm:px-4 py-1.5 rounded-md text-xs font-bold text-slate-500 hover:text-slate-800 hover:bg-white transition-all">P50</button>
+                        </div>
                     </div>
-                </div>
-                <!-- Ligne/Secteur -->
-                <div class="flex items-center gap-3">
-                    <span class="text-[10px] font-black text-slate-400 uppercase w-12">Ligne</span>
-                    <div class="flex gap-1 bg-slate-200/50 p-1 rounded-lg">
-                        <button onclick="setSecteur('A')" id="btn-secteur-A" class="px-4 py-1.5 rounded-md text-xs font-black bg-blue-600 text-white shadow-sm transition-all">A</button>
-                        <button onclick="setSecteur('B')" id="btn-secteur-B" class="px-4 py-1.5 rounded-md text-xs font-bold text-slate-500 hover:text-slate-800 hover:bg-white transition-all">B</button>
-                        <button onclick="setSecteur('C')" id="btn-secteur-C" class="px-4 py-1.5 rounded-md text-xs font-bold text-slate-500 hover:text-slate-800 hover:bg-white transition-all">C</button>
+                    <div class="flex items-center gap-2 flex-shrink-0 border-l border-slate-200 pl-4">
+                        <span class="text-[10px] font-black text-slate-400 uppercase">Ligne</span>
+                        <div class="flex gap-1 bg-slate-200/50 p-1 rounded-lg">
+                            <button onclick="setSecteur('A')" id="btn-secteur-A" class="px-3 sm:px-4 py-1.5 rounded-md text-xs font-black bg-blue-600 text-white shadow-sm transition-all">A</button>
+                            <button onclick="setSecteur('B')" id="btn-secteur-B" class="px-3 sm:px-4 py-1.5 rounded-md text-xs font-bold text-slate-500 hover:text-slate-800 hover:bg-white transition-all">B</button>
+                            <button onclick="setSecteur('C')" id="btn-secteur-C" class="px-3 sm:px-4 py-1.5 rounded-md text-xs font-bold text-slate-500 hover:text-slate-800 hover:bg-white transition-all">C</button>
+                        </div>
                     </div>
-                </div>
-                <!-- Equipe -->
-                <div class="flex items-center gap-3">
-                    <span class="text-[10px] font-black text-slate-400 uppercase w-12">Équipe</span>
-                    <div class="flex gap-1 bg-slate-200/50 p-1 rounded-lg">
-                        <button onclick="setTeam('A')" id="btn-team-A" class="px-4 py-1.5 rounded-md text-xs font-black bg-blue-600 text-white shadow-sm transition-all">Équipe A</button>
-                        <button onclick="setTeam('B')" id="btn-team-B" class="px-4 py-1.5 rounded-md text-xs font-bold text-slate-500 hover:text-slate-800 hover:bg-white transition-all">Équipe B</button>
+                    <div class="flex items-center gap-2 flex-shrink-0 border-l border-slate-200 pl-4 pr-2">
+                        <span class="text-[10px] font-black text-slate-400 uppercase">Équipe</span>
+                        <div class="flex gap-1 bg-slate-200/50 p-1 rounded-lg">
+                            <button onclick="setTeam('A')" id="btn-team-A" class="px-3 sm:px-4 py-1.5 rounded-md text-xs font-black bg-blue-600 text-white shadow-sm transition-all">Équipe A</button>
+                            <button onclick="setTeam('B')" id="btn-team-B" class="px-3 sm:px-4 py-1.5 rounded-md text-xs font-bold text-slate-500 hover:text-slate-800 hover:bg-white transition-all">Équipe B</button>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="bg-white border border-slate-200 overflow-auto flex-grow rounded-xl shadow-sm flex flex-col">
+            <!-- TABLEAU RESPONSIVE -->
+            <div class="bg-transparent lg:bg-white lg:border lg:border-slate-200 overflow-visible lg:overflow-auto flex-grow rounded-xl lg:shadow-sm flex flex-col">
                 <table class="w-full text-sm border-separate border-spacing-0">
-                    <thead class="bg-slate-50 sticky top-0 z-10 border-b-2 border-slate-200 shadow-sm">
+                    <thead class="bg-slate-50 sticky top-0 z-10 border-b-2 border-slate-200 shadow-sm hidden lg:table-header-group">
                         <tr class="text-slate-500 uppercase font-black text-[11px] tracking-widest">
                             <th class="px-6 py-4 w-[15%] border-r-2 border-slate-200 text-left">Opérateur</th>
                             <th class="px-6 py-4 w-[78%] text-left">Cartographie des Qualifications</th>
                             <th class="px-4 py-4 w-[7%] border-l-2 border-slate-200 text-center">Indicateur</th>
                         </tr>
                     </thead>
-                    <tbody id="tableBody" class="divide-y-4 divide-slate-200"></tbody>
+                    <tbody id="tableBody" class="lg:divide-y-4 lg:divide-slate-200 block lg:table-row-group"></tbody>
                 </table>
             </div>
         </div>
 
         <!-- ONGLET 2 : TENDANCE GLOBALE -->
-        <div id="view-global" class="hidden bg-white border border-slate-200 overflow-auto flex-grow rounded-xl shadow-sm flex flex-col p-6">
-            <div class="flex flex-col gap-6">
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-4" id="kpi-row"></div>
+        <div id="view-global" class="hidden bg-white border border-slate-200 overflow-hidden flex-grow rounded-xl shadow-sm flex flex-col p-4 sm:p-6">
+            <div class="flex flex-col gap-6 w-full">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="kpi-row"></div>
 
-                <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm h-80 relative">
-                    <div class="flex justify-between items-center mb-2">
+                <div class="bg-white border border-slate-200 rounded-xl p-4 sm:p-5 shadow-sm h-72 sm:h-80 relative overflow-hidden">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-2 gap-2">
                         <div>
-                            <h3 class="text-slate-800 font-black uppercase text-sm tracking-tight"><i class="fa-solid fa-chart-line text-blue-500 mr-2"></i>Tendance de Production Historique</h3>
-                            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Réalisé (Validé) vs. Charge Totale sur les dernières semaines</p>
+                            <h3 class="text-slate-800 font-black uppercase text-sm tracking-tight"><i class="fa-solid fa-chart-line text-blue-500 mr-2"></i>Tendance de Production</h3>
+                            <p class="text-[9px] sm:text-[10px] text-slate-400 font-bold uppercase tracking-wider">Réalisé (Validé) vs. Charge Totale</p>
                         </div>
-                        <div class="text-[10px] font-bold bg-slate-100 text-slate-500 px-3 py-1 rounded-lg border border-slate-200 flex items-center">
+                        <div class="text-[9px] sm:text-[10px] font-bold bg-slate-100 text-slate-500 px-2 sm:px-3 py-1 rounded-lg border border-slate-200 flex items-center">
                             <i class="fa-solid fa-circle text-emerald-500 text-[8px] mr-1 animate-pulse"></i> Dynamique
                         </div>
                     </div>
-                    <div class="flex-grow relative w-full h-full mt-2">
+                    <div class="relative w-full h-[calc(100%-3rem)] mt-2">
                         <canvas id="velocityChart"></canvas>
                     </div>
                 </div>
 
-                <div class="border border-slate-200 rounded-xl overflow-hidden shadow-sm flex flex-col mt-2">
-                    <table class="w-full text-sm text-left">
+                <div class="border border-slate-200 rounded-xl overflow-x-auto shadow-sm flex flex-col mt-2 w-full">
+                    <table class="w-full min-w-[700px] text-sm text-left">
                         <thead class="bg-slate-50 border-b border-slate-200">
                             <tr class="text-slate-500 uppercase font-black text-[10px] tracking-widest">
-                                <th class="px-6 py-4 border-r border-slate-200">Qualification / Process</th>
-                                <th class="px-6 py-4 text-center border-r border-slate-200 w-24">Total</th>
-                                <th class="px-6 py-4 text-center border-r border-slate-200 w-28 text-blue-600">Réalisable</th>
-                                <th class="px-6 py-4 text-center border-r border-slate-200 w-28 text-emerald-600">Validé</th>
-                                <th class="px-6 py-4 text-center border-r border-slate-200 w-24 text-amber-600">Bloqué</th>
-                                <th class="px-6 py-4 text-center w-40">Taux Réalisable</th>
+                                <th class="px-4 lg:px-6 py-4 border-r border-slate-200">Qualification / Process</th>
+                                <th class="px-4 lg:px-6 py-4 text-center border-r border-slate-200 w-24">Total</th>
+                                <th class="px-4 lg:px-6 py-4 text-center border-r border-slate-200 w-28 text-blue-600">Réalisable</th>
+                                <th class="px-4 lg:px-6 py-4 text-center border-r border-slate-200 w-28 text-emerald-600">Validé</th>
+                                <th class="px-4 lg:px-6 py-4 text-center border-r border-slate-200 w-24 text-amber-600">Bloqué</th>
+                                <th class="px-4 lg:px-6 py-4 text-center w-40">Taux Réalisable</th>
                             </tr>
                         </thead>
                         <tbody id="stats-tbody" class="divide-y divide-slate-100 bg-white"></tbody>
@@ -299,8 +312,8 @@
         </div>
 
         <!-- ONGLET 3 : RÉSUMÉ DE LA SEMAINE -->
-        <div id="view-hebdo" class="hidden bg-white border border-slate-200 overflow-auto flex-grow rounded-xl shadow-sm flex flex-col p-6">
-            <div id="hebdo-container" class="flex flex-col gap-6">
+        <div id="view-hebdo" class="hidden bg-white border border-slate-200 overflow-x-hidden overflow-y-auto flex-grow rounded-xl shadow-sm flex flex-col p-4 sm:p-6">
+            <div id="hebdo-container" class="flex flex-col gap-6 w-full">
                 <!-- Les données séparées par secteurs seront injectées ici -->
             </div>
             <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl text-center text-slate-400 text-sm font-bold mt-6">
@@ -311,31 +324,27 @@
         <!-- ONGLET 4 : TUTO -->
         <div id="view-tuto" class="hidden bg-slate-50 border border-slate-200 overflow-auto flex-grow rounded-xl shadow-inner flex flex-col p-4 sm:p-8 gap-8">
             <div class="text-center max-w-2xl mx-auto">
-                <h2 class="text-2xl font-black text-slate-800 uppercase tracking-tight"><i class="fa-solid fa-route text-blue-500 mr-2"></i>Arbre de Décision QA</h2>
-                <p class="text-slate-500 font-medium mt-2">Ce guide vous indique la procédure exacte à suivre sur SFI et QA MANAGER selon que la qualification soit une "Initiale" ou une "Prorogation".</p>
+                <h2 class="text-xl sm:text-2xl font-black text-slate-800 uppercase tracking-tight"><i class="fa-solid fa-route text-blue-500 mr-2"></i>Arbre de Décision QA</h2>
+                <p class="text-slate-500 font-medium text-xs sm:text-sm mt-2">Ce guide vous indique la procédure exacte à suivre sur SFI et QA MANAGER selon que la qualification soit une "Initiale" ou une "Prorogation".</p>
             </div>
 
-            <!-- Arbre visuel (Image uploadée) -->
             <div class="flex justify-center w-full">
                 <img src="arbre.jpg" alt="Organigramme Arbre de Décision QA" class="max-w-full h-auto rounded-xl shadow-md border border-slate-200" onerror="this.onerror=null; this.src='https://placehold.co/800x400/f8fafc/ef4444?text=IMAGE+INTROUVABLE%5Cn%5Cn1.+Prenez+votre+image%5Cn2.+Renommez-la+exactement+%3A+arbre.jpg%5Cn3.+Placez-la+dans+le+meme+dossier+que+le+site';">
             </div>
 
-            <!-- Explications textuelles -->
-            <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200 text-sm text-slate-600 leading-relaxed mt-2">
-                <h4 class="font-black text-lg text-slate-800 mb-4 border-b border-slate-100 pb-2">Explications Détaillées</h4>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="bg-white p-4 sm:p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200 text-sm text-slate-600 leading-relaxed mt-2">
+                <h4 class="font-black text-base sm:text-lg text-slate-800 mb-4 border-b border-slate-100 pb-2">Explications Détaillées</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
                     <div>
                         <h5 class="font-bold text-blue-600 uppercase mb-2">Cas d'une qualification INITIALE</h5>
-                        <ul class="space-y-3 list-none">
+                        <ul class="space-y-3 list-none text-xs sm:text-sm">
                             <li class="pl-4 border-l-2 border-slate-200"><b class="text-slate-800">Si c'est un "AV avec BP50" :</b> La compétence est à notre charge. L'opérateur passe en statut QARJ. Le QLS Expleo rachète alors l'OP sur le logiciel SFI. Enfin, c'est au QLS OS de faire la validation finale dans QA MANAGER.</li>
                             <li class="pl-4 border-l-2 border-red-300"><b class="text-red-700">Si c'est une "CERTIF" :</b> Vous ne devez pas intervenir ("PAS TOUCHE"). La gestion de cette qualification est assurée uniquement par les QLS. Votre seule mission est de fournir / envoyer le QCM au compagnon pour qu'il le remplisse.</li>
                         </ul>
                     </div>
-                    
                     <div>
                         <h5 class="font-bold text-orange-500 uppercase mb-2">Cas d'une PROROGATION</h5>
-                        <ul class="space-y-3 list-none">
+                        <ul class="space-y-3 list-none text-xs sm:text-sm">
                             <li class="pl-4 border-l-2 border-slate-200"><b class="text-slate-800">Si c'est un "AV avec BP50" :</b> La compétence reste sous notre surveillance. L'opérateur doit racheter lui-même son OP sur SFI. Dès que c'est fait, le QLS OS effectue la validation sur QA MANAGER.</li>
                             <li class="pl-4 border-l-2 border-amber-300"><b class="text-amber-700">Si c'est une "CERTIF" :</b> Nous gardons la main. L'opérateur rachète sur SFI. <b>Attention, une action supplémentaire est obligatoire :</b> le compagnon doit remplir le QCM. Une fois validé, le QLS OS finalise sur QA MANAGER et s'assure d'y intégrer le résultat.</li>
                         </ul>
@@ -345,33 +354,33 @@
         </div>
     </main>
 
-    <footer class="bg-white border-t border-slate-200 px-6 py-4 mt-auto">
-        <div class="max-w-[1920px] mx-auto flex flex-wrap justify-between items-center gap-4 text-xs font-bold text-slate-600">
-            <div class="flex gap-6 overflow-x-auto">
-                <span class="flex items-center gap-2"><span class="w-3 h-3 bg-[#10B981] rounded-sm"></span> Validé</span>
-                <span class="flex items-center gap-2"><span class="w-3 h-3 bg-[#00E5FF] rounded-sm"></span> Priorité (Avion/Éclair)</span>
-                <span class="flex items-center gap-2"><span class="w-3 h-3 bg-[#F59E0B] rounded-sm"></span> Pas en Capacité</span>
-                <span class="flex items-center gap-2"><span class="w-3 h-3 bg-[#64748B] rounded-sm"></span> Standby</span>
-                <span class="flex items-center gap-2"><span class="w-3 h-3 bg-[#EF4444] rounded-sm animate-pulse"></span> Échu</span>
+    <footer class="bg-white border-t border-slate-200 px-4 lg:px-6 py-4 mt-auto">
+        <div class="max-w-[1920px] mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-bold text-slate-600">
+            <div class="flex gap-4 overflow-x-auto hide-scrollbar pb-1 w-full md:w-auto snap-x">
+                <span class="flex items-center gap-2 flex-shrink-0 snap-start"><span class="w-3 h-3 bg-[#10B981] rounded-sm"></span> Validé</span>
+                <span class="flex items-center gap-2 flex-shrink-0 snap-start"><span class="w-3 h-3 bg-[#00E5FF] rounded-sm"></span> Priorité (Avion/Éclair)</span>
+                <span class="flex items-center gap-2 flex-shrink-0 snap-start"><span class="w-3 h-3 bg-[#F59E0B] rounded-sm"></span> Pas en Capacité</span>
+                <span class="flex items-center gap-2 flex-shrink-0 snap-start"><span class="w-3 h-3 bg-[#64748B] rounded-sm"></span> Standby</span>
+                <span class="flex items-center gap-2 flex-shrink-0 snap-start"><span class="w-3 h-3 bg-[#EF4444] rounded-sm animate-pulse"></span> Échu</span>
             </div>
-            <div class="text-slate-400 font-mono text-[11px]"><i class="fa-solid fa-rotate"></i> Reset validations: Mercredi 23:59</div>
+            <div class="text-slate-400 font-mono text-[10px] sm:text-[11px] flex-shrink-0"><i class="fa-solid fa-rotate"></i> Reset validations: Mercredi 23:59</div>
         </div>
     </footer>
 
     <!-- MODAL : ACTION -->
-    <div id="qualif-action-modal" class="fixed inset-0 bg-slate-900/50 hidden z-[200] flex items-center justify-center p-4 backdrop-blur-sm">
-        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden border border-slate-200 flex flex-col max-h-[90vh]">
+    <div id="qualif-action-modal" class="fixed inset-0 bg-slate-900/60 hidden z-[200] flex items-end sm:items-center justify-center p-0 sm:p-4 backdrop-blur-sm">
+        <div class="bg-white rounded-t-2xl sm:rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden border border-slate-200 flex flex-col max-h-[90vh]">
             <div class="p-5 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
                 <h3 id="modal-qualif-title" class="font-black text-sm text-slate-800 uppercase mono">CODE</h3>
                 <button type="button" onclick="closeQualifMenu()" class="text-slate-400 hover:text-slate-700 bg-slate-200 hover:bg-slate-300 w-8 h-8 rounded-lg transition-colors"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <div class="p-4 space-y-3 overflow-y-auto flex-grow">
+            <div class="p-4 space-y-3 overflow-y-auto flex-grow pb-8 sm:pb-4">
                 
                 <div class="bg-emerald-50 border border-emerald-100 rounded-xl p-3 flex flex-col gap-2">
                     <label class="text-[10px] font-black uppercase tracking-widest text-emerald-700">Valider la compétence</label>
                     <div class="flex gap-2">
-                        <select id="modal-validator" class="flex-grow text-xs p-2 rounded-lg border border-emerald-200 text-emerald-800 font-bold outline-none focus:ring-2 focus:ring-emerald-500">
-                            <option value="">Sélectionner le validateur...</option>
+                        <select id="modal-validator" class="flex-grow text-xs p-3 sm:p-2 rounded-lg border border-emerald-200 text-emerald-800 font-bold outline-none focus:ring-2 focus:ring-emerald-500">
+                            <option value="">Sélectionner validateur...</option>
                             <option value="Sliman">Sliman</option>
                             <option value="Claire">Claire</option>
                             <option value="Sandrine">Sandrine</option>
@@ -383,19 +392,19 @@
                 </div>
 
                 <button type="button" onclick="setQualifState('priority')" class="w-full p-4 flex items-center gap-4 bg-sky-50 hover:bg-sky-100 text-sky-700 font-bold text-sm rounded-xl transition-colors text-left border border-sky-200">
-                    <div class="w-8 h-8 rounded-full bg-sky-200 flex items-center justify-center"><i class="fa-solid fa-plane-up text-sky-700"></i></div> Priorité Journée
+                    <div class="w-8 h-8 rounded-full bg-sky-200 flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-plane-up text-sky-700"></i></div> Priorité Journée
                 </button>
                 <button type="button" onclick="setQualifState('disabled')" class="w-full p-4 flex items-center gap-4 bg-amber-50 hover:bg-amber-100 text-amber-800 font-bold text-sm rounded-xl transition-colors text-left border border-amber-200 shadow-sm">
-                    <div class="w-8 h-8 rounded-full bg-amber-200 flex items-center justify-center"><i class="fa-solid fa-lock text-amber-800"></i></div> PAS EN CAPACITÉ
+                    <div class="w-8 h-8 rounded-full bg-amber-200 flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-lock text-amber-800"></i></div> PAS EN CAPACITÉ
                 </button>
                 <button type="button" onclick="setQualifState('standby')" class="w-full p-4 flex items-center gap-4 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-sm rounded-xl transition-colors text-left border border-slate-300">
-                    <div class="w-8 h-8 rounded-full bg-slate-300 flex items-center justify-center"><i class="fa-solid fa-pause text-slate-700"></i></div> En Standby
+                    <div class="w-8 h-8 rounded-full bg-slate-300 flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-pause text-slate-700"></i></div> En Standby
                 </button>
                 <div class="h-px w-full bg-slate-100 my-2"></div>
                 <div class="p-3 bg-slate-50 rounded-xl border border-slate-200">
                     <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2 block"><i class="fa-solid fa-pen mr-1"></i> Note / Commentaire</label>
                     <textarea id="modal-qualif-note" class="w-full text-xs p-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 outline-none resize-none h-16 shadow-inner" placeholder="Ajouter une note (ex: OF manquant...)"></textarea>
-                    <button type="button" onclick="saveQualifNote()" class="mt-2 w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs rounded-lg transition-colors shadow-md">Enregistrer la note</button>
+                    <button type="button" onclick="saveQualifNote()" class="mt-2 w-full py-3 sm:py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs rounded-lg transition-colors shadow-md">Enregistrer la note</button>
                 </div>
                 <button type="button" onclick="setQualifState('normal')" class="w-full p-4 flex items-center gap-4 bg-white hover:bg-slate-50 text-slate-500 font-bold text-sm rounded-xl transition-colors border border-slate-200 mt-2"><i class="fa-solid fa-arrow-rotate-left"></i> Réinitialiser l'état</button>
             </div>
@@ -403,8 +412,8 @@
     </div>
 
     <!-- MODAL : AJOUTER QUALIF DIRECTEMENT AU COMPAGNON -->
-    <div id="add-qualif-modal" class="fixed inset-0 bg-slate-900/50 hidden z-[250] flex items-center justify-center p-4 backdrop-blur-sm">
-        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden border border-slate-200">
+    <div id="add-qualif-modal" class="fixed inset-0 bg-slate-900/60 hidden z-[250] flex items-end sm:items-center justify-center p-0 sm:p-4 backdrop-blur-sm">
+        <div class="bg-white rounded-t-2xl sm:rounded-2xl shadow-2xl w-full max-w-md overflow-hidden border border-slate-200 pb-6 sm:pb-0">
             <div class="p-5 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
                 <h3 class="font-black text-sm text-slate-800 uppercase">Ajouter Qualif : <span id="add-qualif-op-name" class="text-blue-600"></span></h3>
                 <button type="button" onclick="closeAddQualifMenu()" class="text-slate-400 hover:text-slate-700 bg-slate-200 hover:bg-slate-300 w-8 h-8 rounded-lg transition-colors"><i class="fa-solid fa-xmark"></i></button>
@@ -433,7 +442,7 @@
                     <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1 block">Date d'expiration</label>
                     <input type="date" id="new-q-date" class="w-full text-sm p-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 outline-none bg-slate-50">
                 </div>
-                <button type="button" onclick="submitNewQualif()" class="w-full py-3 mt-4 bg-blue-600 hover:bg-blue-700 text-white font-black text-sm rounded-xl transition-colors shadow-md uppercase tracking-wider">
+                <button type="button" onclick="submitNewQualif()" class="w-full py-4 sm:py-3 mt-4 bg-blue-600 hover:bg-blue-700 text-white font-black text-sm rounded-xl transition-colors shadow-md uppercase tracking-wider">
                     <i class="fa-solid fa-plus mr-2"></i> Ajouter au Compagnon
                 </button>
             </div>
@@ -441,15 +450,15 @@
     </div>
 
     <!-- MODAL : GESTION DES OPÉRATEURS -->
-    <div id="manage-modal" class="fixed inset-0 bg-slate-900/60 hidden z-[100] flex items-center justify-center p-4">
-        <div class="bg-white rounded-xl shadow-2xl w-full max-w-5xl flex flex-col h-[85vh] border border-slate-200">
-            <div class="bg-slate-800 p-5 text-white flex justify-between items-center rounded-t-xl">
-                <h2 class="text-base font-black uppercase flex items-center gap-2"><i class="fa-solid fa-users-gear text-blue-400"></i> Gestion des Compagnons & Équipes</h2>
+    <div id="manage-modal" class="fixed inset-0 bg-slate-900/60 hidden z-[100] flex items-end sm:items-center justify-center p-0 sm:p-4">
+        <div class="bg-white rounded-t-xl sm:rounded-xl shadow-2xl w-full max-w-5xl flex flex-col h-[90vh] sm:h-[85vh] border border-slate-200">
+            <div class="bg-slate-800 p-4 sm:p-5 text-white flex justify-between items-center rounded-t-xl">
+                <h2 class="text-sm sm:text-base font-black uppercase flex items-center gap-2"><i class="fa-solid fa-users-gear text-blue-400"></i> Gestion Compagnons</h2>
                 <button type="button" onclick="closeManageModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
             </div>
-            <div class="p-4 bg-slate-50 border-b border-slate-200 grid grid-cols-1 md:grid-cols-4 gap-3 items-center">
-                <input type="text" id="new-nom" placeholder="NOM Prénom" class="p-2.5 border rounded-lg text-sm font-bold uppercase focus:ring-2 focus:ring-blue-500 outline-none">
-                <select id="new-equipe" class="p-2.5 border rounded-lg text-sm font-bold text-slate-700 outline-none">
+            <div class="p-4 bg-slate-50 border-b border-slate-200 flex flex-col sm:grid sm:grid-cols-4 gap-3 items-center">
+                <input type="text" id="new-nom" placeholder="NOM Prénom" class="w-full p-3 sm:p-2.5 border rounded-lg text-sm font-bold uppercase focus:ring-2 focus:ring-blue-500 outline-none">
+                <select id="new-equipe" class="w-full p-3 sm:p-2.5 border rounded-lg text-sm font-bold text-slate-700 outline-none">
                     <optgroup label="Zone P40">
                         <option value="P40A-A">P40 Ligne A - Équipe A</option>
                         <option value="P40A-B">P40 Ligne A - Équipe B</option>
@@ -467,13 +476,13 @@
                         <option value="P50C-B">P50 Ligne C - Équipe B</option>
                     </optgroup>
                 </select>
-                <input type="text" id="new-qualifs" placeholder="CODE-Nom|Date|O/N (Optionnel)" class="p-2.5 border rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none font-mono">
-                <button type="button" onclick="addEntry()" class="bg-blue-600 text-white font-bold p-2.5 rounded-lg text-sm uppercase transition-colors hover:bg-blue-700">Ajouter / Enregistrer</button>
+                <input type="text" id="new-qualifs" placeholder="CODE-Nom|Date|O/N" class="w-full p-3 sm:p-2.5 border rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none font-mono">
+                <button type="button" onclick="addEntry()" class="w-full bg-blue-600 text-white font-bold p-3 sm:p-2.5 rounded-lg text-sm uppercase transition-colors hover:bg-blue-700">Ajouter</button>
             </div>
-            <div class="overflow-auto flex-grow p-4">
-                <table class="w-full text-xs text-left">
+            <div class="overflow-x-auto overflow-y-auto flex-grow p-4">
+                <table class="w-full min-w-[500px] text-xs text-left">
                     <thead class="font-black uppercase text-slate-400 border-b border-slate-200">
-                        <tr><th class="pb-2 w-1/4">Nom</th><th class="pb-2 w-[25%]">Équipe</th><th class="pb-2 w-[40%]">Qualifications (Brut)</th><th class="pb-2 text-right">Sup.</th></tr>
+                        <tr><th class="pb-2 w-[30%]">Nom & Équipe</th><th class="pb-2 w-[60%]">Qualifications (Brut)</th><th class="pb-2 text-right w-[10%]">Sup.</th></tr>
                     </thead>
                     <tbody id="manage-tbody" class="divide-y divide-slate-100 font-mono text-[11px] text-slate-600"></tbody>
                 </table>
@@ -482,16 +491,16 @@
     </div>
 
     <!-- MODAL : LISTE DES VALIDATIONS HEBDO -->
-    <div id="validated-modal" class="fixed inset-0 bg-slate-900/60 hidden z-[100] flex items-center justify-center p-4">
-        <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl flex flex-col max-h-[85vh] border border-slate-200">
+    <div id="validated-modal" class="fixed inset-0 bg-slate-900/60 hidden z-[100] flex items-end sm:items-center justify-center p-0 sm:p-4">
+        <div class="bg-white rounded-t-xl sm:rounded-xl shadow-2xl w-full max-w-2xl flex flex-col max-h-[85vh] border border-slate-200">
             <div class="bg-slate-800 p-5 text-white flex justify-between items-center rounded-t-xl">
-                <h2 class="text-base font-black uppercase flex items-center gap-2"><i class="fa-solid fa-check-circle text-emerald-400"></i> Historique des Validations Hebdo</h2>
+                <h2 class="text-sm sm:text-base font-black uppercase flex items-center gap-2"><i class="fa-solid fa-check-circle text-emerald-400"></i> Historique Validations</h2>
                 <button type="button" onclick="closeValidatedModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
             </div>
-            <div class="overflow-auto flex-grow p-4">
-                <table class="w-full text-sm text-left">
+            <div class="overflow-x-auto overflow-y-auto flex-grow p-4">
+                <table class="w-full min-w-[400px] text-sm text-left">
                     <thead class="font-black uppercase text-slate-400 border-b border-slate-200 text-xs">
-                        <tr><th class="pb-2 w-[25%]">Opérateur</th><th class="pb-2 w-[15%]">Code</th><th class="pb-2 w-[35%]">Qualification</th><th class="pb-2 w-[25%] text-right">Validateur</th></tr>
+                        <tr><th class="pb-2 w-[30%]">Opérateur</th><th class="pb-2 w-[15%]">Code</th><th class="pb-2 w-[30%]">Qualification</th><th class="pb-2 w-[25%] text-right">Validateur</th></tr>
                     </thead>
                     <tbody id="validated-tbody" class="divide-y divide-slate-100 font-medium text-slate-700"></tbody>
                 </table>
@@ -508,7 +517,7 @@
                 <button type="button" onclick="closePinModal()" class="ml-auto text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="p-6 flex flex-col gap-4 text-center">
-                <p class="text-xs text-slate-500 font-bold mb-2">Veuillez saisir le code administrateur pour accéder à la Time Machine et aux données brutes.</p>
+                <p class="text-xs text-slate-500 font-bold mb-2">Saisir le code administrateur pour la Console Technique.</p>
                 <input type="password" id="dev-pin-input" onkeypress="if(event.key === 'Enter') verifyPin()" class="w-full text-center font-mono text-3xl p-3 border-2 border-slate-300 rounded-lg focus:border-blue-500 outline-none tracking-[0.5em] text-slate-800" placeholder="••••••" maxlength="6">
                 <p id="pin-error" class="text-xs text-red-500 font-black hidden bg-red-50 py-2 rounded-lg border border-red-100">❌ Code incorrect.</p>
                 <button type="button" onclick="verifyPin()" class="w-full py-3 mt-2 bg-blue-600 hover:bg-blue-700 text-white font-black text-sm rounded-xl transition-colors shadow-md uppercase tracking-wider">Déverrouiller</button>
@@ -516,20 +525,27 @@
         </div>
     </div>
 
-    <!-- MODAL : DÉVELOPPEUR (TIME MACHINE & EDITEUR JSON/CSV) -->
-    <div id="dev-modal" class="fixed inset-0 bg-slate-900/80 hidden z-[300] flex items-center justify-center p-4">
-        <div class="bg-slate-900 rounded-xl shadow-2xl w-full max-w-6xl flex flex-col h-[85vh] border border-slate-700">
-            <div class="bg-black p-5 text-white flex justify-between items-center rounded-t-xl border-b border-slate-800">
-                <h2 class="text-base font-black uppercase flex items-center gap-3 text-blue-400">
-                    <i class="fa-solid fa-terminal"></i> Console Admin - Mode Développeur
+    <!-- MODAL : DÉVELOPPEUR (TIME MACHINE, JSON/CSV & EDITEUR HTML LIVE) -->
+    <div id="dev-modal" class="fixed inset-0 bg-slate-900/80 hidden z-[300] flex items-end sm:items-center justify-center p-0 sm:p-4">
+        <div class="bg-slate-900 rounded-t-xl sm:rounded-xl shadow-2xl w-full max-w-6xl flex flex-col h-[95vh] sm:h-[85vh] border border-slate-700">
+            <div class="bg-black p-4 sm:p-5 text-white flex justify-between items-center rounded-t-xl border-b border-slate-800">
+                <h2 class="text-sm sm:text-base font-black uppercase flex items-center gap-3 text-blue-400">
+                    <i class="fa-solid fa-terminal"></i> Console Admin
                 </h2>
                 <button type="button" onclick="closeDevModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
             </div>
             
-            <div class="flex-grow overflow-hidden flex flex-col lg:flex-row p-4 gap-4">
+            <!-- ONGLETS NAVIGATION DEVELOPPEUR -->
+            <div class="bg-slate-800 border-b border-slate-700 flex p-2 gap-2 overflow-x-auto hide-scrollbar">
+                <button type="button" onclick="switchDevTab('data')" id="dev-tab-data" class="px-4 py-2 bg-blue-600 text-white rounded-lg text-xs font-bold uppercase transition-colors whitespace-nowrap">Données & Sauvegardes</button>
+                <button type="button" onclick="switchDevTab('html')" id="dev-tab-html" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white border border-slate-600 rounded-lg text-xs font-bold uppercase transition-colors whitespace-nowrap">Éditeur HTML Live</button>
+            </div>
+            
+            <!-- VUE 1 : DONNÉES (TIME MACHINE + CSV/JSON) -->
+            <div id="dev-view-data" class="flex-grow overflow-x-hidden overflow-y-auto flex flex-col lg:flex-row p-4 gap-4">
                 
                 <!-- GAUCHE : TIME MACHINE -->
-                <div class="w-full lg:w-1/3 flex flex-col bg-slate-800 rounded-xl border border-slate-700 overflow-hidden">
+                <div class="w-full lg:w-1/3 flex flex-col bg-slate-800 rounded-xl border border-slate-700 overflow-hidden min-h-[250px]">
                     <div class="bg-slate-700 p-3 text-xs font-black text-slate-300 uppercase tracking-widest flex items-center gap-2">
                         <i class="fa-solid fa-clock-rotate-left text-amber-400"></i> Time Machine (Rollbacks)
                     </div>
@@ -544,24 +560,24 @@
                 </div>
 
                 <!-- DROITE : GESTION DES DONNÉES (CSV & JSON) -->
-                <div class="w-full lg:w-2/3 flex flex-col bg-slate-800 rounded-xl border border-slate-700 overflow-hidden overflow-y-auto">
+                <div class="w-full lg:w-2/3 flex flex-col bg-slate-800 rounded-xl border border-slate-700 overflow-hidden">
                     
                     <!-- EXPORT / IMPORT CSV (SMART MERGE) -->
                     <div class="p-4 border-b border-slate-700 flex flex-col gap-4">
-                        <div class="flex justify-between items-center">
-                            <h3 class="text-xs font-black text-blue-400 uppercase tracking-widest"><i class="fa-solid fa-file-csv mr-2"></i> Synchronisation CSV (Smart Merge)</h3>
-                            <button type="button" onclick="exportCSV()" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors shadow-md flex items-center gap-2">
-                                <i class="fa-solid fa-download"></i> Exporter tout en CSV
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                            <h3 class="text-xs font-black text-blue-400 uppercase tracking-widest"><i class="fa-solid fa-file-csv mr-2"></i> Sync CSV (Smart Merge)</h3>
+                            <button type="button" onclick="exportCSV()" class="w-full sm:w-auto bg-blue-600 hover:bg-blue-500 text-white px-4 py-2.5 sm:py-2 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors shadow-md flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-download"></i> Exporter tout
                             </button>
                         </div>
                         <div class="bg-slate-900 rounded-xl p-3 border border-slate-700">
                             <p class="text-[10px] text-slate-400 mb-2 font-medium">
-                                <strong class="text-emerald-400">Mise à jour intelligente :</strong> Collez ici un tableau (Nom;Equipe;Code;NomQualif;Date;Type). 
-                                Le système mettra à jour les données <strong class="text-amber-400">tout en conservant vos statuts (Standby...), notes et validateurs actuels !</strong>
+                                <strong class="text-emerald-400">Mise à jour :</strong> Collez ici un tableau (Nom;Equipe;Code;NomQualif;Date;Type). 
+                                Les statuts (Standby...) et notes seront <strong class="text-amber-400">conservés !</strong>
                             </p>
                             <textarea id="dev-csv-input" class="w-full bg-[#0f172a] text-slate-300 font-mono text-[11px] p-3 rounded-lg border border-slate-600 focus:outline-none focus:border-blue-500 resize-none h-24 shadow-inner" placeholder="Collez votre tableau CSV ici (Séparateur : Point-virgule)..."></textarea>
-                            <button type="button" onclick="smartImportCSV()" class="w-full mt-2 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-black rounded-lg shadow-md transition-all uppercase tracking-wider flex justify-center items-center gap-2">
-                                <i class="fa-solid fa-wand-magic-sparkles"></i> Fusionner les nouvelles données
+                            <button type="button" onclick="smartImportCSV()" class="w-full mt-2 py-3 sm:py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-black rounded-lg shadow-md transition-all uppercase tracking-wider flex justify-center items-center gap-2">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i> Fusionner les données
                             </button>
                         </div>
                     </div>
@@ -569,23 +585,45 @@
                     <!-- JSON BRUT -->
                     <div class="p-4 flex flex-col gap-3 flex-grow">
                         <div class="flex justify-between items-center">
-                            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest"><i class="fa-solid fa-code mr-2"></i> Mode Secours : Éditeur JSON</h3>
-                            <button type="button" onclick="copyRawData(this)" class="text-slate-400 hover:text-white transition-colors bg-slate-700 px-3 py-1.5 rounded-lg border border-slate-600 shadow-sm text-[10px] font-bold"><i class="fa-solid fa-copy"></i> Copier JSON</button>
+                            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest"><i class="fa-solid fa-code mr-2"></i> Éditeur JSON</h3>
+                            <button type="button" onclick="copyRawData(this)" class="text-slate-400 hover:text-white transition-colors bg-slate-700 px-3 py-2 sm:py-1.5 rounded-lg border border-slate-600 shadow-sm text-[10px] font-bold"><i class="fa-solid fa-copy"></i> Copier JSON</button>
                         </div>
-                        <textarea id="dev-raw-data" class="w-full flex-grow bg-[#0f172a] text-green-400 font-mono text-[11px] p-4 rounded-xl border border-slate-600 focus:outline-none focus:border-red-500 resize-none overflow-auto whitespace-pre shadow-inner leading-relaxed min-h-[100px]" spellcheck="false"></textarea>
+                        <textarea id="dev-raw-data" class="w-full flex-grow bg-[#0f172a] text-green-400 font-mono text-[11px] p-4 rounded-xl border border-slate-600 focus:outline-none focus:border-red-500 resize-none overflow-auto whitespace-pre shadow-inner leading-relaxed min-h-[150px]" spellcheck="false"></textarea>
                         
                         <button type="button" id="btn-force-update" onclick="forceUpdateDatabase()" class="w-full py-3 bg-slate-700 hover:bg-red-600 text-slate-300 hover:text-white text-xs font-black rounded-xl shadow-md transition-all uppercase tracking-wider flex justify-center items-center gap-2 border border-slate-600">
-                            <i class="fa-solid fa-triangle-exclamation"></i> Écraser la base (JSON)
+                            <i class="fa-solid fa-triangle-exclamation"></i> Écraser la base
                         </button>
                     </div>
                 </div>
 
             </div>
+
+            <!-- VUE 2 : NOUVEL ÉDITEUR HTML LIVE -->
+            <div id="dev-view-html" class="hidden flex-grow overflow-x-hidden overflow-y-auto flex-col p-4 gap-4">
+                <div class="w-full flex flex-col bg-slate-800 rounded-xl border border-slate-700 overflow-hidden h-full">
+                    <div class="p-4 border-b border-slate-700 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                        <div>
+                            <h3 class="text-xs font-black text-blue-400 uppercase tracking-widest"><i class="fa-solid fa-code mr-2"></i> Mode Éditeur Live (Anti-Blocage)</h3>
+                            <p class="text-[10px] text-slate-400 mt-1 font-medium">Pour éviter les blocages GitHub/Serveur : copiez-collez votre nouveau code HTML ici et appliquez-le instantanément. Quand tout est prêt, téléchargez-le.</p>
+                        </div>
+                        <button type="button" onclick="downloadHTML()" class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors shadow-md flex items-center justify-center gap-2 border border-slate-600">
+                            <i class="fa-solid fa-download"></i> Sauvegarder (index.html)
+                        </button>
+                    </div>
+                    <div class="flex-grow p-4 flex flex-col gap-3">
+                        <textarea id="dev-html-input" class="w-full flex-grow bg-[#0f172a] text-blue-400 font-mono text-[11px] p-4 rounded-xl border border-slate-600 focus:outline-none focus:border-blue-500 resize-none overflow-auto shadow-inner leading-relaxed" placeholder="Collez l'intégralité du nouveau code HTML ici (<!DOCTYPE html>...). Le code remplacera l'affichage actuel." spellcheck="false"></textarea>
+                        <button type="button" onclick="applyLiveHTML()" class="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white text-xs font-black rounded-xl shadow-md transition-all uppercase tracking-wider flex justify-center items-center gap-2">
+                            <i class="fa-solid fa-play"></i> Appliquer ce code maintenant
+                        </button>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
     <!-- MODAL : CONFIRMATION SUPPRESSION COMPAGNON -->
-    <div id="delete-confirm-modal" class="fixed inset-0 bg-slate-900/60 hidden z-[400] flex items-center justify-center p-4 backdrop-blur-sm">
+    <div id="delete-confirm-modal" class="fixed inset-0 bg-slate-900/60 hidden z-[500] flex items-center justify-center p-4 backdrop-blur-sm">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-sm overflow-hidden border border-slate-200">
             <div class="p-5 bg-red-50 border-b border-red-100 flex items-center gap-3">
                 <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center text-red-600"><i class="fa-solid fa-trash-can text-xl"></i></div>
@@ -594,15 +632,15 @@
             <div class="p-5">
                 <p class="text-sm text-slate-600 font-medium mb-5">Êtes-vous sûr de vouloir supprimer définitivement ce compagnon ? Cette action est irréversible.</p>
                 <div class="flex gap-3">
-                    <button type="button" onclick="cancelDelete()" class="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-sm rounded-lg transition-colors">Annuler</button>
-                    <button type="button" onclick="confirmDelete()" class="flex-1 py-2.5 bg-red-600 hover:bg-red-700 text-white font-bold text-sm rounded-lg transition-colors shadow-md">Oui, supprimer</button>
+                    <button type="button" onclick="cancelDelete()" class="flex-1 py-3 sm:py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-sm rounded-lg transition-colors">Annuler</button>
+                    <button type="button" onclick="confirmDelete()" class="flex-1 py-3 sm:py-2.5 bg-red-600 hover:bg-red-700 text-white font-bold text-sm rounded-lg transition-colors shadow-md">Oui, supprimer</button>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- MODAL : CONFIRMATION RESTAURATION SAUVEGARDE -->
-    <div id="backup-confirm-modal" class="fixed inset-0 bg-slate-900/60 hidden z-[400] flex items-center justify-center p-4 backdrop-blur-sm">
+    <div id="backup-confirm-modal" class="fixed inset-0 bg-slate-900/60 hidden z-[500] flex items-center justify-center p-4 backdrop-blur-sm">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-sm overflow-hidden border border-slate-200">
             <div class="p-5 bg-amber-50 border-b border-amber-100 flex items-center gap-3">
                 <div class="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center text-amber-600"><i class="fa-solid fa-clock-rotate-left text-xl"></i></div>
@@ -611,8 +649,8 @@
             <div class="p-5">
                 <p class="text-sm text-slate-600 font-medium mb-5">Vous allez écraser les données actuelles pour revenir à cette ancienne version. Voulez-vous continuer ?</p>
                 <div class="flex gap-3">
-                    <button type="button" onclick="cancelRestore()" class="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-sm rounded-lg transition-colors">Annuler</button>
-                    <button type="button" onclick="confirmRestore()" class="flex-1 py-2.5 bg-amber-500 hover:bg-amber-600 text-white font-bold text-sm rounded-lg transition-colors shadow-md">Restaurer</button>
+                    <button type="button" onclick="cancelRestore()" class="flex-1 py-3 sm:py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-sm rounded-lg transition-colors">Annuler</button>
+                    <button type="button" onclick="confirmRestore()" class="flex-1 py-3 sm:py-2.5 bg-amber-500 hover:bg-amber-600 text-white font-bold text-sm rounded-lg transition-colors shadow-md">Restaurer</button>
                 </div>
             </div>
         </div>
@@ -623,6 +661,25 @@
         const OLD_KEY = 'cockpit_p40_production_permanente_v6'; 
         const HISTORY_KEY = 'cockpit_p40_history_permanent';
         const STATS_KEY = 'cockpit_p40_weekly_stats_permanent';
+
+        // CYBERSEC: Sanitization logic to prevent XSS injection
+        function sanitize(str) {
+            if (!str) return '';
+            const temp = document.createElement('div');
+            temp.textContent = str;
+            return temp.innerHTML;
+        }
+
+        // Safe JSON parsing function
+        function getSafeStorage(key, defaultVal) {
+            try {
+                const item = localStorage.getItem(key);
+                return item ? JSON.parse(item) : defaultVal;
+            } catch (e) {
+                console.error("Local Storage Error on key", key, e);
+                return defaultVal;
+            }
+        }
 
         // Variables de la hiérarchie
         let currentZone = 'P40';
@@ -653,9 +710,14 @@
         let currentOpForAdd = -1;
         let operatorToDelete = -1;
         let backupToRestore = -1;
-        let confirmForceUpdate = false; // Sécurité pour l'écrasement JSON
+        let confirmForceUpdate = false; 
+        
+        // BUG FIX: Global Validation logic is decoupled from render UI
         let currentValidatedList = [];
+        let totalValidatedCount = 0;
+
         let velocityChartInstance = null; 
+        let searchTimeoutId; // For Debounce
 
         window.onload = () => { 
             initializeDatabase(); 
@@ -680,29 +742,36 @@
             ['P40', 'P50'].forEach(z => {
                 const el = document.getElementById('btn-zone-' + z);
                 if (el) el.className = z === currentZone 
-                    ? "px-4 py-1.5 rounded-md text-xs font-black bg-blue-600 text-white shadow-sm transition-all" 
-                    : "px-4 py-1.5 rounded-md text-xs font-bold text-slate-500 hover:text-slate-800 hover:bg-white transition-all";
+                    ? "px-3 sm:px-4 py-1.5 rounded-md text-xs font-black bg-blue-600 text-white shadow-sm transition-all" 
+                    : "px-3 sm:px-4 py-1.5 rounded-md text-xs font-bold text-slate-500 hover:text-slate-800 hover:bg-white transition-all";
             });
             // Secteur / Ligne
             ['A', 'B', 'C'].forEach(s => {
                 const el = document.getElementById('btn-secteur-' + s);
                 if (el) el.className = s === currentSecteur 
-                    ? "px-4 py-1.5 rounded-md text-xs font-black bg-blue-600 text-white shadow-sm transition-all" 
-                    : "px-4 py-1.5 rounded-md text-xs font-bold text-slate-500 hover:text-slate-800 hover:bg-white transition-all";
+                    ? "px-3 sm:px-4 py-1.5 rounded-md text-xs font-black bg-blue-600 text-white shadow-sm transition-all" 
+                    : "px-3 sm:px-4 py-1.5 rounded-md text-xs font-bold text-slate-500 hover:text-slate-800 hover:bg-white transition-all";
             });
             // Equipe
             ['A', 'B'].forEach(t => {
                 const el = document.getElementById('btn-team-' + t);
                 if (el) el.className = t === currentTeam 
-                    ? "px-4 py-1.5 rounded-md text-xs font-black bg-blue-600 text-white shadow-sm transition-all" 
-                    : "px-4 py-1.5 rounded-md text-xs font-bold text-slate-500 hover:text-slate-800 hover:bg-white transition-all";
+                    ? "px-3 sm:px-4 py-1.5 rounded-md text-xs font-black bg-blue-600 text-white shadow-sm transition-all" 
+                    : "px-3 sm:px-4 py-1.5 rounded-md text-xs font-bold text-slate-500 hover:text-slate-800 hover:bg-white transition-all";
             });
 
             currentTeamFilter = currentZone + currentSecteur + '-' + currentTeam;
             renderTable();
         }
 
-        // --- RECHERCHE INTELLIGENTE ---
+        // --- RECHERCHE INTELLIGENTE (Optimisée avec Debounce) ---
+        function debouncedSearch() {
+            clearTimeout(searchTimeoutId);
+            searchTimeoutId = setTimeout(() => {
+                handleSearchInput();
+            }, 300); // Attend 300ms de pause avant de chercher (optimisation perf)
+        }
+
         function handleSearchInput() {
             const query = document.getElementById('searchInput').value.toLowerCase();
             const resultsDropdown = document.getElementById('searchResults');
@@ -725,10 +794,10 @@
                 resultsDropdown.classList.remove('hidden');
                 matches.forEach(match => {
                     const li = document.createElement('li');
-                    li.className = 'p-3 hover:bg-blue-50 cursor-pointer text-xs text-slate-700 font-bold transition-colors flex justify-between items-center';
+                    li.className = 'p-3 hover:bg-blue-50 cursor-pointer text-xs text-slate-700 font-bold transition-colors flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1 sm:gap-0 border-b border-slate-50 last:border-0';
                     
                     const teamFormat = formatTeamName(match.equipe);
-                    li.innerHTML = `<span>${match.nom}</span> <span class="text-[9px] bg-slate-200 text-slate-500 px-2 py-1 rounded">${teamFormat}</span>`;
+                    li.innerHTML = `<span>${sanitize(match.nom)}</span> <span class="text-[9px] bg-slate-200 text-slate-500 px-2 py-1 rounded w-fit">${teamFormat}</span>`;
                     
                     li.onclick = () => {
                         document.getElementById('searchInput').value = match.nom;
@@ -775,14 +844,14 @@
                 const view = document.getElementById('view-' + id);
                 const tab = document.getElementById('tab-' + id);
                 if (view) view.classList.add('hidden');
-                if (tab) tab.className = "px-5 py-2.5 bg-white text-slate-600 rounded-xl font-bold shadow-sm border border-slate-200 transition-colors text-sm flex items-center gap-2";
+                if (tab) tab.className = "flex-shrink-0 snap-start px-4 sm:px-5 py-2.5 bg-white text-slate-600 rounded-xl font-bold shadow-sm hover:bg-slate-50 border border-slate-200 transition-colors text-sm flex items-center gap-2" + (id === 'tuto' ? ' lg:ml-auto' : '');
             });
             
             const activeView = document.getElementById('view-' + tabId);
             const activeTab = document.getElementById('tab-' + tabId);
             
             if (activeView) activeView.classList.remove('hidden');
-            if (activeTab) activeTab.className = "px-5 py-2.5 bg-blue-600 text-white rounded-xl font-bold shadow-md transition-colors text-sm flex items-center gap-2";
+            if (activeTab) activeTab.className = "flex-shrink-0 snap-start px-4 sm:px-5 py-2.5 bg-blue-600 text-white rounded-xl font-bold shadow-md transition-colors text-sm flex items-center gap-2" + (tabId === 'tuto' ? ' lg:ml-auto' : '');
 
             if (tabId === 'global' || tabId === 'hebdo') {
                 renderStats();
@@ -811,7 +880,7 @@
             }
 
             if (savedData) { 
-                database = JSON.parse(savedData); 
+                database = getSafeStorage(STORAGE_KEY, []); 
                 
                 let updated = false;
                 database.forEach(op => {
@@ -853,10 +922,12 @@
         }
 
         function saveToHistory() {
-            let history = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
+            let history = getSafeStorage(HISTORY_KEY, []);
             const now = new Date();
+            // Ajout d'un ID de timestamp pour éviter les bugs de tri
+            const timeId = now.getTime();
             const timeStr = now.toLocaleDateString('fr-FR') + ' à ' + now.toLocaleTimeString('fr-FR');
-            history.unshift({ time: timeStr, data: JSON.parse(JSON.stringify(database)) });
+            history.unshift({ id: timeId, time: timeStr, data: JSON.parse(JSON.stringify(database)) });
             if (history.length > 30) history = history.slice(0, 30);
             localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
         }
@@ -864,10 +935,13 @@
         function performWeeklyPurge() {
             const now = new Date();
             const lastPurgeStr = localStorage.getItem('p40_purge_permanente');
+            
+            // Déterminer la date du dernier Mercredi à 23:59:59
             let lastWed = new Date();
             lastWed.setDate(now.getDate() - ((now.getDay() + 4) % 7));
             lastWed.setHours(23, 59, 59, 999);
             
+            // On purge seulement si on a dépassé ce mercredi, ET si on n'a pas déjà purgé depuis.
             if (!lastPurgeStr || parseInt(lastPurgeStr) < lastWed.getTime()) {
                 if (now.getTime() > lastWed.getTime()) {
                     
@@ -880,7 +954,7 @@
                         });
                     });
                     
-                    let chartStats = JSON.parse(localStorage.getItem(STATS_KEY) || '[]');
+                    let chartStats = getSafeStorage(STATS_KEY, []);
                     const weekNum = getWeekNumber(now) - 1; 
                     chartStats.push({ label: "Sem " + weekNum, val: weeklyVal, tot: weeklyTot });
                     if (chartStats.length > 10) chartStats.shift(); 
@@ -919,14 +993,39 @@
 
         function cleanName(text) { return text ? text.replace(/\s*\(.*?\)\s*/g, '').trim() : "QUALIFICATION"; }
 
+        // --- CALCUL DES VALIDATIONS GLOBAUX (Indépendant des filtres) ---
+        function calculateGlobalValidations() {
+            currentValidatedList = [];
+            totalValidatedCount = 0;
+            database.forEach((op, opIdx) => {
+                const qs = (op.qualifs || "").split(',').filter(x => x.trim() !== "");
+                qs.forEach((qStr, qIdx) => {
+                    const parts = qStr.trim().split('|');
+                    const state = parts[3] || 'normal';
+                    if (state === 'validated') {
+                        totalValidatedCount++;
+                        currentValidatedList.push({
+                            nom: op.nom,
+                            code: parts[0].split('-')[0] || "?",
+                            name: cleanName(parts[0].split('-')[1]),
+                            validator: parts[5] || ''
+                        });
+                    }
+                });
+            });
+            document.getElementById('global-counter').innerText = totalValidatedCount;
+        }
+
         function renderTable() {
             const tbody = document.getElementById('tableBody');
             const searchQuery = document.getElementById('searchInput').value.toLowerCase();
-            let totalValidatedCount = 0;
-            currentValidatedList = []; 
             tbody.innerHTML = '';
             
+            // On calcule d'abord le total global pour que le compteur soit toujours juste
+            calculateGlobalValidations();
+            
             database.forEach((op, opIdx) => {
+                // Filtre de recherche ou d'équipe
                 if (searchQuery) {
                     if (!op.nom.toLowerCase().includes(searchQuery)) return;
                 } else {
@@ -938,17 +1037,6 @@
                     const codeName = parts[0].split('-');
                     const state = parts[3] || 'normal';
                     const validator = parts[5] || '';
-                    
-                    if (state === 'validated') {
-                        totalValidatedCount++;
-                        currentValidatedList.push({
-                            nom: op.nom,
-                            code: codeName[0] || "?",
-                            name: cleanName(codeName[1]),
-                            validator: validator
-                        });
-                    }
-                    
                     const note = parts[4] || '';
                     const isIni = (parts[2] === 'O' || parts[2] === 'o');
                     return { id: qIdx, code: codeName[0] || "?", name: cleanName(codeName[1]), dateStr: parts[1] || "-", isIni: isIni, state: state, note: note, validator: validator, ...analyzeDate(parts[1], isIni) };
@@ -988,7 +1076,7 @@
                         cardClasses += ' state-validated'; 
                         iconHtml = '<i class="fa-solid fa-circle-check q-icon"></i>'; 
                         if (q.validator) {
-                            validatorBadge = `<span class="text-[9px] bg-emerald-200 text-emerald-800 px-2 py-0.5 rounded-full font-bold ml-auto flex items-center gap-1"><i class="fa-solid fa-user-check"></i> ${q.validator}</span>`;
+                            validatorBadge = `<span class="text-[9px] bg-emerald-200 text-emerald-800 px-2 py-0.5 rounded-full font-bold ml-auto flex items-center gap-1"><i class="fa-solid fa-user-check"></i> ${sanitize(q.validator)}</span>`;
                         }
                     }
                     else if (q.state === 'priority') { 
@@ -1007,11 +1095,11 @@
                     }
                     else if (q.state === 'disabled') { 
                         cardClasses += ' state-disabled'; 
-                        bannerHtml = `<div class="q-banner"><i class="fa-solid fa-triangle-exclamation mr-1 text-[10px]"></i> PAS EN CAPACITÉ <i class="fa-solid fa-circle-question ml-1 text-[11px] cursor-help" title="Le QLS n'a pas les compétences pour pouvoir évaluer le travail de la qualification"></i></div>`; 
+                        bannerHtml = `<div class="q-banner"><i class="fa-solid fa-triangle-exclamation mr-1 text-[10px]"></i> PAS EN CAPACITÉ <i class="fa-solid fa-circle-question ml-1 text-[11px] cursor-help hidden lg:inline-block" title="Le QLS n'a pas les compétences pour pouvoir évaluer le travail de la qualification"></i></div>`; 
                     }
                     else if (q.state === 'standby' || q.state === 'not-needed') { 
                         cardClasses += ' state-standby'; 
-                        bannerHtml = `<div class="q-banner"><i class="fa-solid fa-pause mr-1 text-[10px]"></i> EN STANDBY <i class="fa-solid fa-circle-question ml-1 text-[11px] cursor-help" title="Qualification pas concernée par la zone"></i></div>`; 
+                        bannerHtml = `<div class="q-banner"><i class="fa-solid fa-pause mr-1 text-[10px]"></i> EN STANDBY <i class="fa-solid fa-circle-question ml-1 text-[11px] cursor-help hidden lg:inline-block" title="Qualification pas concernée par la zone"></i></div>`; 
                     }
                     else if (q.state === 'normal' && q.status !== 'ok') { 
                         cardClasses += ` status-${q.status}`; 
@@ -1029,21 +1117,20 @@
                         else timeBadgeHtml = `<span class="timer-badge timer-ok">J-${q.days}</span>`;
                     }
 
-                    let noteHtml = q.note ? `<div class="q-note"><i class="fa-solid fa-comment-dots opacity-50 mr-1"></i> ${q.note}</div>` : '';
-                    const safeName = (q.name || "QUALIF").replace(/"/g, '&quot;');
-
+                    let noteHtml = q.note ? `<div class="q-note"><i class="fa-solid fa-comment-dots opacity-50 mr-1"></i> ${sanitize(q.note)}</div>` : '';
+                    
                     return `
-                    <div class="q-card ${cardClasses}" onclick="openActionMenu(${opIdx}, ${q.id}, '${q.code}')">
+                    <div class="q-card ${cardClasses}" onclick="openActionMenu(${opIdx}, ${q.id}, '${sanitize(q.code)}')">
                         ${bannerHtml}
-                        <div class="q-header"><span class="q-code">${q.code}</span><div class="flex items-center">${validatorBadge}${typeBadge}</div></div>
+                        <div class="q-header"><span class="q-code">${sanitize(q.code)}</span><div class="flex items-center">${validatorBadge}${typeBadge}</div></div>
                         <div class="q-body">
                             <div class="q-title-row">
                                 ${iconHtml ? `<span>${iconHtml}</span>` : ''}
-                                <span class="q-title" data-title="${safeName}">${q.name}</span>
+                                <span class="q-title" data-title="${sanitize(q.name)}">${sanitize(q.name)}</span>
                             </div>
                             ${noteHtml}
                         </div>
-                        <div class="q-footer"><span class="q-date">${q.dateStr}</span>${timeBadgeHtml}</div>
+                        <div class="q-footer"><span class="q-date">${sanitize(q.dateStr)}</span>${timeBadgeHtml}</div>
                     </div>`;
                 }).join('');
 
@@ -1056,24 +1143,30 @@
                     else rowHealth = 'bg-emerald-400';
                 }
 
+                // Construction de la ligne modifiée pour le Responsive Mobile
                 const tr = document.createElement('tr');
-                tr.className = "hover:bg-slate-50 transition-colors";
+                tr.className = "hover:bg-slate-50 transition-colors block lg:table-row border-b-4 lg:border-b-0 border-slate-200 mb-4 lg:mb-0 bg-white lg:bg-transparent rounded-xl lg:rounded-none overflow-hidden shadow-sm lg:shadow-none";
                 
                 tr.innerHTML = `
-                    <td class="px-6 py-6 border-r-2 border-slate-200 align-top">
-                        <div class="font-black text-sm text-slate-800 uppercase tracking-tight">${op.nom}</div>
-                        <div class="text-[10px] text-slate-400 font-bold mt-1">${formatTeamName(op.equipe)}</div>
-                        <button type="button" onclick="openAddQualifMenu(${opIdx})" class="mt-3 text-[10px] font-bold bg-slate-100 hover:bg-blue-50 text-slate-500 hover:text-blue-600 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 border border-slate-200 shadow-sm w-full justify-center">
-                            <i class="fa-solid fa-plus"></i> Ajouter une Qualif
+                    <td class="px-4 py-3 lg:px-6 lg:py-6 border-b lg:border-b-0 lg:border-r-2 border-slate-200 align-top bg-slate-100 lg:bg-transparent flex lg:table-cell justify-between items-center">
+                        <div>
+                            <div class="font-black text-sm text-slate-800 uppercase tracking-tight">${sanitize(op.nom)}</div>
+                            <div class="text-[10px] text-slate-400 font-bold mt-1">${formatTeamName(op.equipe)}</div>
+                        </div>
+                        <button type="button" onclick="openAddQualifMenu(${opIdx})" class="lg:mt-3 text-[10px] font-bold bg-white lg:bg-slate-100 hover:bg-blue-50 text-slate-500 hover:text-blue-600 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 border border-slate-200 shadow-sm lg:w-full justify-center">
+                            <i class="fa-solid fa-plus"></i> <span class="hidden lg:inline">Ajouter Qualif</span>
                         </button>
                     </td>
-                    <td class="px-4 py-4 flex flex-wrap items-stretch">${cardsHtml || '<div class="text-slate-400 italic text-xs px-3 py-2 bg-slate-50 rounded border border-slate-100">Aucune qualification</div>'}</td>
-                    <td class="px-4 py-4 text-center align-middle border-l-2 border-slate-200"><div class="w-3 h-3 mx-auto rounded-full ${rowHealth}"></div></td>
+                    <td class="px-3 py-4 lg:px-4 lg:py-4 flex flex-col items-center sm:flex-row sm:flex-wrap sm:items-stretch sm:justify-center lg:justify-start gap-2 block lg:table-cell w-full">
+                        ${cardsHtml || '<div class="text-slate-400 italic text-xs px-3 py-2 bg-slate-50 rounded border border-slate-100 w-full text-center">Aucune qualification</div>'}
+                    </td>
+                    <td class="px-4 py-3 lg:py-4 text-center align-middle border-t lg:border-t-0 lg:border-l-2 border-slate-200 bg-slate-50 lg:bg-transparent flex lg:table-cell justify-between items-center">
+                        <span class="lg:hidden text-[10px] font-bold text-slate-400 uppercase tracking-widest">État Global :</span>
+                        <div class="w-3 h-3 lg:mx-auto rounded-full ${rowHealth}"></div>
+                    </td>
                 `;
                 tbody.appendChild(tr);
             });
-            
-            document.getElementById('global-counter').innerText = totalValidatedCount;
             
             const viewGlobal = document.getElementById('view-global');
             const viewHebdo = document.getElementById('view-hebdo');
@@ -1161,28 +1254,28 @@
                 return list.map(item => `
                     <div class="py-2 border-b border-${color}-100 last:border-0 flex flex-col gap-1">
                         <div class="flex justify-between items-start">
-                            <p class="text-xs font-bold text-slate-800">${item.op}</p>
-                            ${item.date ? `<span class="text-[9px] font-bold bg-${color}-100 text-${color}-700 px-2 py-0.5 rounded">${item.date}</span>` : ''}
+                            <p class="text-xs font-bold text-slate-800">${sanitize(item.op)}</p>
+                            ${item.date ? `<span class="text-[9px] font-bold bg-${color}-100 text-${color}-700 px-2 py-0.5 rounded">${sanitize(item.date)}</span>` : ''}
                         </div>
                         <div class="flex justify-between items-center mt-1">
-                            <p class="text-[10px] text-${color}-600 truncate pr-2">${item.q}</p>
-                            ${item.validator ? `<span class="text-[9px] font-bold bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded flex-shrink-0"><i class="fa-solid fa-user-check"></i> ${item.validator}</span>` : ''}
+                            <p class="text-[10px] text-${color}-600 truncate pr-2">${sanitize(item.q)}</p>
+                            ${item.validator ? `<span class="text-[9px] font-bold bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded flex-shrink-0"><i class="fa-solid fa-user-check"></i> ${sanitize(item.validator)}</span>` : ''}
                         </div>
                     </div>
                 `).join('');
             };
 
             const renderHebdoSection = (title, data) => `
-                <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-6">
-                    <div class="flex items-center gap-3 mb-4 border-b border-slate-200 pb-3">
+                <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 sm:p-5 mb-6 overflow-hidden">
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3 mb-4 border-b border-slate-200 pb-3">
                         <div class="bg-slate-800 text-white w-8 h-8 flex items-center justify-center rounded-lg font-black"><i class="fa-solid fa-industry"></i></div>
                         <h3 class="font-black text-base text-slate-800 uppercase tracking-widest">${title}</h3>
                     </div>
                     
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
                         <div class="bg-white border border-red-200 rounded-xl p-4 shadow-sm relative overflow-hidden">
                             <div class="absolute -right-2 -top-2 opacity-5 text-4xl text-red-500"><i class="fa-solid fa-clock-rotate-left"></i></div>
-                            <div class="text-red-500 text-[10px] font-black uppercase tracking-widest mb-1 relative z-10"><i class="fa-solid fa-clock-rotate-left mr-1"></i> Prorog. Expirées (Semaine)</div>
+                            <div class="text-red-500 text-[10px] font-black uppercase tracking-widest mb-1 relative z-10"><i class="fa-solid fa-clock-rotate-left mr-1"></i> Prorog. Expirées</div>
                             <div class="text-2xl font-black text-red-600 mono relative z-10">${data.proExp}</div>
                         </div>
                         <div class="bg-white border border-sky-200 rounded-xl p-4 shadow-sm relative overflow-hidden">
@@ -1197,7 +1290,7 @@
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
                         <div class="bg-white border border-red-200 rounded-xl p-4 shadow-sm h-48 overflow-auto">
                             <h4 class="text-xs font-black uppercase text-red-600 mb-2 sticky top-0 bg-white pb-2 border-b border-red-100">Détail Expirations</h4>
                             ${renderList(data.listProExp, "Aucune expiration à gérer.", "red")}
@@ -1233,18 +1326,18 @@
 
                     tbody.innerHTML += `
                         <tr class="hover:bg-slate-50 transition-colors">
-                            <td class="px-6 py-4 border-r border-slate-100 font-bold text-slate-700 uppercase text-[11px] tracking-wide">${name}</td>
-                            <td class="px-6 py-4 text-center border-r border-slate-100 font-mono font-black text-slate-800">${s.total}</td>
-                            <td class="px-6 py-4 text-center border-r border-slate-100 font-mono font-black text-blue-600 bg-blue-50/30">${s.realizable}</td>
-                            <td class="px-6 py-4 text-center border-r border-slate-100 font-mono font-bold text-emerald-600">${s.validated}</td>
-                            <td class="px-6 py-4 text-center border-r border-slate-100 font-mono font-bold text-amber-500">${s.blocked}</td>
-                            <td class="px-6 py-4">
-                                <div class="flex items-center gap-3">
+                            <td class="px-4 sm:px-6 py-4 border-r border-slate-100 font-bold text-slate-700 uppercase text-[11px] tracking-wide">${sanitize(name)}</td>
+                            <td class="px-4 sm:px-6 py-4 text-center border-r border-slate-100 font-mono font-black text-slate-800">${s.total}</td>
+                            <td class="px-4 sm:px-6 py-4 text-center border-r border-slate-100 font-mono font-black text-blue-600 bg-blue-50/30">${s.realizable}</td>
+                            <td class="px-4 sm:px-6 py-4 text-center border-r border-slate-100 font-mono font-bold text-emerald-600">${s.validated}</td>
+                            <td class="px-4 sm:px-6 py-4 text-center border-r border-slate-100 font-mono font-bold text-amber-500">${s.blocked}</td>
+                            <td class="px-4 sm:px-6 py-4 min-w-[120px]">
+                                <div class="flex items-center gap-2 sm:gap-3">
                                     <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden flex shadow-inner">
                                         <div class="bg-emerald-500 h-3" style="width: ${pctVal}%" title="Validé : ${pctVal}%"></div>
                                         <div class="bg-blue-500 h-3" style="width: ${pctRealizable}%" title="Réalisable : ${pctRealizable}%"></div>
                                     </div>
-                                    <span class="text-[11px] font-black text-slate-500 w-10 text-right">${pctRealizable}%</span>
+                                    <span class="text-[10px] sm:text-[11px] font-black text-slate-500 w-8 sm:w-10 text-right">${pctRealizable}%</span>
                                 </div>
                             </td>
                         </tr>
@@ -1320,12 +1413,12 @@
                         x: { duration: 1200, easing: 'easeOutQuart' }
                     },
                     plugins: {
-                        legend: { position: 'top', align: 'end', labels: { usePointStyle: true, boxWidth: 8, font: { family: 'Inter', size: 11, weight: 'bold' } } },
+                        legend: { position: 'top', align: 'end', labels: { usePointStyle: true, boxWidth: 8, font: { family: 'Inter', size: 10, weight: 'bold' } } },
                         tooltip: { backgroundColor: 'rgba(15, 23, 42, 0.9)', titleFont: { family: 'Inter', size: 13 }, bodyFont: { family: 'JetBrains Mono', size: 12 }, padding: 12, cornerRadius: 8, displayColors: true }
                     },
                     scales: {
                         y: { beginAtZero: true, suggestedMax: totalPotential + 5, grid: { color: '#F1F5F9', drawBorder: false }, ticks: { font: { family: 'JetBrains Mono', size: 10 }, color: '#64748B', stepSize: 5 } },
-                        x: { grid: { display: false, drawBorder: false }, ticks: { font: { family: 'Inter', size: 11, weight: 'bold' }, color: '#64748B' } }
+                        x: { grid: { display: false, drawBorder: false }, ticks: { font: { family: 'Inter', size: 10, weight: 'bold' }, color: '#64748B' } }
                     }
                 }
             });
@@ -1372,12 +1465,15 @@
         function saveQualifNote() {
             const { opIdx, qIdx } = currentActiveQualif;
             if (opIdx === -1) return;
-            const newNote = document.getElementById('modal-qualif-note').value.trim().replace(/\|/g, '-').replace(/,/g, ';');
+            
+            // XSS Prevention + format safety
+            const rawNote = document.getElementById('modal-qualif-note').value;
+            const cleanNote = rawNote.trim().replace(/\|/g, '-').replace(/,/g, ';');
             
             let qualifArray = database[opIdx].qualifs.split(',');
             let parts = qualifArray[qIdx].trim().split('|');
             while(parts.length < 4) parts.push('');
-            parts[4] = newNote;
+            parts[4] = cleanNote;
             
             qualifArray[qIdx] = parts.join('|');
             database[opIdx].qualifs = qualifArray.join(',');
@@ -1386,7 +1482,7 @@
 
         function openAddQualifMenu(opIdx) {
             currentOpForAdd = opIdx;
-            document.getElementById('add-qualif-op-name').innerText = database[opIdx].nom;
+            document.getElementById('add-qualif-op-name').innerText = sanitize(database[opIdx].nom);
             
             const select = document.getElementById('new-q-select');
             select.innerHTML = QUALIFS_LIST.map(q => `<option value="${q}">${q}</option>`).join('');
@@ -1450,10 +1546,10 @@
                 return `
                 <tr class="hover:bg-slate-50 transition-colors">
                     <td class="py-4 pr-3 font-bold text-slate-800 flex flex-col">
-                        <span>${op.nom}</span>
+                        <span>${sanitize(op.nom)}</span>
                         <span class="text-[10px] text-slate-400 uppercase">${formatTeamName(op.equipe)}</span>
                     </td>
-                    <td class="py-4 pr-3 text-slate-500 max-w-md truncate" title="${safeQualifs}">${op.qualifs||'-'}</td>
+                    <td class="py-4 pr-3 text-slate-500 max-w-md truncate" title="${safeQualifs}">${safeQualifs||'-'}</td>
                     <td class="py-4 text-right">
                         <button type="button" onclick="deleteEntry(${idx})" class="bg-slate-100 text-slate-400 hover:bg-red-500 hover:text-white p-2.5 rounded-xl transition-colors"><i class="fa-solid fa-trash-can"></i></button>
                     </td>
@@ -1471,7 +1567,7 @@
             const qualifs = document.getElementById('new-qualifs').value.trim();
             const comm = ""; 
             if (!nom) return;
-            database.push({ nom, equipe, qualifs, comm });
+            database.push({ nom: sanitize(nom), equipe, qualifs: sanitize(qualifs), comm });
             persistData(); renderTable(); openManageModal();
             document.getElementById('new-nom').value = ''; document.getElementById('new-qualifs').value = '';
         }
@@ -1501,11 +1597,11 @@
             if (currentValidatedList.length > 0) {
                 tbody.innerHTML = currentValidatedList.map(item => `
                     <tr class="hover:bg-emerald-50 transition-colors">
-                        <td class="py-3 font-bold text-slate-800">${item.nom}</td>
-                        <td class="py-3 font-mono text-emerald-600 font-bold">${item.code}</td>
-                        <td class="py-3 text-slate-500 text-xs uppercase">${item.name}</td>
+                        <td class="py-3 font-bold text-slate-800">${sanitize(item.nom)}</td>
+                        <td class="py-3 font-mono text-emerald-600 font-bold">${sanitize(item.code)}</td>
+                        <td class="py-3 text-slate-500 text-xs uppercase">${sanitize(item.name)}</td>
                         <td class="py-3 text-right">
-                            ${item.validator ? `<span class="bg-emerald-100 text-emerald-700 px-2 py-1 rounded text-[10px] font-bold inline-flex items-center gap-1"><i class="fa-solid fa-user-check"></i> ${item.validator}</span>` : '<span class="text-slate-300">-</span>'}
+                            ${item.validator ? `<span class="bg-emerald-100 text-emerald-700 px-2 py-1 rounded text-[10px] font-bold inline-flex items-center gap-1"><i class="fa-solid fa-user-check"></i> ${sanitize(item.validator)}</span>` : '<span class="text-slate-300">-</span>'}
                         </td>
                     </tr>
                 `).join('');
@@ -1542,7 +1638,7 @@
 
         function openDevModal() {
             const tbody = document.getElementById('dev-tbody');
-            let history = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
+            let history = getSafeStorage(HISTORY_KEY, []);
             
             // Affichage Time Machine
             if (history.length === 0) {
@@ -1550,7 +1646,7 @@
             } else {
                 tbody.innerHTML = history.map((bkp, idx) => `
                     <tr class="hover:bg-slate-800 transition-colors">
-                        <td class="py-4 text-blue-400 font-bold"><i class="fa-solid fa-clock mr-2 text-slate-500"></i> ${bkp.time}</td>
+                        <td class="py-4 text-blue-400 font-bold"><i class="fa-solid fa-clock mr-2 text-slate-500"></i> ${sanitize(bkp.time)}</td>
                         <td class="py-4 text-right">
                             <button type="button" onclick="restoreBackup(${idx})" class="bg-slate-700 hover:bg-slate-600 text-white px-3 py-1.5 rounded text-[10px] uppercase font-bold transition-colors">Restaurer</button>
                         </td>
@@ -1565,12 +1661,68 @@
             btn.innerHTML = '<i class="fa-solid fa-triangle-exclamation mr-1"></i> Écraser la base avec ce texte';
             btn.className = "w-full py-3 bg-red-600 hover:bg-red-500 text-white text-xs font-black rounded-xl shadow-md transition-all uppercase tracking-wider flex justify-center items-center gap-2";
 
+            // Reset tab à l'ouverture
+            switchDevTab('data');
+
             document.getElementById('dev-modal').classList.remove('hidden');
         }
         
         function closeDevModal() { document.getElementById('dev-modal').classList.add('hidden'); }
 
-        // --- NOUVEAU : SMART IMPORT / EXPORT CSV ---
+        // Navigation au sein de la modal dev
+        function switchDevTab(tab) {
+            if (tab === 'data') {
+                document.getElementById('dev-view-data').classList.remove('hidden');
+                document.getElementById('dev-view-data').classList.add('flex');
+                document.getElementById('dev-view-html').classList.add('hidden');
+                document.getElementById('dev-view-html').classList.remove('flex');
+                
+                document.getElementById('dev-tab-data').className = "px-4 py-2 bg-blue-600 text-white rounded-lg text-xs font-bold uppercase transition-colors whitespace-nowrap";
+                document.getElementById('dev-tab-html').className = "px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white border border-slate-600 rounded-lg text-xs font-bold uppercase transition-colors whitespace-nowrap";
+            } else {
+                document.getElementById('dev-view-html').classList.remove('hidden');
+                document.getElementById('dev-view-html').classList.add('flex');
+                document.getElementById('dev-view-data').classList.add('hidden');
+                document.getElementById('dev-view-data').classList.remove('flex');
+                
+                document.getElementById('dev-tab-html').className = "px-4 py-2 bg-blue-600 text-white rounded-lg text-xs font-bold uppercase transition-colors whitespace-nowrap";
+                document.getElementById('dev-tab-data').className = "px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white border border-slate-600 rounded-lg text-xs font-bold uppercase transition-colors whitespace-nowrap";
+            }
+        }
+
+        // Application du code HTML en live
+        function applyLiveHTML() {
+            const newHTML = document.getElementById('dev-html-input').value.trim();
+            if (!newHTML) {
+                alert("Veuillez coller du code HTML valide.");
+                return;
+            }
+            if (confirm("⚠️ Attention : La page va être entièrement remplacée par ce nouveau code.\n\nVos modifications de données non sauvegardées pourraient être perdues. Continuer ?")) {
+                document.documentElement.innerHTML = newHTML;
+                // Note : remplacer documentElement détruit le script context. 
+                // Un rechargement complet est souvent nécessaire, mais pour un test rapide ça dépanne !
+            }
+        }
+
+        // Téléchargement direct du fichier HTML
+        function downloadHTML() {
+            let htmlContent = document.getElementById('dev-html-input').value.trim();
+            
+            // Si la case est vide, on essaye d'exporter le code de la page actuelle
+            if (!htmlContent) {
+                htmlContent = "<!DOCTYPE html>\n<html lang=\"fr\">\n" + document.documentElement.innerHTML + "\n</html>";
+            }
+            
+            const blob = new Blob([htmlContent], {type: 'text/html;charset=utf-8;'});
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = "index.html";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // --- SMART IMPORT / EXPORT CSV ---
         function exportCSV() {
             let csv = "Nom;Equipe;Code Qualif;Nom Qualif;Date Exp;Type;Statut;Note;Validateur\n";
             database.forEach(op => {
@@ -1632,7 +1784,7 @@
                 let date = (cols[4]||'').trim();
                 let type = (cols[5]||'').trim();
                 
-                // Champs optionnels du CSV (au cas où l'utilisateur a modifié l'export pour le réimporter)
+                // Champs optionnels du CSV
                 let statut = (cols[6]||'').trim();
                 let note = (cols[7]||'').trim();
                 let val = (cols[8]||'').trim();
@@ -1647,13 +1799,12 @@
                 let finalNote = '';
                 let finalVal = '';
 
-                // Si le CSV contient un statut précis explicite, on l'utilise
+                // Si le CSV contient un statut explicite on l'utilise, sinon on garde l'historique
                 if(statut) {
                     finalState = statut;
                     finalNote = note;
                     finalVal = val;
                 } else {
-                    // Sinon, on cherche dans l'historique pour conserver le travail existant !
                     if(oldDataMap[nom] && oldDataMap[nom][code]) {
                         let oldQ = oldDataMap[nom][code];
                         finalState = oldQ.state || 'normal';
@@ -1666,8 +1817,7 @@
                 newDbMap[nom].qualifsArr.push(qStr);
             });
 
-            // 3. Reconstruction de la base
-            if(validLines === 0) return alert("Erreur : Aucune donnée lisible dans le format (Nom;Equipe;Code...).");
+            if(validLines === 0) return alert("Erreur : Aucune donnée lisible dans le format attendu.");
 
             let newDatabase = [];
             for(let nom in newDbMap) {
@@ -1696,11 +1846,11 @@
             const oldHtml = btnElement.innerHTML;
             btnElement.innerHTML = '<i class="fa-solid fa-check"></i> Copié !';
             btnElement.classList.add('text-emerald-400');
-            btnElement.classList.remove('text-blue-400');
+            btnElement.classList.remove('text-slate-400');
             setTimeout(() => {
                 btnElement.innerHTML = oldHtml;
                 btnElement.classList.remove('text-emerald-400');
-                btnElement.classList.add('text-blue-400');
+                btnElement.classList.add('text-slate-400');
             }, 2000);
         }
 
@@ -1716,7 +1866,7 @@
                     if (confirmForceUpdate) {
                         confirmForceUpdate = false;
                         btn.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Écraser la base avec ce texte';
-                        btn.className = "w-full py-3 bg-red-600 hover:bg-red-500 text-white text-xs font-black rounded-xl shadow-md transition-all uppercase tracking-wider flex justify-center items-center gap-2";
+                        btn.className = "w-full py-3 bg-slate-700 hover:bg-red-600 text-slate-300 hover:text-white text-xs font-black rounded-xl shadow-md transition-all uppercase tracking-wider flex justify-center items-center gap-2 border border-slate-600";
                     }
                 }, 4000);
                 return;
@@ -1745,7 +1895,7 @@
                 
                 setTimeout(() => {
                     btn.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Écraser la base avec ce texte';
-                    btn.className = "w-full py-3 bg-red-600 hover:bg-red-500 text-white text-xs font-black rounded-xl shadow-md transition-all uppercase tracking-wider flex justify-center items-center gap-2";
+                    btn.className = "w-full py-3 bg-slate-700 hover:bg-red-600 text-slate-300 hover:text-white text-xs font-black rounded-xl shadow-md transition-all uppercase tracking-wider flex justify-center items-center gap-2 border border-slate-600";
                 }, 4000);
             }
         }
@@ -1762,7 +1912,7 @@
 
         function confirmRestore() {
             if (backupToRestore > -1) {
-                let history = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
+                let history = getSafeStorage(HISTORY_KEY, []);
                 if (history[backupToRestore]) {
                     database = history[backupToRestore].data;
                     persistData(); 
@@ -1794,6 +1944,7 @@
         // ==========================================
         // SÉCURITÉ : ATTACHEMENT GLOBAL DES FONCTIONS
         // ==========================================
+        window.debouncedSearch = debouncedSearch;
         window.switchTab = switchTab;
         window.setZone = setZone;
         window.setSecteur = setSecteur;
@@ -1821,8 +1972,11 @@
         window.verifyPin = verifyPin;
         window.openDevModal = openDevModal;
         window.closeDevModal = closeDevModal;
-        window.exportCSV = exportCSV;          // NOUVEAU
-        window.smartImportCSV = smartImportCSV; // NOUVEAU
+        window.switchDevTab = switchDevTab;
+        window.applyLiveHTML = applyLiveHTML;
+        window.downloadHTML = downloadHTML;
+        window.exportCSV = exportCSV;          
+        window.smartImportCSV = smartImportCSV; 
         window.copyRawData = copyRawData;
         window.forceUpdateDatabase = forceUpdateDatabase;
         window.restoreBackup = restoreBackup;
