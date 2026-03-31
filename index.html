@@ -149,7 +149,7 @@
                 
                 <div id="search-container" class="relative flex-grow sm:flex-grow-0 z-50">
                     <i class="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm"></i>
-                    <input type="text" id="searchInput" oninput="debouncedSearch()" placeholder="Rechercher un nom..." class="pl-9 pr-8 py-2.5 sm:py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm text-white focus:border-blue-500 focus:outline-none w-full sm:w-64 transition-all" autocomplete="off">
+                    <input type="text" id="searchInput" oninput="debouncedSearch()" placeholder="Rechercher..." class="pl-9 pr-8 py-2.5 sm:py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm text-white focus:border-blue-500 focus:outline-none w-full sm:w-64 transition-all" autocomplete="off">
                     <button onclick="clearSearch()" id="clearSearchBtn" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white hidden"><i class="fa-solid fa-xmark"></i></button>
                     <ul id="searchResults" class="absolute top-full left-0 w-full mt-2 bg-white border border-slate-200 rounded-lg shadow-2xl hidden max-h-64 overflow-y-auto divide-y divide-slate-100 text-slate-800"></ul>
                 </div>
@@ -329,9 +329,11 @@
                 <p class="text-slate-500 font-medium text-sm sm:text-base mt-3">Identifiez votre situation (Initiale ou Prorogation) et suivez les étapes numérotées.</p>
             </div>
 
+            <!-- FICHES DE PROCÉDURES TEXTUELLES -->
             <div>
                 <h3 class="text-xl font-black text-slate-800 uppercase tracking-tight mb-6 flex items-center gap-3"><i class="fa-solid fa-list-check text-blue-500"></i> Les 4 Scénarios d'Action</h3>
                 <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 lg:gap-8">
+                    
                     <!-- Cas 1 -->
                     <div class="bg-white rounded-2xl shadow-md border border-slate-200 overflow-hidden flex flex-col hover:shadow-lg transition-shadow">
                         <div class="bg-gradient-to-r from-blue-50 to-emerald-50 border-b border-slate-200 p-4 flex justify-between items-center">
@@ -339,16 +341,31 @@
                                 <span class="text-[10px] font-black text-blue-600 uppercase tracking-widest bg-blue-100 px-2 py-0.5 rounded w-fit">Cas n°1</span>
                                 <h4 class="font-black text-slate-800 text-lg uppercase">Initiale <i class="fa-solid fa-arrow-right text-slate-300 mx-1 text-sm"></i> AV avec BP50</h4>
                             </div>
-                            <div class="bg-emerald-100 text-emerald-700 p-2 rounded-lg text-xs font-black uppercase text-center shadow-sm border border-emerald-200"><i class="fa-solid fa-check-circle mr-1"></i> Pour Nous<br><span class="text-[9px] font-bold">On surveille</span></div>
+                            <div class="bg-emerald-100 text-emerald-700 p-2 rounded-lg text-xs font-black uppercase text-center shadow-sm border border-emerald-200">
+                                <i class="fa-solid fa-check-circle mr-1"></i> Pour Nous<br><span class="text-[9px] font-bold">On surveille</span>
+                            </div>
                         </div>
                         <div class="p-6 flex-grow">
                             <div class="relative pl-8 border-l-2 border-emerald-200 space-y-8 mt-2">
-                                <div class="relative"><div class="absolute -left-[41px] bg-white border-4 border-emerald-400 w-8 h-8 rounded-full flex items-center justify-center text-xs font-black text-emerald-600 shadow-sm">1</div><h5 class="text-sm font-black text-slate-800 uppercase">Statut Opérateur</h5><p class="text-xs text-slate-500 font-medium mt-1">L'opérateur doit être placé en statut <strong class="text-slate-700 bg-slate-100 px-1 rounded">QARJ</strong>.</p></div>
-                                <div class="relative"><div class="absolute -left-[41px] bg-white border-4 border-emerald-400 w-8 h-8 rounded-full flex items-center justify-center text-xs font-black text-emerald-600 shadow-sm">2</div><h5 class="text-sm font-black text-slate-800 uppercase">Action SFI</h5><p class="text-xs text-slate-500 font-medium mt-1">Le <strong class="text-blue-600">QLS Expleo</strong> procède au rachat de l'OP directement sur SFI.</p></div>
-                                <div class="relative"><div class="absolute -left-[41px] bg-emerald-500 w-8 h-8 rounded-full flex items-center justify-center text-xs font-black text-white shadow-md shadow-emerald-500/40"><i class="fa-solid fa-flag-checkered"></i></div><h5 class="text-sm font-black text-emerald-700 uppercase">Validation Finale</h5><p class="text-xs text-slate-600 font-bold mt-1">Le QLS OS effectue la validation définitive sur QA MANAGER.</p></div>
+                                <div class="relative">
+                                    <div class="absolute -left-[41px] bg-white border-4 border-emerald-400 w-8 h-8 rounded-full flex items-center justify-center text-xs font-black text-emerald-600 shadow-sm">1</div>
+                                    <h5 class="text-sm font-black text-slate-800 uppercase">Statut Opérateur</h5>
+                                    <p class="text-xs text-slate-500 font-medium mt-1">L'opérateur doit être placé en statut <strong class="text-slate-700 bg-slate-100 px-1 rounded">QARJ</strong>.</p>
+                                </div>
+                                <div class="relative">
+                                    <div class="absolute -left-[41px] bg-white border-4 border-emerald-400 w-8 h-8 rounded-full flex items-center justify-center text-xs font-black text-emerald-600 shadow-sm">2</div>
+                                    <h5 class="text-sm font-black text-slate-800 uppercase">Action SFI</h5>
+                                    <p class="text-xs text-slate-500 font-medium mt-1">Le <strong class="text-blue-600">QLS Expleo</strong> procède au rachat de l'OP directement sur SFI.</p>
+                                </div>
+                                <div class="relative">
+                                    <div class="absolute -left-[41px] bg-emerald-500 w-8 h-8 rounded-full flex items-center justify-center text-xs font-black text-white shadow-md shadow-emerald-500/40"><i class="fa-solid fa-flag-checkered"></i></div>
+                                    <h5 class="text-sm font-black text-emerald-700 uppercase">Validation Finale</h5>
+                                    <p class="text-xs text-slate-600 font-bold mt-1">Le QLS OS effectue la validation définitive sur QA MANAGER.</p>
+                                </div>
                             </div>
                         </div>
                     </div>
+
                     <!-- Cas 2 -->
                     <div class="bg-white rounded-2xl shadow-md border border-slate-200 overflow-hidden flex flex-col hover:shadow-lg transition-shadow">
                         <div class="bg-gradient-to-r from-blue-50 to-red-50 border-b border-slate-200 p-4 flex justify-between items-center">
@@ -356,15 +373,24 @@
                                 <span class="text-[10px] font-black text-blue-600 uppercase tracking-widest bg-blue-100 px-2 py-0.5 rounded w-fit">Cas n°2</span>
                                 <h4 class="font-black text-slate-800 text-lg uppercase">Initiale <i class="fa-solid fa-arrow-right text-slate-300 mx-1 text-sm"></i> Certif</h4>
                             </div>
-                            <div class="bg-red-100 text-red-700 p-2 rounded-lg text-xs font-black uppercase text-center shadow-sm border border-red-200 animate-pulse"><i class="fa-solid fa-hand text-red-600 mr-1"></i> PAS TOUCHE<br><span class="text-[9px] font-bold">Géré par les QLS</span></div>
+                            <div class="bg-red-100 text-red-700 p-2 rounded-lg text-xs font-black uppercase text-center shadow-sm border border-red-200 animate-pulse">
+                                <i class="fa-solid fa-hand text-red-600 mr-1"></i> PAS TOUCHE<br><span class="text-[9px] font-bold">Géré par les QLS</span>
+                            </div>
                         </div>
                         <div class="p-6 flex-grow">
-                            <div class="bg-red-50 border border-red-200 rounded-xl p-4 mb-6 text-xs text-red-800 font-medium"><i class="fa-solid fa-triangle-exclamation mr-2"></i> Vous ne devez pas intervenir sur le processus de validation de cette qualification.</div>
+                            <div class="bg-red-50 border border-red-200 rounded-xl p-4 mb-6 text-xs text-red-800 font-medium">
+                                <i class="fa-solid fa-triangle-exclamation mr-2"></i> Vous ne devez pas intervenir sur le processus de validation de cette qualification.
+                            </div>
                             <div class="relative pl-8 border-l-2 border-red-200 space-y-8">
-                                <div class="relative"><div class="absolute -left-[41px] bg-red-500 w-8 h-8 rounded-full flex items-center justify-center text-xs font-black text-white shadow-md shadow-red-500/40"><i class="fa-solid fa-envelope"></i></div><h5 class="text-sm font-black text-red-700 uppercase">Seule action requise</h5><p class="text-xs text-slate-600 font-bold mt-1">Vous devez uniquement envoyer le QCM au compagnon concerné pour qu'il le remplisse.</p></div>
+                                <div class="relative">
+                                    <div class="absolute -left-[41px] bg-red-500 w-8 h-8 rounded-full flex items-center justify-center text-xs font-black text-white shadow-md shadow-red-500/40"><i class="fa-solid fa-envelope"></i></div>
+                                    <h5 class="text-sm font-black text-red-700 uppercase">Seule action requise</h5>
+                                    <p class="text-xs text-slate-600 font-bold mt-1">Vous devez uniquement envoyer le QCM au compagnon concerné pour qu'il le remplisse.</p>
+                                </div>
                             </div>
                         </div>
                     </div>
+
                     <!-- Cas 3 -->
                     <div class="bg-white rounded-2xl shadow-md border border-slate-200 overflow-hidden flex flex-col hover:shadow-lg transition-shadow">
                         <div class="bg-gradient-to-r from-orange-50 to-emerald-50 border-b border-slate-200 p-4 flex justify-between items-center">
@@ -372,15 +398,26 @@
                                 <span class="text-[10px] font-black text-orange-600 uppercase tracking-widest bg-orange-100 px-2 py-0.5 rounded w-fit">Cas n°3</span>
                                 <h4 class="font-black text-slate-800 text-lg uppercase">Prorogation <i class="fa-solid fa-arrow-right text-slate-300 mx-1 text-sm"></i> AV avec BP50</h4>
                             </div>
-                            <div class="bg-emerald-100 text-emerald-700 p-2 rounded-lg text-xs font-black uppercase text-center shadow-sm border border-emerald-200"><i class="fa-solid fa-check-circle mr-1"></i> Pour Nous<br><span class="text-[9px] font-bold">On surveille</span></div>
+                            <div class="bg-emerald-100 text-emerald-700 p-2 rounded-lg text-xs font-black uppercase text-center shadow-sm border border-emerald-200">
+                                <i class="fa-solid fa-check-circle mr-1"></i> Pour Nous<br><span class="text-[9px] font-bold">On surveille</span>
+                            </div>
                         </div>
                         <div class="p-6 flex-grow">
                             <div class="relative pl-8 border-l-2 border-emerald-200 space-y-8 mt-2">
-                                <div class="relative"><div class="absolute -left-[41px] bg-white border-4 border-emerald-400 w-8 h-8 rounded-full flex items-center justify-center text-xs font-black text-emerald-600 shadow-sm">1</div><h5 class="text-sm font-black text-slate-800 uppercase">Action SFI (Autonome)</h5><p class="text-xs text-slate-500 font-medium mt-1">L'opérateur doit racheter lui-même son OP sur le logiciel SFI.</p></div>
-                                <div class="relative"><div class="absolute -left-[41px] bg-emerald-500 w-8 h-8 rounded-full flex items-center justify-center text-xs font-black text-white shadow-md shadow-emerald-500/40"><i class="fa-solid fa-flag-checkered"></i></div><h5 class="text-sm font-black text-emerald-700 uppercase">Validation Finale</h5><p class="text-xs text-slate-600 font-bold mt-1">Une fois l'OP racheté, le QLS OS effectue la validation définitive sur QA MANAGER.</p></div>
+                                <div class="relative">
+                                    <div class="absolute -left-[41px] bg-white border-4 border-emerald-400 w-8 h-8 rounded-full flex items-center justify-center text-xs font-black text-emerald-600 shadow-sm">1</div>
+                                    <h5 class="text-sm font-black text-slate-800 uppercase">Action SFI (Autonome)</h5>
+                                    <p class="text-xs text-slate-500 font-medium mt-1">L'opérateur doit racheter lui-même son OP sur le logiciel SFI.</p>
+                                </div>
+                                <div class="relative">
+                                    <div class="absolute -left-[41px] bg-emerald-500 w-8 h-8 rounded-full flex items-center justify-center text-xs font-black text-white shadow-md shadow-emerald-500/40"><i class="fa-solid fa-flag-checkered"></i></div>
+                                    <h5 class="text-sm font-black text-emerald-700 uppercase">Validation Finale</h5>
+                                    <p class="text-xs text-slate-600 font-bold mt-1">Une fois l'OP racheté, le QLS OS effectue la validation définitive sur QA MANAGER.</p>
+                                </div>
                             </div>
                         </div>
                     </div>
+
                     <!-- Cas 4 -->
                     <div class="bg-white rounded-2xl shadow-md border border-slate-200 overflow-hidden flex flex-col hover:shadow-lg transition-shadow">
                         <div class="bg-gradient-to-r from-orange-50 to-amber-50 border-b border-slate-200 p-4 flex justify-between items-center">
@@ -388,16 +425,31 @@
                                 <span class="text-[10px] font-black text-orange-600 uppercase tracking-widest bg-orange-100 px-2 py-0.5 rounded w-fit">Cas n°4</span>
                                 <h4 class="font-black text-slate-800 text-lg uppercase">Prorogation <i class="fa-solid fa-arrow-right text-slate-300 mx-1 text-sm"></i> Certif</h4>
                             </div>
-                            <div class="bg-emerald-100 text-emerald-700 p-2 rounded-lg text-xs font-black uppercase text-center shadow-sm border border-emerald-200"><i class="fa-solid fa-check-circle mr-1"></i> Pour Nous<br><span class="text-[9px] font-bold">On surveille</span></div>
+                            <div class="bg-emerald-100 text-emerald-700 p-2 rounded-lg text-xs font-black uppercase text-center shadow-sm border border-emerald-200">
+                                <i class="fa-solid fa-check-circle mr-1"></i> Pour Nous<br><span class="text-[9px] font-bold">On surveille</span>
+                            </div>
                         </div>
                         <div class="p-6 flex-grow">
                             <div class="relative pl-8 border-l-2 border-amber-300 space-y-8 mt-2">
-                                <div class="relative"><div class="absolute -left-[41px] bg-white border-4 border-amber-400 w-8 h-8 rounded-full flex items-center justify-center text-xs font-black text-amber-600 shadow-sm">1</div><h5 class="text-sm font-black text-slate-800 uppercase">Action SFI</h5><p class="text-xs text-slate-500 font-medium mt-1">L'opérateur rachète son OP sur le logiciel SFI.</p></div>
-                                <div class="relative"><div class="absolute -left-[41px] bg-amber-400 border-2 border-amber-200 w-8 h-8 rounded-full flex items-center justify-center text-xs font-black text-amber-900 shadow-sm"><i class="fa-solid fa-triangle-exclamation"></i></div><h5 class="text-sm font-black text-amber-700 uppercase">Action Obligatoire</h5><p class="text-xs text-slate-600 font-bold mt-1 bg-amber-50 p-2 rounded border border-amber-100">Le compagnon doit impérativement faire le QCM Compagnon.</p></div>
-                                <div class="relative"><div class="absolute -left-[41px] bg-emerald-500 w-8 h-8 rounded-full flex items-center justify-center text-xs font-black text-white shadow-md shadow-emerald-500/40"><i class="fa-solid fa-flag-checkered"></i></div><h5 class="text-sm font-black text-emerald-700 uppercase">Validation Finale & Intégration</h5><p class="text-xs text-slate-600 font-bold mt-1">Le QLS OS valide sur QA MANAGER <strong class="text-emerald-600">ET</strong> intègre le résultat du QCM.</p></div>
+                                <div class="relative">
+                                    <div class="absolute -left-[41px] bg-white border-4 border-amber-400 w-8 h-8 rounded-full flex items-center justify-center text-xs font-black text-amber-600 shadow-sm">1</div>
+                                    <h5 class="text-sm font-black text-slate-800 uppercase">Action SFI</h5>
+                                    <p class="text-xs text-slate-500 font-medium mt-1">L'opérateur rachète son OP sur le logiciel SFI.</p>
+                                </div>
+                                <div class="relative">
+                                    <div class="absolute -left-[41px] bg-amber-400 border-2 border-amber-200 w-8 h-8 rounded-full flex items-center justify-center text-xs font-black text-amber-900 shadow-sm"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                                    <h5 class="text-sm font-black text-amber-700 uppercase">Action Obligatoire</h5>
+                                    <p class="text-xs text-slate-600 font-bold mt-1 bg-amber-50 p-2 rounded border border-amber-100">Le compagnon doit impérativement faire le QCM Compagnon.</p>
+                                </div>
+                                <div class="relative">
+                                    <div class="absolute -left-[41px] bg-emerald-500 w-8 h-8 rounded-full flex items-center justify-center text-xs font-black text-white shadow-md shadow-emerald-500/40"><i class="fa-solid fa-flag-checkered"></i></div>
+                                    <h5 class="text-sm font-black text-emerald-700 uppercase">Validation Finale & Intégration</h5>
+                                    <p class="text-xs text-slate-600 font-bold mt-1">Le QLS OS valide sur QA MANAGER <strong class="text-emerald-600">ET</strong> intègre le résultat du QCM.</p>
+                                </div>
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
             
@@ -753,14 +805,13 @@
 
     <!-- SCRIPT JS COMPLET ET SÉCURISÉ -->
     <script>
-        // === 1. FONCTIONS GLOBALES (SÉCURISÉES) ===
-        const STORAGE_KEY = 'cockpit_qa_master_data_v38';
-        const KPI_LOG_KEY = 'cockpit_boss_log_master_v38';
-        const HISTORY_KEY = 'cockpit_qa_history_master';
-        const CORBEILLE_KEY = 'cockpit_qa_corbeille_master';
+        var STORAGE_KEY = 'cockpit_qa_master_data_v42';
+        var KPI_LOG_KEY = 'cockpit_boss_log_master_v40';
+        var HISTORY_KEY = 'cockpit_qa_history_master';
+        var CORBEILLE_KEY = 'cockpit_qa_corbeille_master';
 
         function cleanName(text) { return text ? text.replace(/\s*\(.*?\)\s*/g, '').trim() : "QUALIFICATION"; }
-        function sanitize(str) { if(!str)return''; const t=document.createElement('div'); t.textContent=str; return t.innerHTML; }
+        function sanitize(str) { if(!str)return''; var t=document.createElement('div'); t.textContent=str; return t.innerHTML; }
         
         function getWeekNumber(d) {
             d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
@@ -770,19 +821,19 @@
         }
 
         function getQAWeekStartTimestamp() {
-            let d = new Date();
-            let day = d.getDay(); 
-            let diff = (day <= 3) ? (7 - 3 + day) : (day - 3); 
+            var d = new Date();
+            var day = d.getDay(); 
+            var diff = (day <= 3) ? (7 - 3 + day) : (day - 3); 
             d.setDate(d.getDate() - diff);
             d.setHours(23, 59, 59, 999);
             return d.getTime();
         }
 
         function getSafeStorageWithMigration(primaryKey, fallbackKeys, defaultVal) {
-            let data = localStorage.getItem(primaryKey);
+            var data = localStorage.getItem(primaryKey);
             if (data) return JSON.parse(data);
-            for (let key of fallbackKeys) {
-                data = localStorage.getItem(key);
+            for (var i=0; i<fallbackKeys.length; i++) {
+                data = localStorage.getItem(fallbackKeys[i]);
                 if (data) {
                     localStorage.setItem(primaryKey, data); 
                     return JSON.parse(data);
@@ -792,16 +843,15 @@
         }
 
         function getSafeStorage(key, defaultVal) {
-            try { const item = localStorage.getItem(key); return item ? JSON.parse(item) : defaultVal; } catch (e) { return defaultVal; }
+            try { var item = localStorage.getItem(key); return item ? JSON.parse(item) : defaultVal; } catch (e) { return defaultVal; }
         }
 
-        // --- 2. DONNEES GLOBALES ---
-        const HISTORICAL_KPI = {
+        var HISTORICAL_KPI = {
             'P40': { 2:{init:12,pro:0}, 3:{init:6,pro:1}, 4:{init:0,pro:3}, 5:{init:1,pro:6}, 6:{init:6,pro:12}, 7:{init:5,pro:13}, 8:{init:6,pro:2}, 9:{init:0,pro:7}, 10:{init:3,pro:15}, 11:{init:7,pro:13}, 12:{init:5,pro:10}, 13:{init:2,pro:7} },
             'P50': { 4:{init:14,pro:10}, 5:{init:14,pro:8}, 6:{init:10,pro:12}, 7:{init:17,pro:6}, 8:{init:14,pro:6}, 9:{init:1,pro:13}, 10:{init:3,pro:3}, 11:{init:17,pro:5}, 12:{init:10,pro:19}, 13:{init:3,pro:5} }
         };
 
-        const VALIDATORS_LIST = [
+        var VALIDATORS_LIST = [
             { name: 'Sliman OUERTANI', alias: 'Sliman' },
             { name: 'Sandrine PEREZ', alias: 'Sandrine' },
             { name: 'Thi Ha TRAN', alias: 'Thi Ha' },
@@ -810,35 +860,44 @@
             { name: 'Abdelkader GHEZOUAR', alias: 'Abdelkhader' }
         ];
 
-        const QUALIFS_LIST = [ "ET0O45-Certification étanchage", "B40TE31-Install harness+torquage", "BCO0E30-Collage Support Electrique", "BCO0S00-Collage Support Matelas", "BCO0S34-Collage avec résine", "BDE0S00-Dépose EQ ou éléments", "BME0E31-Mesure métallisation élec", "BME0S00-Mesure métallisation méca", "BMT0S03-Mtge joint tuyauterie", "BOP1E31-Fibre Optic", "BP40A05-Essai Recherche de Fuite", "BP40E30-Elec Install Core Compet", "BP40E31-Install Elec. Harnesses", "BP40E32-Install Elec. Equipment", "BP40E35-A/C C cable connection", "BP40E36-A/C Z cable connection", "BP40L07-Mouler/Démouler Avion", "BP40O45-Réalis Opérat° Etancheite", "BP40P01-Compétence Basic Peintre", "BP40P02-Appliq Peinture Finition", "BP40S00-Basic Metier Assemblage", "BP40S01-Mont Méca avec Réglage", "BP40S02-Hydraulique", "BP40S03-Carburant", "BP40S05-Circuit Eaux", "BP40S07-Conditionnement Air", "BP40S08-Extinction", "BP40S10-Commande de Vol", "BP40S11-Trains", "BP40S12-Pneumatique", "BP40S20-Assemb/Ajust Elmt Struct", "BP40S21-Assemb/Ajuster Composite", "BP40S23-Mettre en RéfGrandePiece", "BP40S25-Inst/RéglerElémentCdeVol", "BP40S27-Mont et Régler Empennages", "BP40S37-Ajusteur photogramétrie", "BPV0S00-Pose visserie", "BPV3S21-Pose visserie dans composit", "BPV4S21-Pose visserie A350", "BRC0C19-Retou compos sans moy chauf", "BRC0C20-retou compos avec moy chauf", "BSC0E30-Opérat°couple serrage élec", "BSC0S00-Opérat°couple serrage", "BSC0S02-Serrage couple hydraulique", "BSE1S02-Sertissage Rynglok", "BSE9S02-Sertissage Permaswage", "BTS0S00-Application Alodine" ];
+        var QUALIFS_LIST = [ "ET0O45-Certification étanchage", "B40TE31-Install harness+torquage", "BCO0E30-Collage Support Electrique", "BCO0S00-Collage Support Matelas", "BCO0S34-Collage avec résine", "BDE0S00-Dépose EQ ou éléments", "BME0E31-Mesure métallisation élec", "BME0S00-Mesure métallisation méca", "BMT0S03-Mtge joint tuyauterie", "BOP1E31-Fibre Optic", "BP40A05-Essai Recherche de Fuite", "BP40E30-Elec Install Core Compet", "BP40E31-Install Elec. Harnesses", "BP40E32-Install Elec. Equipment", "BP40E35-A/C C cable connection", "BP40E36-A/C Z cable connection", "BP40L07-Mouler/Démouler Avion", "BP40O45-Réalis Opérat° Etancheite", "BP40P01-Compétence Basic Peintre", "BP40P02-Appliq Peinture Finition", "BP40S00-Basic Metier Assemblage", "BP40S01-Mont Méca avec Réglage", "BP40S02-Hydraulique", "BP40S03-Carburant", "BP40S05-Circuit Eaux", "BP40S07-Conditionnement Air", "BP40S08-Extinction", "BP40S10-Commande de Vol", "BP40S11-Trains", "BP40S12-Pneumatique", "BP40S20-Assemb/Ajust Elmt Struct", "BP40S21-Assemb/Ajuster Composite", "BP40S23-Mettre en RéfGrandePiece", "BP40S25-Inst/RéglerElémentCdeVol", "BP40S27-Mont et Régler Empennages", "BP40S37-Ajusteur photogramétrie", "BPV0S00-Pose visserie", "BPV3S21-Pose visserie dans composit", "BPV4S21-Pose visserie A350", "BRC0C19-Retou compos sans moy chauf", "BRC0C20-retou compos avec moy chauf", "BSC0E30-Opérat°couple serrage élec", "BSC0S00-Opérat°couple serrage", "BSC0S02-Serrage couple hydraulique", "BSE1S02-Sertissage Rynglok", "BSE9S02-Sertissage Permaswage", "BTS0S00-Application Alodine" ];
 
-        let database = [];
-        let bossKpiLog = [];
-        let deletedOperators = []; 
-        let currentActiveQualif = { opIdx: -1, qIdx: -1 };
-        let currentOpForAdd = -1;
-        let operatorToDelete = -1;
+        var database = [];
+        var bossKpiLog = [];
+        var deletedOperators = []; 
+        var currentActiveQualif = { opIdx: -1, qIdx: -1 };
+        var currentOpForAdd = -1;
+        var operatorToDelete = -1;
+        var backupToRestore = -1;
+        var confirmForceUpdate = false; 
         
-        let currentZone = 'P40', currentSecteur = 'A', currentTeam = 'A', currentTeamFilter = 'P40A-A', currentKpiView = 'Tout';
-        let searchTimeoutId;
-        
-        // --- INIT AU CHARGEMENT ---
-        window.onload = () => { 
+        var currentZone = 'P40', currentSecteur = 'A', currentTeam = 'A', currentTeamFilter = 'P40A-A', currentKpiView = 'Tout';
+        var bossKpiChartInstanceP40 = null, bossKpiChartInstanceP50 = null, searchTimeoutId = null;
+
+        var currentTourIndex = 0;
+        var tourSteps = [
+            { title: '👋 Bienvenue sur le Cockpit !', text: 'Vous ne connaissez pas l\'outil ? Pas de panique, ce petit guide interactif va vous montrer comment faire.', target: null },
+            { title: '🔍 1. La Recherche Rapide', text: 'Besoin de trouver un opérateur rapidement ? Tapez son nom ici.', target: 'search-container' },
+            { title: '📂 2. La Navigation par Équipe', text: 'Vous préférez voir l\'état de toute une équipe ? Utilisez ces filtres.', target: 'filters-container' },
+            { title: '✅ 3. Agir sur une compétence', text: 'Dans le tableau principal, cliquez sur n\'importe quelle carte blanche pour ouvrir le menu d\'action.', target: 'table-container' },
+            { title: '📈 4. Historique des Validations', text: 'Toutes les validations de la semaine s\'ajoutent ici. Le compteur se remet à zéro tous les mercredis soirs !', target: 'btn-validated-modal' }
+        ];
+
+        window.onload = function() { 
             initializeDatabase(); 
             performWeeklyPurge(); 
             updateFilters(); 
-            document.addEventListener('click', e => {
-                const sc = document.getElementById('search-container');
-                if (sc && !sc.contains(e.target)) { const res = document.getElementById('searchResults'); if(res) res.classList.add('hidden'); }
+            document.addEventListener('click', function(e) {
+                var sc = document.getElementById('search-container');
+                if (sc && !sc.contains(e.target)) { var res = document.getElementById('searchResults'); if(res) res.classList.add('hidden'); }
             });
         };
 
         function initializeDatabase() {
-            const legacyKeys = ['cockpit_qa_master_data_v37', 'cockpit_qa_master_data_v36', 'cockpit_qa_master_data_v35', 'cockpit_qa_master_data_v34'];
-            let data = getSafeStorageWithMigration(STORAGE_KEY, legacyKeys, null);
+            var legacyKeys = ['cockpit_qa_master_data_v41', 'cockpit_qa_master_data_v39', 'cockpit_qa_master_data_v38', 'cockpit_qa_master_data_v37', 'cockpit_qa_master_data_v36', 'cockpit_qa_master_data_v35'];
+            var data = getSafeStorageWithMigration(STORAGE_KEY, legacyKeys, null);
             if(data) { database = data; } 
             else {
-                // 19 opérateurs
                 database = [
                     { nom: "ATTARD THEO", equipe: "P40A-A", qualifs: "BSC0E30-Serrage Elec|15/07/2026|N, BTS0S00-Alodine|3/10/2026|N" },
                     { nom: "CROUZERY NICOLAS", equipe: "P40A-A", qualifs: "PSIVXBTS0S00-Application Alodine|À QUALIFIER|O" },
@@ -857,15 +916,21 @@
                     { nom: "RIVIERE ENZO", equipe: "P40A-A", qualifs: "BRC0C19-Retou sans moy chauf|À QUALIFIER|O, BSC0S00-Serrage Meca|02/06/2026|N, BP40S01-Mont Méca Réglage|05/05/2026|N, BPV3S21-Pose visserie composit|02/06/2026|N, BPV0S00-Visserie structurale|17/07/2026|N" },
                     { nom: "SANCE ALLAN", equipe: "P40A-A", qualifs: "BMT0S03-Tuyauterie carbu|À QUALIFIER|O" },
                     { nom: "SEGUE MAIRONE", equipe: "P40A-A", qualifs: "BME0S00-Métallisation|À QUALIFIER|O" },
-                    { nom: "SCALLI GUILLAUME", equipe: "P40B-A", qualifs: "BTS0S00-Alodine|À QUALIFIER|O" },
-                    { nom: "ETHAN WHITE", equipe: "P40B-A", qualifs: "BME0E31-Métallisation|À QUALIFIER|O" }
+                    { nom: "SCALI GUILLAUME", equipe: "P40B-A", qualifs: "BTS0S00-Application Alodine|25/03/2026|N" },
+                    { nom: "WHITE ETHAN", equipe: "P40B-A", qualifs: "BTS0S00-Application Alodine|À QUALIFIER|O, BME0E31-Mesure métallisation élec|À QUALIFIER|O, BP40S20-Assemb/Ajust Elmt Struct|À QUALIFIER|O, BP40P01-Compétence Basic Peintre|À QUALIFIER|O, BP40P02-Appliq Peinture Finition|À QUALIFIER|O" },
+                    { nom: "CHEVREL ANTHONY", equipe: "P40B-A", qualifs: "" },
+                    { nom: "EL GARAH MOHAMED", equipe: "P40B-A", qualifs: "BME0E31-Mesure métallisation élec|À QUALIFIER|O, BP40S02-Hydraulique|À QUALIFIER|O, BP40A05-Essai Recherche de Fuite|À QUALIFIER|O" },
+                    { nom: "MARQUES JEREMY", equipe: "P40B-A", qualifs: "BP40L07-Mouler/Démouler Avion|À QUALIFIER|O, BP40S21-Assemb/Ajuster Composite|06/01/2026|N, BP40E30-Elec Install Core Compet|24/02/2026|N, BPV3S21-Pose visserie dans composit|10/03/2026|N" },
+                    { nom: "MARSAULT VINCENT", equipe: "P40B-A", qualifs: "BP40S05-Circuit Eaux|À QUALIFIER|O" },
+                    { nom: "MEKARBECH ZAKARIA", equipe: "P40B-A", qualifs: "BP40P02-Appliq Peinture Finition|À QUALIFIER|O, BP40P01-Compétence Basic Peintre|À QUALIFIER|O, BP40S20-Assemb/Ajust Elmt Struct|À QUALIFIER|O, BTS0S00-Application Alodine|À QUALIFIER|O, BET0O45-Etanchage|À QUALIFIER|O" },
+                    { nom: "PEZET GABRIEL", equipe: "P40B-A", qualifs: "BP40A05-Essai Recherche de Fuite|À QUALIFIER|O, BP40S42-Installer matelas isolants|À QUALIFIER|O, BP40E32-Install Elec. Equipment|25/02/2026|N, BP40S27-Mont et Régler Empennage|31/01/2026|N, BMT0S03-Mtge joint tuyauterie carbu|31/01/2026|N, BPV4S21-Pose visserie A350 P40|31/01/2026|N" }
                 ];
             }
 
-            const legacyKpiKeys = ['cockpit_boss_log_master_v37', 'cockpit_boss_log_master_v36'];
+            var legacyKpiKeys = ['cockpit_boss_log_master_v39', 'cockpit_boss_log_master_v38'];
             bossKpiLog = getSafeStorageWithMigration(KPI_LOG_KEY, legacyKpiKeys, null);
             if (!bossKpiLog) {
-                const past = new Date().getTime() - (86400000 * 7); 
+                var past = new Date().getTime() - (86400000 * 7); 
                 bossKpiLog = [
                     { poste: 'P50', station: 'P50B', qualif: 'XXXX ( voir avec Claire)', compagnon: 'XXX', type: 'Initiale', qls: 'QLS2', validateur: 'Claire THOMAS', date: '19/03/2026', qcm: 'Oui', cw: 13, timestamp: past },
                     { poste: 'P50', station: 'P50A', qualif: 'XXXX ( voir avec Claire)', compagnon: 'XXX', type: 'Initiale', qls: 'QLS1', validateur: 'Claire THOMAS', date: '19/03/2026', qcm: '', cw: 13, timestamp: past },
@@ -910,26 +975,26 @@
         }
 
         function saveToHistory() {
-            let history = getSafeStorageWithMigration(HISTORY_KEY, [], []);
-            const now = new Date();
+            var history = getSafeStorageWithMigration(HISTORY_KEY, [], []);
+            var now = new Date();
             history.unshift({ id: now.getTime(), time: now.toLocaleDateString('fr-FR') + ' à ' + now.toLocaleTimeString('fr-FR'), data: JSON.parse(JSON.stringify(database)) });
             if (history.length > 30) history = history.slice(0, 30);
             localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
         }
 
         function performWeeklyPurge() {
-            const now = new Date();
-            const lastPurge = localStorage.getItem('cockpit_purge_master_v10');
-            let lastWed = new Date();
+            var now = new Date();
+            var lastPurge = localStorage.getItem('cockpit_purge_master_v11');
+            var lastWed = new Date();
             lastWed.setDate(now.getDate() - ((now.getDay() + 4) % 7));
             lastWed.setHours(23, 59, 0, 0);
 
             if (!lastPurge || parseInt(lastPurge) < lastWed.getTime()) {
-                database.forEach(op => {
+                database.forEach(function(op) {
                     if(!op.qualifs) return;
-                    op.qualifs = op.qualifs.split(',').filter(q => !q.includes('|validated')).join(',');
+                    op.qualifs = op.qualifs.split(',').filter(function(q) { return !q.includes('|validated'); }).join(',');
                 });
-                localStorage.setItem('cockpit_purge_master_v10', now.getTime().toString());
+                localStorage.setItem('cockpit_purge_master_v11', now.getTime().toString());
                 persistData();
             }
         }
@@ -937,9 +1002,9 @@
         function analyzeDate(dateStr, isInitial) {
             if (isInitial || dateStr === "À QUALIFIER") return { status: 'ok', days: null };
             try {
-                const parts = dateStr.split('/');
+                var parts = dateStr.split('/');
                 if(parts.length !== 3) return { status: 'ok', days: null };
-                const diffDays = Math.ceil((new Date(parts[2], parts[1]-1, parts[0]) - new Date().setHours(0,0,0,0)) / 86400000);
+                var diffDays = Math.ceil((new Date(parts[2], parts[1]-1, parts[0]) - new Date().setHours(0,0,0,0)) / 86400000);
                 if (diffDays <= 0) return { status: 'expired', days: diffDays };
                 if (diffDays <= 5) return { status: 'critical', days: diffDays };
                 if (diffDays <= 15) return { status: 'warning', days: diffDays };
@@ -949,45 +1014,50 @@
 
         function setZone(z) { currentZone = z; clearSearch(); updateFilters(); }
         function setSecteur(s) { currentSecteur = s; clearSearch(); updateFilters(); }
+        function setTeam(t) { currentTeam = t; clearSearch(); updateFilters(); }
+
         function updateFilters() {
-            ['P40', 'P50'].forEach(z => { const el = document.getElementById('btn-zone-'+z); if(el) el.className = z === currentZone ? "px-4 py-1.5 rounded-md text-xs font-black bg-blue-600 text-white" : "px-4 py-1.5 rounded-md text-xs font-bold text-slate-500 hover:bg-slate-200"; });
-            ['A', 'B', 'C'].forEach(s => { const el = document.getElementById('btn-secteur-'+s); if(el) el.className = s === currentSecteur ? "px-4 py-1.5 rounded-md text-xs font-black bg-blue-600 text-white" : "px-4 py-1.5 rounded-md text-xs font-bold text-slate-500 hover:bg-slate-200"; });
-            currentTeamFilter = currentZone + currentSecteur + '-A';
+            ['P40', 'P50'].forEach(function(z) { var el = document.getElementById('btn-zone-'+z); if(el) el.className = z === currentZone ? "px-4 py-1.5 rounded-md text-xs font-black bg-blue-600 text-white shadow-sm" : "px-4 py-1.5 rounded-md text-xs font-bold text-slate-500 hover:bg-slate-200"; });
+            ['A', 'B', 'C'].forEach(function(s) { var el = document.getElementById('btn-secteur-'+s); if(el) el.className = s === currentSecteur ? "px-4 py-1.5 rounded-md text-xs font-black bg-blue-600 text-white shadow-sm" : "px-4 py-1.5 rounded-md text-xs font-bold text-slate-500 hover:bg-slate-200"; });
+            ['A', 'B'].forEach(function(t) { var el = document.getElementById('btn-team-'+t); if(el) el.className = t === currentTeam ? "px-4 py-1.5 rounded-md text-xs font-black bg-blue-600 text-white shadow-sm" : "px-4 py-1.5 rounded-md text-xs font-bold text-slate-500 hover:bg-slate-200"; });
+            currentTeamFilter = currentZone + currentSecteur + '-' + currentTeam;
             renderTable();
         }
 
         function debouncedSearch() { clearTimeout(searchTimeoutId); searchTimeoutId = setTimeout(handleSearchInput, 300); }
+        
         function handleSearchInput() {
-            const q = document.getElementById('searchInput').value.toLowerCase();
-            const res = document.getElementById('searchResults');
-            const clr = document.getElementById('clearSearchBtn');
+            var q = document.getElementById('searchInput').value.toLowerCase();
+            var res = document.getElementById('searchResults');
+            var clr = document.getElementById('clearSearchBtn');
             if(res) res.innerHTML = '';
             if (!q) { if(res) res.classList.add('hidden'); if(clr) clr.classList.add('hidden'); renderTable(); return; }
             if(clr) clr.classList.remove('hidden');
-            const matches = database.filter(op => op.nom.toLowerCase().includes(q));
+            var matches = database.filter(function(op) { return op.nom.toLowerCase().includes(q); });
             if (matches.length > 0 && res) {
                 res.classList.remove('hidden');
-                matches.forEach(m => {
-                    const li = document.createElement('li');
+                matches.forEach(function(m) {
+                    var li = document.createElement('li');
                     li.className = 'p-3 hover:bg-blue-50 cursor-pointer text-xs font-bold flex justify-between border-b';
                     li.innerHTML = `<span>${sanitize(m.nom)}</span> <span class="bg-slate-200 px-2 rounded">${sanitize(m.equipe)}</span>`;
-                    li.onclick = () => { document.getElementById('searchInput').value = m.nom; res.classList.add('hidden'); currentTeamFilter = m.equipe; renderTable(); };
+                    li.onclick = function() { document.getElementById('searchInput').value = m.nom; res.classList.add('hidden'); currentTeamFilter = m.equipe; renderTable(); };
                     res.appendChild(li);
                 });
             } else if(res) { res.classList.add('hidden'); }
             renderTable();
         }
+        
         function clearSearch() { document.getElementById('searchInput').value = ''; document.getElementById('searchResults').classList.add('hidden'); document.getElementById('clearSearchBtn').classList.add('hidden'); updateFilters(); }
 
         function switchTab(tabId) {
-            ['operators', 'reporting', 'hebdo', 'tuto'].forEach(id => {
-                const v = document.getElementById('view-' + id);
-                const t = document.getElementById('tab-' + id);
+            ['operators', 'reporting', 'hebdo', 'tuto'].forEach(function(id) {
+                var v = document.getElementById('view-' + id);
+                var t = document.getElementById('tab-' + id);
                 if(v) v.classList.add('hidden');
                 if(t) t.className = "px-5 py-2.5 bg-white text-slate-600 rounded-xl font-bold border border-slate-200 text-sm flex items-center gap-2";
             });
-            const av = document.getElementById('view-' + tabId);
-            const at = document.getElementById('tab-' + tabId);
+            var av = document.getElementById('view-' + tabId);
+            var at = document.getElementById('tab-' + tabId);
             if(av) { av.classList.remove('hidden'); if(tabId==='reporting') av.classList.add('flex'); }
             if(at) at.className = "px-5 py-2.5 bg-blue-600 text-white rounded-xl font-bold shadow-md text-sm flex items-center gap-2";
             if (tabId === 'reporting') renderReporting();
@@ -995,30 +1065,31 @@
         }
 
         function renderTable() {
-            const tbody = document.getElementById('tableBody');
-            const query = document.getElementById('searchInput').value.toLowerCase();
+            var tbody = document.getElementById('tableBody');
+            var query = document.getElementById('searchInput').value.toLowerCase();
             if(!tbody) return;
             tbody.innerHTML = '';
             
-            let globVal = 0;
-            database.forEach((op) => {
-                (op.qualifs || "").split(',').forEach(q => { if(q.includes('|validated')) globVal++; });
+            var globVal = 0;
+            database.forEach(function(op) {
+                (op.qualifs || "").split(',').forEach(function(q) { if(q.includes('|validated')) globVal++; });
             });
-            const c = document.getElementById('global-counter'); if(c) c.innerText = globVal;
+            var c = document.getElementById('global-counter'); if(c) c.innerText = globVal;
 
-            database.forEach((op, opIdx) => {
+            database.forEach(function(op, opIdx) {
                 if (query && !op.nom.toLowerCase().includes(query)) return;
                 if (!query && op.equipe !== currentTeamFilter) return;
 
-                const qualifs = (op.qualifs || "").split(',').filter(x => x.trim() !== "").map((qStr, qIdx) => {
-                    const p = qStr.trim().split('|');
-                    return { id: qIdx, code: p[0].split('-')[0], name: cleanName(p[0].split('-')[1]), date: p[1] || "-", isIni: (p[2] === 'O'), state: p[3] || 'normal', note: p[4] || '', validator: p[5] || '', ...analyzeDate(p[1], p[2] === 'O') };
+                var qualifs = (op.qualifs || "").split(',').filter(function(x) { return x.trim() !== ""; }).map(function(qStr, qIdx) {
+                    var p = qStr.trim().split('|');
+                    var dateAnalysis = analyzeDate(p[1], p[2] === 'O');
+                    return { id: qIdx, code: p[0].split('-')[0], name: cleanName(p[0].split('-')[1]), date: p[1] || "-", isIni: (p[2] === 'O'), state: p[3] || 'normal', note: p[4] || '', validator: p[5] || '', status: dateAnalysis.status, days: dateAnalysis.days };
                 });
 
-                qualifs.sort((a,b) => {
+                qualifs.sort(function(a,b) {
                     if(a.state==='priority' && b.state!=='priority') return -1;
                     if(b.state==='priority' && a.state!=='priority') return 1;
-                    const bot = ['validated', 'disabled', 'standby'];
+                    var bot = ['validated', 'disabled', 'standby'];
                     if(bot.includes(a.state) && !bot.includes(b.state)) return 1;
                     if(!bot.includes(a.state) && bot.includes(b.state)) return -1;
                     if(a.status==='expired' && b.status!=='expired') return -1;
@@ -1026,16 +1097,16 @@
                     return a.isIni ? -1 : 1;
                 });
 
-                const cards = qualifs.map(q => {
-                    let cls = q.isIni ? "card-ini" : "card-pro";
-                    let icon = ""; let banner = ""; let valBadge = "";
+                var cards = qualifs.map(function(q) {
+                    var cls = q.isIni ? "card-ini" : "card-pro";
+                    var icon = ""; var banner = ""; var valBadge = "";
                     if (q.state === 'validated') { cls += ' state-validated'; icon = '<i class="fa-solid fa-circle-check text-emerald-500"></i>'; valBadge = q.validator ? `<span class="text-[9px] bg-emerald-200 text-emerald-800 px-2 rounded-full font-bold ml-auto">${sanitize(q.validator)}</span>` : ''; }
                     else if (q.state === 'priority') { cls += ' state-priority'; banner = `<div class="q-banner priority-sky text-blue-600 bg-blue-100">PRIORITÉ</div>`; }
                     else if (q.state === 'disabled') { cls += ' state-disabled'; banner = `<div class="q-banner bg-amber-500 text-white">PAS CAPABLE</div>`; }
                     else if (q.state === 'standby') { cls += ' state-standby'; banner = `<div class="q-banner bg-slate-600 text-white">STANDBY</div>`; }
                     else if (q.status !== 'ok') { cls += ` status-${q.status}`; if(q.status==='expired'){ icon = '<i class="fa-solid fa-triangle-exclamation"></i>'; banner = `<div class="q-banner bg-red-900 text-red-200">ÉCHU</div>`;} }
 
-                    let tBadge = "";
+                    var tBadge = "";
                     if(q.days !== null && q.state === 'normal'){
                         if(q.status === 'expired') tBadge = `<span class="timer-badge timer-expired">ÉCHU</span>`;
                         else if(q.status === 'critical') tBadge = `<span class="timer-badge bg-red-500 text-white">J-${q.days}</span>`;
@@ -1052,10 +1123,10 @@
                     </div>`;
                 }).join('');
 
-                let health = 'bg-emerald-400';
-                if(qualifs.some(q => q.state === 'priority')) health = 'bg-sky-500 animate-pulse';
-                else if(qualifs.some(q => q.status === 'expired' && q.state === 'normal')) health = 'bg-red-600 animate-pulse';
-                else if(qualifs.some(q => q.status === 'critical' && q.state === 'normal')) health = 'bg-red-400';
+                var health = 'bg-emerald-400';
+                if(qualifs.some(function(q) { return q.state === 'priority'; })) health = 'bg-sky-500 animate-pulse';
+                else if(qualifs.some(function(q) { return q.status === 'expired' && q.state === 'normal'; })) health = 'bg-red-600 animate-pulse';
+                else if(qualifs.some(function(q) { return q.status === 'critical' && q.state === 'normal'; })) health = 'bg-red-400';
 
                 tbody.innerHTML += `
                 <tr class="bg-white border-b border-slate-200">
@@ -1068,8 +1139,8 @@
                 </tr>`;
             });
             
-            const viewReporting = document.getElementById('view-reporting');
-            const viewHebdo = document.getElementById('view-hebdo');
+            var viewReporting = document.getElementById('view-reporting');
+            var viewHebdo = document.getElementById('view-hebdo');
             if (viewReporting && !viewReporting.classList.contains('hidden')) renderReporting();
             if (viewHebdo && !viewHebdo.classList.contains('hidden')) renderHebdoStats();
         }
@@ -1078,23 +1149,23 @@
         function changeKpiView(view) { currentKpiView = view; renderReporting(); }
 
         function renderReporting() {
-            const activeCls = "flex-1 px-5 py-2 rounded-md text-xs font-black bg-blue-600 text-white shadow-sm transition-all";
-            const inactiveCls = "flex-1 px-5 py-2 rounded-md text-xs font-bold text-slate-500 hover:text-slate-800 hover:bg-slate-200 transition-all";
+            var activeCls = "flex-1 px-5 py-2 rounded-md text-xs font-black bg-blue-600 text-white shadow-sm transition-all";
+            var inactiveCls = "flex-1 px-5 py-2 rounded-md text-xs font-bold text-slate-500 hover:text-slate-800 hover:bg-slate-200 transition-all";
             
-            const btnTout = document.getElementById('btn-kpi-Tout'); if(btnTout) btnTout.className = (currentKpiView === 'Tout') ? activeCls : inactiveCls;
-            const btnP40 = document.getElementById('btn-kpi-P40'); if(btnP40) btnP40.className = (currentKpiView === 'P40') ? activeCls : inactiveCls;
-            const btnP50 = document.getElementById('btn-kpi-P50'); if(btnP50) btnP50.className = (currentKpiView === 'P50') ? activeCls : inactiveCls;
+            var btnTout = document.getElementById('btn-kpi-Tout'); if(btnTout) btnTout.className = (currentKpiView === 'Tout') ? activeCls : inactiveCls;
+            var btnP40 = document.getElementById('btn-kpi-P40'); if(btnP40) btnP40.className = (currentKpiView === 'P40') ? activeCls : inactiveCls;
+            var btnP50 = document.getElementById('btn-kpi-P50'); if(btnP50) btnP50.className = (currentKpiView === 'P50') ? activeCls : inactiveCls;
 
-            const p40Container = document.getElementById('kpi-section-p40');
-            const p50Container = document.getElementById('kpi-section-p50');
+            var p40Container = document.getElementById('kpi-section-p40');
+            var p50Container = document.getElementById('kpi-section-p50');
             if (p40Container) p40Container.style.display = (currentKpiView === 'Tout' || currentKpiView === 'P40') ? 'block' : 'none';
             if (p50Container) p50Container.style.display = (currentKpiView === 'Tout' || currentKpiView === 'P50') ? 'block' : 'none';
 
             // Registre Officiel
-            const tbody = document.getElementById('boss-registry-tbody');
+            var tbody = document.getElementById('boss-registry-tbody');
             if (tbody) {
-                let logs = currentKpiView === 'Tout' ? bossKpiLog : bossKpiLog.filter(l => l.poste === currentKpiView);
-                tbody.innerHTML = logs.map(log => `
+                var logs = currentKpiView === 'Tout' ? bossKpiLog : bossKpiLog.filter(function(l) { return l.poste === currentKpiView; });
+                tbody.innerHTML = logs.map(function(log) { return `
                     <tr class="hover:bg-blue-50 transition-colors border-b border-slate-50">
                         <td class="font-bold">${sanitize(log.poste)}</td><td>${sanitize(log.station)}</td><td class="font-mono text-blue-600">${sanitize(log.qualif)}</td>
                         <td class="font-bold">${sanitize(log.compagnon)}</td>
@@ -1102,7 +1173,7 @@
                         <td>${sanitize(log.qls) || '-'}</td><td class="font-bold text-emerald-600">${sanitize(log.validateur)}</td>
                         <td class="mono text-center">${sanitize(log.date)}</td><td class="font-black text-center">${sanitize(log.qcm)}</td><td class="text-center font-bold">CW${log.cw}</td>
                     </tr>
-                `).join('');
+                `; }).join('');
             }
 
             if (window.Chart) {
@@ -1114,35 +1185,35 @@
 
         // --- TABLEAU CROISÉ DYNAMIQUE QLS ---
         function drawQlsTable() {
-            const container = document.getElementById('qls-table-container');
+            var container = document.getElementById('qls-table-container');
             if (!container) return;
 
-            let weeks = new Set();
-            const currentWeek = getWeekNumber(new Date());
+            var weeks = new Set();
+            var currentWeek = getWeekNumber(new Date());
             weeks.add(currentWeek); 
             
-            bossKpiLog.forEach(log => {
-                const cw = parseInt(log.cw);
+            bossKpiLog.forEach(function(log) {
+                var cw = parseInt(log.cw);
                 if (!isNaN(cw) && cw >= 13) weeks.add(cw);
             });
             
-            let sortedWeeks = Array.from(weeks).sort((a,b) => a-b);
+            var sortedWeeks = Array.from(weeks).sort(function(a,b) { return a-b; });
 
-            let stats = {};
-            let weekTotals = {}; 
+            var stats = {};
+            var weekTotals = {}; 
             
-            VALIDATORS_LIST.forEach(v => {
+            VALIDATORS_LIST.forEach(function(v) {
                 stats[v.alias] = {};
-                sortedWeeks.forEach(cw => { stats[v.alias][cw] = { init: 0, proro: 0, tot: 0 }; });
+                sortedWeeks.forEach(function(cw) { stats[v.alias][cw] = { init: 0, proro: 0, tot: 0 }; });
             });
-            sortedWeeks.forEach(cw => weekTotals[cw] = 0);
+            sortedWeeks.forEach(function(cw) { weekTotals[cw] = 0; });
 
-            bossKpiLog.forEach(log => {
-                const cw = parseInt(log.cw);
+            bossKpiLog.forEach(function(log) {
+                var cw = parseInt(log.cw);
                 if (!sortedWeeks.includes(cw)) return;
                 
-                const valName = log.validateur;
-                const valObj = VALIDATORS_LIST.find(v => valName.includes(v.alias) || valName === v.name);
+                var valName = log.validateur;
+                var valObj = VALIDATORS_LIST.find(function(v) { return valName.includes(v.alias) || valName === v.name; });
                 
                 if (valObj) {
                     if (log.type === 'Initiale') stats[valObj.alias][cw].init++;
@@ -1152,37 +1223,37 @@
                 }
             });
 
-            const getBg = (val) => {
+            var getBg = function(val) {
                 if(val === 0) return 'bg-[#E6A5A5]'; 
                 if(val <= 4) return 'bg-[#FDE047]'; 
                 return 'bg-[#A7F3D0]'; 
             };
-            const getTotBg = (val) => {
+            var getTotBg = function(val) {
                 if(val === 0) return 'bg-slate-300 text-slate-800'; 
                 if(val <= 2) return 'bg-[#FCA5A5]'; 
                 if(val <= 4) return 'bg-[#FDE047]'; 
                 return 'bg-[#A7F3D0]'; 
             };
 
-            let html = `<div class="flex justify-center overflow-x-auto w-full pb-2"><table class="w-full sm:w-auto mx-auto text-[10px] text-center border-collapse border border-slate-400 qls-table">`;
+            var html = `<div class="flex justify-center overflow-x-auto w-full pb-2"><table class="w-full sm:w-auto mx-auto text-[10px] text-center border-collapse border border-slate-400 qls-table">`;
             
             html += `<thead><tr>`;
             html += `<th class="w-20 bg-slate-200 border border-slate-400"></th><th class="w-12 bg-slate-200 border border-slate-400"></th>`;
-            sortedWeeks.forEach(cw => {
+            sortedWeeks.forEach(function(cw) {
                 html += `<th class="bg-slate-200 border border-slate-400 font-bold min-w-[60px]">Sem. ${cw}</th><th class="bg-slate-300 border border-slate-400 font-bold min-w-[60px]">Total CW${cw}</th>`;
             });
             html += `</tr></thead><tbody class="bg-white">`;
 
-            VALIDATORS_LIST.forEach(v => {
-                let row1 = `<tr>`;
+            VALIDATORS_LIST.forEach(function(v) {
+                var row1 = `<tr>`;
                 row1 += `<td rowspan="2" class="font-bold text-slate-800 bg-slate-100 border border-slate-400 align-middle">${v.alias}</td>`;
                 row1 += `<td class="text-slate-800 bg-slate-100 border border-slate-400 p-1">Prorog</td>`;
                 
-                let row2 = `<tr>`;
+                var row2 = `<tr>`;
                 row2 += `<td class="text-slate-800 bg-slate-100 border border-slate-400 p-1">Init</td>`;
 
-                sortedWeeks.forEach(cw => {
-                    const s = stats[v.alias][cw];
+                sortedWeeks.forEach(function(cw) {
+                    var s = stats[v.alias][cw];
                     row1 += `<td class="${getBg(s.proro)} border border-slate-400 font-mono">${s.proro}</td>`;
                     row1 += `<td rowspan="2" class="align-middle ${getTotBg(s.tot)} border border-slate-400 font-mono font-bold text-sm">${s.tot}</td>`;
                     row2 += `<td class="${getBg(s.init)} border border-slate-400 font-mono">${s.init}</td>`;
@@ -1193,7 +1264,7 @@
 
             html += `<tr class="bg-slate-800 text-white font-black">`;
             html += `<td colspan="2" class="uppercase tracking-widest text-left pl-4 border border-slate-400">Total</td>`;
-            sortedWeeks.forEach(cw => {
+            sortedWeeks.forEach(function(cw) {
                 html += `<td class="border border-slate-400"></td>`;
                 html += `<td class="font-mono text-sm border border-slate-400 bg-slate-700">${weekTotals[cw]}</td>`;
             });
@@ -1204,28 +1275,28 @@
 
         // --- GRAPHIQUES KPI ---
         function updateChart(poste, canvasId) {
-            const canvas = document.getElementById(canvasId);
+            var canvas = document.getElementById(canvasId);
             if (!canvas) return;
-            const ctx = canvas.getContext('2d');
+            var ctx = canvas.getContext('2d');
             
-            let init = 0, pro = 0;
+            var init = 0, pro = 0;
             if (HISTORICAL_KPI[poste]) {
-                Object.values(HISTORICAL_KPI[poste]).forEach(w => { init += w.init; pro += w.pro; });
+                Object.values(HISTORICAL_KPI[poste]).forEach(function(w) { init += w.init; pro += w.pro; });
             }
-            bossKpiLog.forEach(log => {
+            bossKpiLog.forEach(function(log) {
                 if (log.poste === poste && log.cw >= 14) {
                     if (log.type === 'Initiale') init++; else pro++;
                 }
             });
             
-            const totalEl = document.getElementById(`kpi-${poste.toLowerCase()}-total`);
+            var totalEl = document.getElementById(`kpi-${poste.toLowerCase()}-total`);
             if (totalEl) totalEl.innerText = init + pro;
 
-            const weeksData = {};
-            for (let w in HISTORICAL_KPI[poste]) {
+            var weeksData = {};
+            for (var w in HISTORICAL_KPI[poste]) {
                 weeksData[w] = { i: HISTORICAL_KPI[poste][w].init, p: HISTORICAL_KPI[poste][w].pro, t: HISTORICAL_KPI[poste][w].init + HISTORICAL_KPI[poste][w].pro };
             }
-            bossKpiLog.forEach(log => {
+            bossKpiLog.forEach(function(log) {
                 if (log.poste === poste && log.cw >= 14) {
                     if (!weeksData[log.cw]) weeksData[log.cw] = { i:0, p:0, t:0 };
                     if (log.type === 'Initiale') weeksData[log.cw].i++; else weeksData[log.cw].p++;
@@ -1233,18 +1304,18 @@
                 }
             });
 
-            const labels = Object.keys(weeksData).sort((a,b) => a-b).map(w => 'CW' + w);
-            const dataI = Object.keys(weeksData).sort((a,b) => a-b).map(w => weeksData[w].i);
-            const dataP = Object.keys(weeksData).sort((a,b) => a-b).map(w => weeksData[w].p);
-            const dataT = Object.keys(weeksData).sort((a,b) => a-b).map(w => weeksData[w].t);
+            var labels = Object.keys(weeksData).sort(function(a,b) { return a-b; }).map(function(w) { return 'CW' + w; });
+            var dataI = Object.keys(weeksData).sort(function(a,b) { return a-b; }).map(function(w) { return weeksData[w].i; });
+            var dataP = Object.keys(weeksData).sort(function(a,b) { return a-b; }).map(function(w) { return weeksData[w].p; });
+            var dataT = Object.keys(weeksData).sort(function(a,b) { return a-b; }).map(function(w) { return weeksData[w].t; });
 
             if (poste === 'P40' && window.bossKpiChartInstanceP40) window.bossKpiChartInstanceP40.destroy();
             if (poste === 'P50' && window.bossKpiChartInstanceP50) window.bossKpiChartInstanceP50.destroy();
 
-            const chart = new Chart(ctx, {
+            var chart = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels,
+                    labels: labels,
                     datasets: [
                         { type: 'line', label: 'Total', data: dataT, borderColor: '#1E293B', borderWidth: 2, tension: 0.3, pointRadius: 2 },
                         { label: 'Initiales', data: dataI, backgroundColor: '#0EA5E9', stack: 'A' },
@@ -1259,28 +1330,26 @@
 
         // --- STATS HEBDO ---
         function renderHebdoStats() {
-            const hc = document.getElementById('hebdo-container');
+            var hc = document.getElementById('hebdo-container');
             if(!hc) return;
 
-            let hebdoP40 = { proExp: 0, iniVal: 0, proVal: 0, listProExp: [], listIniVal: [], listProVal: [] };
-            let hebdoP50 = { proExp: 0, iniVal: 0, proVal: 0, listProExp: [], listIniVal: [], listProVal: [] };
+            var hebdoP40 = { proExp: 0, iniVal: 0, proVal: 0, listProExp: [], listIniVal: [], listProVal: [] };
+            var hebdoP50 = { proExp: 0, iniVal: 0, proVal: 0, listProExp: [], listIniVal: [], listProVal: [] };
 
-            const lastWed = new Date(getQAWeekStartTimestamp());
-            const nextWed = new Date(lastWed.getTime() + 7 * 24 * 60 * 60 * 1000);
+            var lastWed = new Date(getQAWeekStartTimestamp());
+            var nextWed = new Date(lastWed.getTime() + 7 * 24 * 60 * 60 * 1000);
 
-            database.forEach(op => {
-                const isP50 = op.equipe && op.equipe.startsWith('P50');
-                const targetHebdo = isP50 ? hebdoP50 : hebdoP40;
+            database.forEach(function(op) {
+                var targetHebdo = (op.equipe && op.equipe.startsWith('P50')) ? hebdoP50 : hebdoP40;
 
-                const qualifs = (op.qualifs || "").split(',').filter(x => x.trim() !== "");
-                qualifs.forEach(q => {
-                    const parts = q.trim().split('|');
-                    const codeName = parts[0].split('-');
-                    const name = cleanName(codeName[1]) || "NON DÉFINIE";
-                    const dateStr = parts[1];
-                    const type = parts[2];
-                    const state = parts[3] || 'normal';
-                    const validator = parts[5] || ''; 
+                (op.qualifs || "").split(',').filter(function(x) { return x.trim() !== ""; }).forEach(function(q) {
+                    var parts = q.trim().split('|');
+                    var codeName = parts[0].split('-');
+                    var name = cleanName(codeName[1]) || "NON DÉFINIE";
+                    var dateStr = parts[1];
+                    var type = parts[2];
+                    var state = parts[3] || 'normal';
+                    var validator = parts[5] || ''; 
 
                     if (state === 'validated') { 
                         if (type === 'O' || type === 'o') { targetHebdo.iniVal++; targetHebdo.listIniVal.push({op: op.nom, q: name, validator: validator}); }
@@ -1289,9 +1358,9 @@
 
                     if ((type === 'N' || type === 'n') && state !== 'validated' && state !== 'standby' && state !== 'disabled' && state !== 'not-needed') {
                         if (dateStr && dateStr !== "À QUALIFIER" && dateStr !== "-") {
-                            let dParts = dateStr.split('/');
+                            var dParts = dateStr.split('/');
                             if(dParts.length === 3) {
-                                let expDate = new Date(dParts[2], dParts[1]-1, dParts[0]);
+                                var expDate = new Date(dParts[2], dParts[1]-1, dParts[0]);
                                 expDate.setHours(12, 0, 0, 0); 
                                 if (expDate > lastWed && expDate <= nextWed) {
                                     targetHebdo.proExp++;
@@ -1303,16 +1372,16 @@
                 });
             });
 
-            const renderList = (list, emptyMsg, color) => {
+            var renderList = function(list, emptyMsg, color) {
                 if (list.length === 0) return `<p class="text-xs italic text-slate-400 p-2">${emptyMsg}</p>`;
-                return list.map(item => `
+                return list.map(function(item) { return `
                     <div class="py-2 border-b border-${color}-100 last:border-0 flex flex-col gap-1">
                         <div class="flex justify-between items-start"><p class="text-xs font-bold text-slate-800">${sanitize(item.op)}</p>${item.date ? `<span class="text-[9px] font-bold bg-${color}-100 text-${color}-700 px-2 py-0.5 rounded">${sanitize(item.date)}</span>` : ''}</div>
                         <div class="flex justify-between items-center mt-1"><p class="text-[10px] text-${color}-600 truncate pr-2">${sanitize(item.q)}</p>${item.validator ? `<span class="text-[9px] font-bold bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded flex-shrink-0"><i class="fa-solid fa-user-check"></i> ${sanitize(item.validator)}</span>` : ''}</div>
-                    </div>`).join('');
+                    </div>`; }).join('');
             };
 
-            const renderHebdoSection = (title, data) => `
+            var renderHebdoSection = function(title, data) { return `
                 <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 sm:p-5 mb-6 overflow-hidden">
                     <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3 mb-4 border-b border-slate-200 pb-3">
                         <div class="bg-slate-800 text-white w-8 h-8 flex items-center justify-center rounded-lg font-black"><i class="fa-solid fa-industry"></i></div>
@@ -1329,15 +1398,15 @@
                         <div class="bg-white border border-amber-200 rounded-xl p-4 shadow-sm h-48 overflow-auto"><h4 class="text-xs font-black uppercase text-amber-600 mb-2 sticky top-0 bg-white pb-2 border-b border-amber-100">Détail Prorogations Validées</h4>${renderList(data.listProVal, "Aucune prorogation validée.", "amber")}</div>
                     </div>
                 </div>
-            `;
+            `; };
 
             hc.innerHTML = renderHebdoSection('Secteur P40', hebdoP40) + renderHebdoSection('Secteur P50', hebdoP50);
         }
 
         // --- ACTIONS SUR QUALIFS ---
         function openActionMenu(opIdx, qIdx, code) {
-            currentActiveQualif = { opIdx, qIdx };
-            const q = database[opIdx].qualifs.split(',')[qIdx].split('|');
+            currentActiveQualif = { opIdx: opIdx, qIdx: qIdx };
+            var q = database[opIdx].qualifs.split(',')[qIdx].split('|');
             document.getElementById('modal-qualif-title').innerText = code;
             document.getElementById('modal-qualif-note').value = q[4] || '';
             document.getElementById('modal-validator').value = q[5] || '';
@@ -1347,18 +1416,19 @@
         function closeQualifMenu() { document.getElementById('qualif-action-modal').classList.add('hidden'); }
 
         function setQualifState(state) {
-            const { opIdx, qIdx } = currentActiveQualif;
-            let qs = database[opIdx].qualifs.split(',');
-            let p = qs[qIdx].split('|');
+            var opIdx = currentActiveQualif.opIdx;
+            var qIdx = currentActiveQualif.qIdx;
+            var qs = database[opIdx].qualifs.split(',');
+            var p = qs[qIdx].split('|');
             
             if (state === 'validated') {
-                const val = document.getElementById('modal-validator').value;
+                var val = document.getElementById('modal-validator').value;
                 if (!val) return alert("Sélectionnez un validateur.");
                 
                 p[3] = 'validated'; p[5] = val;
                 
-                const d = new Date();
-                const vObj = VALIDATORS_LIST.find(v => v.alias === val || v.name === val);
+                var d = new Date();
+                var vObj = VALIDATORS_LIST.find(function(v) { return v.alias === val || v.name === val; });
                 
                 bossKpiLog.unshift({
                     poste: database[opIdx].equipe.substring(0,3),
@@ -1368,7 +1438,7 @@
                     type: (p[2] === 'O' ? 'Initiale' : 'Prorogation'),
                     qls: document.getElementById('modal-qls').value, 
                     validateur: vObj ? vObj.name : val, 
-                    date: `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`,
+                    date: `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`,
                     qcm: document.getElementById('modal-qcm').value, 
                     cw: getWeekNumber(d), 
                     timestamp: d.getTime()
@@ -1379,14 +1449,16 @@
             qs[qIdx] = p.join('|'); database[opIdx].qualifs = qs.join(',');
             persistData(); renderTable(); 
             
-            const vr = document.getElementById('view-reporting');
+            var vr = document.getElementById('view-reporting');
             if (vr && !vr.classList.contains('hidden')) renderReporting();
             closeQualifMenu();
         }
 
         function saveQualifNote() {
-            const { opIdx, qIdx } = currentActiveQualif;
-            let qs = database[opIdx].qualifs.split(','); let p = qs[qIdx].split('|');
+            var opIdx = currentActiveQualif.opIdx;
+            var qIdx = currentActiveQualif.qIdx;
+            var qs = database[opIdx].qualifs.split(','); 
+            var p = qs[qIdx].split('|');
             p[4] = document.getElementById('modal-qualif-note').value.replace(/\|/g, ' ');
             qs[qIdx] = p.join('|'); database[opIdx].qualifs = qs.join(',');
             persistData(); renderTable(); closeQualifMenu();
@@ -1401,27 +1473,27 @@
             document.getElementById('manual-log-modal').classList.add('hidden');
         }
         function submitManualLog() {
-            const poste = document.getElementById('ml-poste').value;
-            const station = document.getElementById('ml-station').value.trim() || poste;
-            const compagnon = document.getElementById('ml-compagnon').value.trim().toUpperCase() || 'INCONNU';
-            const qualif = document.getElementById('ml-qualif').value.trim() || 'INCONNUE';
-            const type = document.getElementById('ml-type').value;
-            const qls = document.getElementById('ml-qls').value;
-            const validateur = document.getElementById('ml-val').value;
-            const dateVal = document.getElementById('ml-date').value;
-            const qcm = document.getElementById('ml-qcm').value;
+            var poste = document.getElementById('ml-poste').value;
+            var station = document.getElementById('ml-station').value.trim() || poste;
+            var compagnon = document.getElementById('ml-compagnon').value.trim().toUpperCase() || 'INCONNU';
+            var qualif = document.getElementById('ml-qualif').value.trim() || 'INCONNUE';
+            var type = document.getElementById('ml-type').value;
+            var qls = document.getElementById('ml-qls').value;
+            var validateur = document.getElementById('ml-val').value;
+            var dateVal = document.getElementById('ml-date').value;
+            var qcm = document.getElementById('ml-qcm').value;
 
             if (!dateVal) return alert('Veuillez sélectionner une date de validation.');
 
-            const d = new Date(dateVal);
-            const cw = getWeekNumber(d);
-            const vObj = VALIDATORS_LIST.find(v => v.alias === validateur || v.name === validateur);
+            var d = new Date(dateVal);
+            var cw = getWeekNumber(d);
+            var vObj = VALIDATORS_LIST.find(function(v) { return v.alias === validateur || v.name === validateur; });
 
             bossKpiLog.unshift({
-                poste, station, qualif, compagnon, type, qls, 
+                poste: poste, station: station, qualif: qualif, compagnon: compagnon, type: type, qls: qls, 
                 validateur: vObj ? vObj.name : validateur, 
                 date: `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`, 
-                qcm, cw, timestamp: d.getTime()
+                qcm: qcm, cw: cw, timestamp: d.getTime()
             });
 
             persistData();
@@ -1432,36 +1504,36 @@
         // --- GESTION & ADMIN ---
         function openAddQualifMenu(opIdx) {
             currentOpForAdd = opIdx; document.getElementById('add-qualif-op-name').innerText = sanitize(database[opIdx].nom);
-            document.getElementById('new-q-select').innerHTML = QUALIFS_LIST.map(q => `<option value="${q}">${q}</option>`).join('');
+            document.getElementById('new-q-select').innerHTML = QUALIFS_LIST.map(function(q) { return `<option value="${q}">${q}</option>`; }).join('');
             document.querySelector('input[name="q-type"][value="O"]').checked = true; document.getElementById('new-q-date').value = '';
             toggleDateField(); document.getElementById('add-qualif-modal').classList.remove('hidden');
         }
         function closeAddQualifMenu() { document.getElementById('add-qualif-modal').classList.add('hidden'); currentOpForAdd = -1; }
         function toggleDateField() { document.getElementById('date-input-container').style.display = document.querySelector('input[name="q-type"]:checked').value === 'N' ? 'block' : 'none'; }
         function submitNewQualif() {
-            const qualif = document.getElementById('new-q-select').value; const type = document.querySelector('input[name="q-type"]:checked').value; 
-            let dateStr = "À QUALIFIER";
-            if (type === 'N') { const d = document.getElementById('new-q-date').value; if(!d) return alert("Date requise."); const p=d.split('-'); dateStr=`${p[2]}/${p[1]}/${p[0]}`; }
-            let op = database[currentOpForAdd]; op.qualifs = (op.qualifs ? op.qualifs + ", " : "") + `${qualif}|${dateStr}|${type}|normal|`;
+            var qualif = document.getElementById('new-q-select').value; var type = document.querySelector('input[name="q-type"]:checked').value; 
+            var dateStr = "À QUALIFIER";
+            if (type === 'N') { var d = document.getElementById('new-q-date').value; if(!d) return alert("Date requise."); var p=d.split('-'); dateStr=`${p[2]}/${p[1]}/${p[0]}`; }
+            var op = database[currentOpForAdd]; op.qualifs = (op.qualifs ? op.qualifs + ", " : "") + `${qualif}|${dateStr}|${type}|normal|`;
             persistData(); renderTable(); closeAddQualifMenu();
         }
 
         function openManageModal() {
-            document.getElementById('manage-tbody').innerHTML = database.map((op, idx) => `
+            document.getElementById('manage-tbody').innerHTML = database.map(function(op, idx) { return `
                 <tr class="hover:bg-slate-50"><td class="py-4 font-bold text-slate-800">${sanitize(op.nom)}<br><span class="text-[9px] text-slate-400">${sanitize(op.equipe)}</span></td>
                 <td class="py-4 text-slate-500 truncate max-w-xs">${sanitize(op.qualifs)}</td>
-                <td class="py-4 text-right"><button onclick="deleteEntry(${idx})" class="text-slate-400 hover:text-red-500"><i class="fa-solid fa-trash"></i></button></td></tr>`).join('');
+                <td class="py-4 text-right"><button onclick="deleteEntry(${idx})" class="text-slate-400 hover:text-red-500"><i class="fa-solid fa-trash"></i></button></td></tr>`; }).join('');
             document.getElementById('manage-modal').classList.remove('hidden');
         }
         function closeManageModal() { document.getElementById('manage-modal').classList.add('hidden'); }
         function addEntry() {
-            const nom = document.getElementById('new-nom').value.trim().toUpperCase(); const equipe = document.getElementById('new-equipe').value; const qualifs = document.getElementById('new-qualifs').value.trim();
-            if(nom) { database.push({ nom, equipe, qualifs, comm: "" }); persistData(); renderTable(); openManageModal(); document.getElementById('new-nom').value=''; }
+            var nom = document.getElementById('new-nom').value.trim().toUpperCase(); var equipe = document.getElementById('new-equipe').value; var qualifs = document.getElementById('new-qualifs').value.trim();
+            if(nom) { database.push({ nom: nom, equipe: equipe, qualifs: sanitize(qualifs), comm: "" }); persistData(); renderTable(); openManageModal(); document.getElementById('new-nom').value=''; }
         }
         function deleteEntry(idx) { operatorToDelete = idx; document.getElementById('delete-author').value=''; document.getElementById('delete-reason').value=''; document.getElementById('delete-confirm-modal').classList.remove('hidden'); }
         function cancelDelete() { document.getElementById('delete-confirm-modal').classList.add('hidden'); }
         function confirmDelete() {
-            const auth=document.getElementById('delete-author').value; const reas=document.getElementById('delete-reason').value;
+            var auth=document.getElementById('delete-author').value; var reas=document.getElementById('delete-reason').value;
             if(!auth || !reas) return alert("Remplissez l'auteur et le motif.");
             deletedOperators.unshift({ data: database[operatorToDelete], by: sanitize(auth), reason: sanitize(reas), date: new Date().toLocaleString() });
             localStorage.setItem(CORBEILLE_KEY, JSON.stringify(deletedOperators));
@@ -1473,84 +1545,84 @@
         function verifyPin() { if (document.getElementById('dev-pin-input').value === '270418') { closePinModal(); openDevModal(); } }
 
         function exportBossCSV() {
-            let csv = "Poste;Station;Nom de la QA;Nom du compagnon;Initiale / Prorogation;QLS1 Ou QLS2;Validée Par;Date de validation QA;QCM réalisé;CW\n";
-            bossKpiLog.forEach(l => csv += `${l.poste};${l.station};${l.qualif.replace(/\n/g, ' ')};${l.compagnon};${l.type};${l.qls};${l.validateur};${l.date};${l.qcm};${l.cw}\n`);
-            const b = new Blob(["\uFEFF"+csv], {type: 'text/csv;charset=utf-8;'}); const l = document.createElement("a"); l.href = URL.createObjectURL(b); l.download = "Registre_QA_Sliman.csv"; l.click();
+            var csv = "Poste;Station;Nom de la QA;Nom du compagnon;Initiale / Prorogation;QLS1 Ou QLS2;Validée Par;Date de validation QA;QCM réalisé;CW\n";
+            bossKpiLog.forEach(function(l) { csv += `${l.poste};${l.station};${l.qualif.replace(/\n/g, ' ')};${l.compagnon};${l.type};${l.qls};${l.validateur};${l.date};${l.qcm};${l.cw}\n`; });
+            var b = new Blob(["\uFEFF"+csv], {type: 'text/csv;charset=utf-8;'}); var l = document.createElement("a"); l.href = URL.createObjectURL(b); l.download = "Registre_QA_Sliman.csv"; l.click();
         }
 
         function openDevModal() {
             switchDevTab('data'); document.getElementById('dev-modal').classList.remove('hidden');
             document.getElementById('dev-raw-data').value = JSON.stringify(database, null, 2);
             document.getElementById('sliman-notes-input').value = localStorage.getItem('cockpit_sliman_notes') || '';
-            const hist = getSafeStorage(HISTORY_KEY, []);
-            document.getElementById('dev-tbody').innerHTML = hist.map((b,i)=>`<tr><td class="py-2 text-blue-400 font-bold">${b.time}</td><td class="text-right"><button onclick="restoreBackup(${i})" class="bg-slate-700 text-white px-2 py-1 rounded text-[10px]">Restaurer</button></td></tr>`).join('');
+            var hist = getSafeStorage(HISTORY_KEY, []);
+            document.getElementById('dev-tbody').innerHTML = hist.map(function(b,i) { return `<tr><td class="py-2 text-blue-400 font-bold">${b.time}</td><td class="text-right"><button onclick="restoreBackup(${i})" class="bg-slate-700 text-white px-2 py-1 rounded text-[10px]">Restaurer</button></td></tr>`; }).join('');
         }
         function closeDevModal() { document.getElementById('dev-modal').classList.add('hidden'); }
-        function switchDevTab(t) { ['data','html','notes'].forEach(id=>{ document.getElementById('dev-view-'+id).style.display = id===t ? 'flex' : 'none'; }); }
+        function switchDevTab(t) { ['data','html','notes'].forEach(function(id) { document.getElementById('dev-view-'+id).style.display = id===t ? 'flex' : 'none'; }); }
         function saveSlimanNotes() { localStorage.setItem('cockpit_sliman_notes', document.getElementById('sliman-notes-input').value); }
         function clearSlimanNotes() { if(confirm("Effacer ?")) { document.getElementById('sliman-notes-input').value=''; saveSlimanNotes(); } }
-        function copySlimanNotes(btn) { document.getElementById('sliman-notes-input').select(); document.execCommand('copy'); btn.innerText="Copié!"; setTimeout(()=>btn.innerHTML=`<i class="fa-solid fa-copy"></i> Copier`, 2000); }
+        function copySlimanNotes(btn) { document.getElementById('sliman-notes-input').select(); document.execCommand('copy'); btn.innerText="Copié!"; setTimeout(function() { btn.innerHTML=`<i class="fa-solid fa-copy"></i> Copier`; }, 2000); }
         
         function smartImportCSV() {
-            const text = document.getElementById('dev-csv-input').value.trim();
+            var text = document.getElementById('dev-csv-input').value.trim();
             if(!text) return alert("Veuillez coller des données CSV.");
-            const oldDataMap = {};
-            database.forEach(op => {
+            var oldDataMap = {};
+            database.forEach(function(op) {
                 oldDataMap[op.nom] = oldDataMap[op.nom] || {};
                 oldDataMap[op.nom].equipe = op.equipe;
-                let qs = (op.qualifs||"").split(',').filter(x=>x.trim());
-                qs.forEach(q => { let p = q.trim().split('|'); let code = p[0].split('-')[0]; oldDataMap[op.nom][code] = { date: p[1], type: p[2], state: p[3], note: p[4], val: p[5] }; });
+                var qs = (op.qualifs||"").split(',').filter(function(x){ return x.trim(); });
+                qs.forEach(function(q) { var p = q.trim().split('|'); var code = p[0].split('-')[0]; oldDataMap[op.nom][code] = { date: p[1], type: p[2], state: p[3], note: p[4], val: p[5] }; });
             });
-            let lines = text.split('\n'); let newDbMap = {}; let validLines = 0;
-            lines.forEach((line, idx) => {
+            var lines = text.split('\n'); var newDbMap = {}; var validLines = 0;
+            lines.forEach(function(line, idx) {
                 if(idx === 0 && line.toLowerCase().includes('nom;')) return; 
                 if(!line.trim()) return;
-                let cols = line.split(';'); if (cols.length < 3) return; 
-                let nom = (cols[0]||'').trim().toUpperCase(); let equipe = (cols[1]||'').trim() || (oldDataMap[nom]?.equipe) || 'P40A-A'; let code = (cols[2]||'').trim(); let qname = (cols[3]||'').trim(); let date = (cols[4]||'').trim(); let type = (cols[5]||'').trim();
-                let statut = (cols[6]||'').trim(); let note = (cols[7]||'').trim(); let val = (cols[8]||'').trim();
+                var cols = line.split(';'); if (cols.length < 3) return; 
+                var nom = (cols[0]||'').trim().toUpperCase(); var equipe = (cols[1]||'').trim() || (oldDataMap[nom]?.equipe) || 'P40A-A'; var code = (cols[2]||'').trim(); var qname = (cols[3]||'').trim(); var date = (cols[4]||'').trim(); var type = (cols[5]||'').trim();
+                var statut = (cols[6]||'').trim(); var note = (cols[7]||'').trim(); var val = (cols[8]||'').trim();
                 if(!nom || !code) return;
                 validLines++;
                 newDbMap[nom] = newDbMap[nom] || { nom: nom, equipe: equipe, qualifsArr: [] };
-                let finalState = 'normal'; let finalNote = ''; let finalVal = '';
-                if(statut) { finalState = statut; finalNote = note; finalVal = val; } else { if(oldDataMap[nom] && oldDataMap[nom][code]) { let oldQ = oldDataMap[nom][code]; finalState = oldQ.state || 'normal'; finalNote = oldQ.note || ''; finalVal = oldQ.val || ''; } }
-                let qStr = `${code}-${qname}|${date}|${type}|${finalState}|${finalNote}|${finalVal}`;
+                var finalState = 'normal'; var finalNote = ''; var finalVal = '';
+                if(statut) { finalState = statut; finalNote = note; finalVal = val; } else { if(oldDataMap[nom] && oldDataMap[nom][code]) { var oldQ = oldDataMap[nom][code]; finalState = oldQ.state || 'normal'; finalNote = oldQ.note || ''; finalVal = oldQ.val || ''; } }
+                var qStr = `${code}-${qname}|${date}|${type}|${finalState}|${finalNote}|${finalVal}`;
                 newDbMap[nom].qualifsArr.push(qStr);
             });
             if(validLines === 0) return alert("Erreur : Aucune donnée lisible.");
-            let newDatabase = [];
-            for(let nom in newDbMap) { newDatabase.push({ nom: nom, equipe: newDbMap[nom].equipe, qualifs: newDbMap[nom].qualifsArr.join(', '), comm: "" }); }
+            var newDatabase = [];
+            for(var nom in newDbMap) { newDatabase.push({ nom: nom, equipe: newDbMap[nom].equipe, qualifs: newDbMap[nom].qualifsArr.join(', '), comm: "" }); }
             database = newDatabase; persistData(); renderTable(); alert("✅ Fusion réussie ! " + newDatabase.length + " compagnons mis à jour."); document.getElementById('dev-csv-input').value = ''; closeDevModal();
         }
 
         function forceUpdateDatabase() {
             try {
-                const newData = JSON.parse(document.getElementById('dev-raw-data').value);
+                var newData = JSON.parse(document.getElementById('dev-raw-data').value);
                 if (!Array.isArray(newData)) throw new Error("Format JSON invalide (doit être un tableau [ ])");
                 database = newData; persistData(); renderTable(); alert("Mise à jour réussie");
             } catch (e) { alert('Erreur : ' + e.message); }
         }
         function restoreBackup(idx) {
-            let history = getSafeStorage(HISTORY_KEY, []);
+            var history = getSafeStorage(HISTORY_KEY, []);
             if (history[idx]) { database = history[idx].data; persistData(); renderTable(); closeDevModal(); }
         }
         function exportCSV() {
-            let csv = "Nom;Equipe;Code Qualif;Nom Qualif;Date Exp;Type;Statut;Note;Validateur\n";
-            database.forEach(op => {
-                let qs = (op.qualifs||"").split(',').filter(x=>x.trim());
-                qs.forEach(q => {
-                    let p = q.trim().split('|'); let codeName = p[0].split('-'); let code = codeName[0]; let qname = codeName[1] || "";
+            var csv = "Nom;Equipe;Code Qualif;Nom Qualif;Date Exp;Type;Statut;Note;Validateur\n";
+            database.forEach(function(op) {
+                var qs = (op.qualifs||"").split(',').filter(function(x) { return x.trim(); });
+                qs.forEach(function(q) {
+                    var p = q.trim().split('|'); var codeName = p[0].split('-'); var code = codeName[0]; var qname = codeName[1] || "";
                     csv += `${op.nom};${op.equipe};${code};${qname};${p[1]||''};${p[2]||''};${p[3]||'normal'};${p[4]||''};${p[5]||''}\n`;
                 });
             });
-            let blob = new Blob(["\uFEFF" + csv], {type: 'text/csv;charset=utf-8;'});
-            let link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = "Sauvegarde_App.csv"; link.click();
+            var blob = new Blob(["\uFEFF" + csv], {type: 'text/csv;charset=utf-8;'});
+            var link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = "Sauvegarde_App.csv"; link.click();
         }
-        function applyLiveHTML() { const newHTML = document.getElementById('dev-html-input').value.trim(); if(newHTML) { document.open(); document.write(newHTML); document.close(); } }
+        function applyLiveHTML() { var newHTML = document.getElementById('dev-html-input').value.trim(); if(newHTML) { document.open(); document.write(newHTML); document.close(); } }
         function downloadHTML() {
-            let htmlContent = document.getElementById('dev-html-input').value.trim();
+            var htmlContent = document.getElementById('dev-html-input').value.trim();
             if (!htmlContent) { htmlContent = "<!DOCTYPE html>\n<html lang=\"fr\">\n" + document.documentElement.innerHTML + "\n</html>"; }
-            const blob = new Blob([htmlContent], {type: 'text/html;charset=utf-8;'});
-            const link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = "index.html"; link.click();
+            var blob = new Blob([htmlContent], {type: 'text/html;charset=utf-8;'});
+            var link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = "index.html"; link.click();
         }
 
         // Tuto interactif
@@ -1562,14 +1634,14 @@
         }
 
         function showTourStep() {
-            document.querySelectorAll('.tour-highlight').forEach(el => el.classList.remove('tour-highlight'));
+            document.querySelectorAll('.tour-highlight').forEach(function(el) { el.classList.remove('tour-highlight'); });
             
-            const step = tourSteps[currentTourIndex];
+            var step = tourSteps[currentTourIndex];
             document.getElementById('tour-title').innerHTML = step.title;
             document.getElementById('tour-text').innerHTML = step.text;
             document.getElementById('tour-step-counter').innerText = `Étape ${currentTourIndex + 1} / ${tourSteps.length}`;
             
-            const btn = document.getElementById('tour-next-btn');
+            var btn = document.getElementById('tour-next-btn');
             if (currentTourIndex === tourSteps.length - 1) {
                 btn.innerHTML = 'Terminer <i class="fa-solid fa-check ml-1"></i>';
                 btn.classList.replace('bg-blue-600', 'bg-emerald-500');
@@ -1580,15 +1652,15 @@
                 btn.classList.replace('hover:bg-emerald-400', 'hover:bg-blue-500');
             }
 
-            const focusBox = document.getElementById('tour-focus-box');
+            var focusBox = document.getElementById('tour-focus-box');
             if (step.target) {
-                const targetEl = document.getElementById(step.target);
+                var targetEl = document.getElementById(step.target);
                 if (targetEl) { 
                     targetEl.classList.add('tour-highlight'); 
                     targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' }); 
                     
-                    setTimeout(() => {
-                        const rect = targetEl.getBoundingClientRect();
+                    setTimeout(function() {
+                        var rect = targetEl.getBoundingClientRect();
                         focusBox.style.top = (rect.top - 8) + 'px';
                         focusBox.style.left = (rect.left - 8) + 'px';
                         focusBox.style.width = (rect.width + 16) + 'px';
@@ -1607,7 +1679,7 @@
         }
 
         function endTour() {
-            document.querySelectorAll('.tour-highlight').forEach(el => el.classList.remove('tour-highlight'));
+            document.querySelectorAll('.tour-highlight').forEach(function(el) { el.classList.remove('tour-highlight'); });
             document.getElementById('tour-overlay').style.display='none'; 
             document.getElementById('tour-dialog').style.display='none'; 
             document.getElementById('tour-focus-box').classList.remove('active');
@@ -1616,16 +1688,27 @@
         function zoomIn() { document.body.style.zoom = 1.1; } function zoomOut() { document.body.style.zoom = 0.9; }
 
         function openValidatedModal() {
-            const tbody = document.getElementById('validated-tbody');
+            var tbody = document.getElementById('validated-tbody');
+            var globVal = 0;
+            var currentValidatedList = [];
+            database.forEach(function(op) {
+                (op.qualifs || "").split(',').forEach(function(q) { 
+                    if(q.includes('|validated')) {
+                        var p = q.trim().split('|');
+                        currentValidatedList.push({ nom: op.nom, code: p[0].split('-')[0], name: cleanName(p[0].split('-')[1]), validator: p[5] });
+                    }
+                });
+            });
+
             if (currentValidatedList.length > 0) {
-                tbody.innerHTML = currentValidatedList.map(item => `
+                tbody.innerHTML = currentValidatedList.map(function(item) { return `
                     <tr class="hover:bg-emerald-50 border-b border-slate-100">
                         <td class="py-3 font-bold text-slate-800">${sanitize(item.nom)}</td>
                         <td class="py-3 font-mono text-emerald-600 font-bold">${sanitize(item.code)}</td>
                         <td class="py-3 text-slate-500 text-xs uppercase">${sanitize(item.name)}</td>
                         <td class="py-3 text-right">${item.validator ? `<span class="bg-emerald-100 text-emerald-700 px-2 py-1 rounded text-[10px] font-bold"><i class="fa-solid fa-user-check"></i> ${sanitize(item.validator)}</span>` : '<span class="text-slate-300">-</span>'}</td>
                     </tr>
-                `).join('');
+                `; }).join('');
             } else {
                 tbody.innerHTML = `<tr><td colspan="4" class="py-8 text-center text-slate-400 italic">Aucune qualification validée pour le moment.</td></tr>`;
             }
@@ -1633,6 +1716,23 @@
         }
         function closeValidatedModal() { document.getElementById('validated-modal').classList.add('hidden'); }
 
+        // EXPLICIT GLOBAL EXPORTS
+        window.setZone = setZone; window.setSecteur = setSecteur; window.setTeam = setTeam; window.updateFilters = updateFilters;
+        window.debouncedSearch = debouncedSearch; window.clearSearch = clearSearch; window.switchTab = switchTab;
+        window.renderTable = renderTable; window.changeKpiView = changeKpiView; window.renderReporting = renderReporting;
+        window.renderHebdoStats = renderHebdoStats; window.openActionMenu = openActionMenu; window.closeQualifMenu = closeQualifMenu;
+        window.setQualifState = setQualifState; window.saveQualifNote = saveQualifNote; window.openManualLogModal = openManualLogModal;
+        window.closeManualLogModal = closeManualLogModal; window.submitManualLog = submitManualLog; window.openAddQualifMenu = openAddQualifMenu;
+        window.closeAddQualifMenu = closeAddQualifMenu; window.submitNewQualif = submitNewQualif; window.openManageModal = openManageModal;
+        window.closeManageModal = closeManageModal; window.addEntry = addEntry; window.deleteEntry = deleteEntry;
+        window.cancelDelete = cancelDelete; window.confirmDelete = confirmDelete; window.openPinModal = openPinModal;
+        window.closePinModal = closePinModal; window.verifyPin = verifyPin; window.exportBossCSV = exportBossCSV;
+        window.openDevModal = openDevModal; window.closeDevModal = closeDevModal; window.switchDevTab = switchDevTab;
+        window.saveSlimanNotes = saveSlimanNotes; window.clearSlimanNotes = clearSlimanNotes; window.copySlimanNotes = copySlimanNotes;
+        window.smartImportCSV = smartImportCSV; window.forceUpdateDatabase = forceUpdateDatabase; window.restoreBackup = restoreBackup;
+        window.exportCSV = exportCSV; window.applyLiveHTML = applyLiveHTML; window.downloadHTML = downloadHTML;
+        window.startTour = startTour; window.nextTourStep = nextTourStep; window.endTour = endTour;
+        window.zoomIn = zoomIn; window.zoomOut = zoomOut; window.openValidatedModal = openValidatedModal; window.closeValidatedModal = closeValidatedModal;
     </script>
 </body>
 </html>
